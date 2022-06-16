@@ -3,6 +3,18 @@ import * as statsChart from './statsChart.js';
 import * as main from './main.js';
 
 const pokeballPath = '../Images/pokeball.png';
+const numberHeader = document.getElementById('number-header');
+const nameHeader = document.getElementById('name-header');
+const genusSubHeader = document.getElementById('genus-sub-header');
+const generationText = document.getElementById('generation-text');
+const pokedexEntryText = document.getElementById('pokedex-entry-text');
+const heightText = document.getElementById('height-text');
+const weightText = document.getElementById('weight-text');
+const statsText = document.getElementById('stats-text');
+const frontDefault = document.getElementById('front-default');
+const frontShiny = document.getElementById('front-shiny');
+const backDefault = document.getElementById('back-default');
+const backShiny = document.getElementById('back-shiny');
 var pokemon = null;
 
 function populatePage(pokemonResponse, speciesResponse, state) {
@@ -21,40 +33,29 @@ function populatePage(pokemonResponse, speciesResponse, state) {
 }
 
 function displayAttributes(pokemon) {
-  document.getElementById('number-header').innerText = `#${pokemon.id} `;
+  numberHeader.innerText = `#${pokemon.id} `;
   pokemon.name = pokemon.name.includes('mr-') ? pokemon.name.replace('mr-', 'mr. ') :
     pokemon.name.includes('-jr') ? pokemon.name.replace('-jr', ' jr.') :
     pokemon.name;
-  document.getElementById('name-header').innerText = `${pokemon.name.toUpperCase()}`;
-  document.getElementById('genus-sub-header').innerText = `The ${pokemon.genus}`;
-  document.getElementById('generation-text').innerText = `${pokemon.generation}`;
-  document.getElementById('pokedex-entry-text').innerText = `${pokemon.pokedexEntry}`;
-  document.getElementById('height-text').innerText = `${pokemon.height}`;
-  document.getElementById('weight-text').innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)}`;
+  nameHeader.innerText = `${pokemon.name.toUpperCase()}`;
+  genusSubHeader.innerText = `The ${pokemon.genus}`;
+  generationText.innerText = `${pokemon.generation}`;
+  pokedexEntryText.innerText = `${pokemon.pokedexEntry}`;
+  heightText.innerText = `${pokemon.height}`;
+  weightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
   if(main.deviceType === 'mobile') {
-    document.getElementById('weight-text').innerText += '<br>';
+    weightText.innerHTML += '<br>';
   }
-  document.getElementById('stats-text').innerText = `${pokemon.baseStatTotal}`;
-  if(main.deviceType === 'desktop') {
-    document.getElementById('stats-text').innerText += '<br>';
+  statsText.innerText = `${pokemon.baseStatTotal}`;
+  if(main.deviceType === 'tablet') {
+    statsText.innerHTML += '<br>';
   }
-  // if(main.deviceType === 'mobile' || main.deviceType === 'tablet') {
-  //   if(main.deviceType === 'mobile') {
-  //     document.getElementById('weight-text').innerHTML = `<span id='weight-text' class='text'>${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs</span><br>`;
-  //   } else {
-  //     document.getElementById('weight-text').innerHTML = `<span id='weight-text' class='text'>${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs</span>`;
-  //   }
-  //   document.getElementById('stats-text').innerHTML = `<span id='stats-text' class='text'>${pokemon.baseStatTotal}</span><br>`;
-  // } else {
-  //   document.getElementById('weight-text').innerHTML = `<span id='weight-text' class='text'>${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs</span>`;
-  //   document.getElementById('stats-text').innerHTML = `<span id='stats-text' class='text'>${pokemon.baseStatTotal}</span>`;
-  // }
-  document.getElementById('front-default').setAttribute('src', pokemon.frontDefaultSprite);
-  document.getElementById('front-shiny').setAttribute('src', pokemon.frontShinySprite);
+  frontDefault.setAttribute('src', pokemon.frontDefaultSprite);
+  frontShiny.setAttribute('src', pokemon.frontShinySprite);
   pokemon.backDefaultSprite = pokemon.backDefaultSprite === null ? pokeballPath : pokemon.backDefaultSprite;
-  document.getElementById('back-default').setAttribute('src', pokemon.backDefaultSprite);
+  backDefault.setAttribute('src', pokemon.backDefaultSprite);
   pokemon.backShinySprite = pokemon.backShinySprite === null ? pokeballPath : pokemon.backShinySprite;
-  document.getElementById('back-shiny').setAttribute('src', pokemon.backShinySprite);
+  backShiny.setAttribute('src', pokemon.backShinySprite);
 }
 
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {

@@ -215,17 +215,18 @@ function headerLayout(deviceType, goButton, randomPokemonButton, previousButton,
     nextButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-angle-right"></i></span>'
     readEntryButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-book-open-reader"></i></span>';
     clearButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-x"></i></span>';
+    return;
   } else if(deviceType === 'tablet') {//(screenWidth >= 481 && screenWidth <= 768) {
-    previousButton.innerText = 'Prev';
-    readEntryButton.innerText = 'Read Entry';
+    randomPokemonButton.innerHTML = '<span class="button-top">Random</span>';
+    previousButton.innerHTML = '<span class="button-top">Prev</span>';
   } else {
-    goButton.innerHTML = 'Go';
-    randomPokemonButton.innerHTML = 'Random Pokémon';
-    previousButton.innerHTML = 'Previous';
-    nextButton.innerHTML = 'Next';
-    readEntryButton.innerHTML = 'Read Entry';
-    clearButton.innerHTML = ' X ';
+    randomPokemonButton.innerHTML = '<span class="button-top">Random Pokémon</span>';
+    previousButton.innerHTML = '<span class="button-top">Previous</span>';
   }
+  goButton.innerHTML = '<span class="button-top">Go</span>';
+  nextButton.innerHTML = '<span class="button-top">Next</span>';
+  readEntryButton.innerHTML = '<span class="button-top">Read Entry</span>';
+  clearButton.innerHTML = '<span class="button-top"> X </span>';
 }
 
 function scrollToTop() {

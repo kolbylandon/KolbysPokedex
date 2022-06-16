@@ -11,7 +11,6 @@ const readEntryButton = document.getElementById('read-entry-button');
 const clearButton = document.getElementById('clear-button');
 const hiddenElements = helpers.createArray(document.getElementsByClassName('hidden-element'));
 const screenElements = helpers.createArray(document.getElementsByClassName('screen'));
-let screenWidth = window.innerWidth;
 let deviceType = null;
 
 (() => {
@@ -22,9 +21,9 @@ let deviceType = null;
   };
   randomPokemonButton.onclick = () => {
     helpers.stopReadingEntry();
-    let randomPokemon = ~~(Math.random() * 898) + 1;
-    textbox.value = randomPokemon
-    helpers.generatePokemon(randomPokemon, 'visible');
+    let id = ~~(Math.random() * 898) + 1;
+    textbox.value = id;
+    helpers.generatePokemon(id, 'visible');
   };
   previousButton.onclick = () => {
     helpers.stopReadingEntry();

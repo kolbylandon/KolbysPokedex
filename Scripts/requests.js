@@ -38,9 +38,9 @@ async function requestAbilityEffect(url, listItem, name) {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
   .then(abilityEffectResponse => {
-    for(let index in abilityEffectResponse.effect_entries) {
-      if(abilityEffectResponse.effect_entries[index].language.name === 'en') {
-        listItem.innerHTML = `<u>${name}:</u> ${abilityEffectResponse.effect_entries[index].short_effect}`;
+    for(let index in abilityEffectResponse.flavor_text_entries) {
+      if(abilityEffectResponse.flavor_text_entries[index].language.name === 'en') {
+        listItem.innerHTML = `<u>${name}:</u> ${abilityEffectResponse.flavor_text_entries[index].flavor_text}`;
       }
     }
   })
