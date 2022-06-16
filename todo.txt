@@ -1,0 +1,132 @@
+TO DO
+-----------------------------------------------------------------------------------------
+06) Show move sets in a grid including other information about the attack.
+07) Show held items in a list format.
+11) Explore https://pokeapi.co/api/v2/ for new items to add to the info screen.
+12) Refactor for efficiency.
+15) Allow generatePreviousPokedexEntry when user has searched by Pokémon name.
+16) Allow generateNextPokedexEntry when user has searched by Pokémon name.
+17) If the Pokémon is legendary or mythical, have particles.js in the background.
+18) Use the glass instead of the screen or info-screen.
+22) Rewrite javascript files in typescript.
+26) Search footprints on the API, if they exist, show them in the info screen.
+27) Redo the color scheme.
+30) Add console logs to the script.
+31) Change to female form when clicking on the stats-chart.
+32) If the Pokémon is a baby, have particles.js be snow in the background.
+33) Look into DevExpress to see if their chart is better than chart.js.
+37) Hover over the abilities and see what the ability does.
+39) Hover over the types and get the strengths and weaknesses of the type.
+42) Host this site so others can see it.
+43) Add media queries for mobile devices.
+47) Click the Info header text to switch to old css.
+57) Create two functions for front and back sprites to create less text.
+58) Hover over the held items and create a tooltip to see what they item does.
+59) Get random 'en' flavor text for Pokédex entry.
+61) Have a front/back switch to shiny sprites.
+68) Recreate API using MongoDB and NodeJS.
+72) See if API has images for Held Items.
+73) Create a getFunctions.js file for all of the functions getting information.
+76) Create a custom stylized scrollbar.
+77) Recall previously viewed Pokémon via a button.
+78) Look into how to implement service workers.
+79) Look into storing the last Pokémon viewed before closing the window.
+80) Look into how to monitor if the width has changed.
+81) Have a matrix background when a member of the Porygon line is selected.
+82) Have gradients instead of a solid border color.
+83) Have the id as a parameter int the URL and pass use that to fetch the requests.
+
+IN PROGRESS
+-----------------------------------------------------------------------------------------
+44) Make this site into a Progressive Web Application.
+56) Push Enter key to search for Pokémon.
+67) Return the Pokédex number to the textbox if the textbox looses focus.
+69) Create a custom toast or modal when there is an error.
+75) Create html elements for other screen sizes from the media queries.
+
+IMPLEMENTED
+-----------------------------------------------------------------------------------------
+01) Put json info into object. //pokemonObject is populated with the getPokemonObject
+  function and pokemonSpeciesObject is populated with getPokemonSpeciesObject.
+02) When clicking on the image, change to back views. //This has been completed with a
+  click event.
+03) Get prev button working //Now working properly. Decreases the Pokédex number and
+  makes new fetch requests using the generatePreviousPokedexEntry function.
+04) Get next button working //Now working properly. Increases the Pokédex number and
+  makes new fetch requests using the generateNextPokedexEntry function.
+05) Base stats into radar chart. //The chart for stats is generated from the
+  displayStatsChart function, convertHexToRgba and getLargestStat are helper functions.
+08) Make abilities and is_hidden into a property of Pokémon. //Abilities is a property,
+  but is_hidden does not make sense to make a property at this time.
+09) Make generation into a property of pokemon. //The property for generation is
+ in the pokemonSpeciesObject generated from the getPokemonSpeciesObject function.
+10) Get Pokéball to show in the window tab. //Pokéball is showing in the window tab.
+  The pokeball.png file is the one showing.
+13) Display Pokédex information in english. //Proper Pokédex entry is being shown using
+  the getPokedexEntry function.
+14) Change to fetch instead of ajax. //API calls are now using fetch requests instead of
+  ajax requests with the fetchPokemon functions.
+19) Hover over abilities to get the explanation of what it does. // Created a list
+  instead a hover. I believe the API call would be to slow to do this.
+20) Uppercase generation and abilities after a hyphen. //The generation is now properly
+  upper cased using the formatGeneration function.
+21) Rewrite pokemon.css in Sass. //All of the CSS files have been rewritten in Sass and
+  have been minified.
+23) Merge the pokemonObject and pokemonSpeciesObject into one object. //The objects were
+  merged into one object.
+24) Try having the Type spans on the same line as the Type Header. //The three elements
+  are now on the same plane.
+25) Use small Pokéball as bullet points for the different info headers. //Small Pokéballs
+  are now bullets for lists.
+28) Use arrow functions were available. //The arrow functions are implemented throughout
+  the javascript file.
+29) Comment and create regions for the entire codebase. //The regions and comments have
+  been added to the codebase.
+34) Get rid of characters that do not belong (examples: #107 and #369). //Added a method
+  called checkTextForUnwantedCharacters to remove these characters.
+36) Show abilities in a grid including other information about the ability. // Created a
+  list instead a hover. I believe the API call would be to slow to do this.
+38) Hover over the base stat number to see the chart. //I have decided to move the stats
+  chart to the right side of the screen.
+40) Move the chart to its own screen to the left side of the screen. //Moved the stat chart to
+  the left side of the screen in its own box.
+41) Create web server from MSI gaming PC to host the website. //Decided that I will host this
+  website on GitHub.
+45) Move Pokédex Entry above Base Stats. //Adjusted the order of the displayed information
+  in pokedex.html.
+46) Add animation for the buttons and the different screens when showing and hiding. //Used
+  jQuery's fadeIn, fadeOut, and fadeToggle functions.
+48) Capitalize letters after a hyphen. //Added a new function called upperCaseAfterHyphen to
+  capitalize the first letter after the hyphen.
+49) Fix colorization of the hidden abilities. //The hidden abilities color had an extra #
+  making it a green color. Removed the character and it is showing as the correct color.
+50) Resize the Held Items List. //The Held Items List is the same size as all of the other
+  text items.
+51) Experiment with claymorphism and glass textures. //I have decided to go with the neumorphism
+  aesthetics for this Pokédex.
+52) Use variables in the CSS file. //I have decided to go with using the Sass pre-compiler
+  instead of using variables in CSS.
+53) Fix the Stats Chart to fit within the screen. //Added a padding setting withing the stats
+  chart options.
+54) Change font and font size of the Stats Chart. //Added matching font and increased the font
+  size of the Stats Chart.
+55) Replace IF statements with ternary statements. //The IF statements that could be turned to
+  ternary operators have been.
+60) Add Height and Weight before the Base Stats. //Added the Height and Weight before the Base
+  Stats and added them to the same line.
+62) Get rid of jQuery. //All jQuery has been removed from the modules and have been replaced
+  with vanilla JavaScript.
+63) Create different JavaScript modules. //The JavaScript has been separated into different
+  modules depending on what the function does.
+64) Limit the amount of characters for pokemon-textbox to 3. //The input pokemon-textbox has
+  been limited to 3 characters.
+65) Create different CSS modules. //The CSS has been separated into different modules depending
+  on what elements are being styled.
+66) Create a Regular Expression to check the Pokédex number. //Created a function to check against
+  a Regular Expression to see if number from the input is valid.
+70) Fix Mr. Mime and Mime Jr.'s names. //The dashes in the names have been fixed on the pokemon.name
+  to show periods.
+71) Show a Pokéball when a sprite is unavailable. //Now shows a Pokéball when the sprite is null.
+  Still looking for better options.
+74) Update the Pokémon's ID and name to have it be centered correctly. //The name and ID are now
+  centered properly. Padding was added with <li> and had to remove it.

@@ -1,0 +1,469 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+$box-shadow: 0.4rem 0.4rem 0.8rem 0rem rgba(120, 120, 120, 0.5);
+$background-color: rgba(255, 110, 97, 1);
+$dark-color: rgba(0, 0, 0, 1);
+$med-color: rgba(82, 82, 82, 1);
+$light-color: rgba(247, 247, 247, 1);
+$s-size: 0.75rem;
+$m-size: 1rem;
+$l-size: 1.75rem;
+
+// Mobile Devices --iPhone X
+@media screen and (min-width: 320px) and (max-width: 480px) {
+  #root {
+    background-color: rgba(247, 247, 247, 1);;
+    padding-top: 8.5vh;
+
+    .image {
+      display: block;
+      width: 100%;
+    }
+
+    #stats-chart {
+      height: 100%;
+      width: 100%;
+    }
+
+    .list-no-bullets {
+      list-style-position: inside;
+      list-style-type: none;
+      padding: 0.5vh 1.25vw;
+
+      #number-and-name-list-item {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+
+      #genus-sub-header-list-item {
+        font-weight: bolder;
+        text-align: center;
+      }
+
+      li {
+        padding: 0.3vh 1vw;
+      }
+    }
+
+    .list-bulleted {
+      list-style-image: url(../Images/pokeball-bullet.png);
+      padding: 0.15vh 2vw;
+    }
+
+    .screen {
+      // border: 0.215rem solid rgba(247, 247, 247, 1);
+      border-image: linear-gradient(rgba(247, 247, 247, 1), rgba(0,0,0,1));
+      border-radius: 2rem;
+      margin: 1.5vh 3vw;
+      box-shadow: 0.4rem 0.4rem 0.8rem 0rem rgba(120, 120, 120, 0.5), -0.4rem -0.4rem 0.8rem 0rem rgba(247, 247, 247, 1)
+    }
+
+    .bottom-screen {
+      padding: 0.25vh 0.75vw;
+    }
+
+    .type-text {
+      border-color: rgba(0, 0, 0, 1);
+      border-radius: 0.75rem;
+      color: rgba(247, 247, 247, 1);
+      padding: 0.35vh 1.5vw;
+      box-shadow: 0.4rem 0.4rem 0.8rem 0rem rgba(120, 120, 120, 0.5),
+    }
+
+    .headers {
+      font-weight: bold;
+    }
+
+    .text {
+      color: rgba(82, 82, 82, 1);
+      padding: 1.5vh 1.25vw;
+    }
+  }
+}
+
+// iPads, Tablets --iPad
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  #root {
+    display: grid;
+    background-color: rgba(247, 247, 247, 1);
+    grid-template-columns: 1fr 0.9fr ;
+    grid-column-gap: 4vw;
+    grid-row-gap: 2.5vh;
+    padding-top: 8.5vh;
+
+    #sprite-screen {
+      float: left;
+      grid-area: 2/1/3/2;
+      margin-left: 3vw;
+
+      .image {
+        display: block;
+        width: 100%;
+      }
+    }
+
+    #stats-screen {
+      float: right;
+      grid-area: 2/2/3/3;
+      margin-right: 3vw;
+
+      #stats-chart {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    #info-screen {
+      grid-area: 1/1/2/3;
+      margin: 0.5vh 3vw;
+      padding-bottom: 1vh;
+
+      .list-no-bullets {
+        list-style-type: none;
+        list-style-position: inside;
+        padding: 0vh 0vw;
+
+        #genus-sub-header-list-item {
+          text-align: center;
+          font-weight: bolder;
+        }
+
+        #number-and-name-list-item {
+          font-size: 2.25rem;
+          text-align: center;
+        }
+
+        li {
+          padding: 0.3vh 1vw;
+        }
+      }
+
+      .list-bulleted {
+        list-style-image: url(../Images/pokeball-bullet.png);
+        padding: 0.15vh 2vw;
+      }
+    }
+
+    .screen {
+      border: 0.33rem solid rgba(247, 247, 247, 1);
+      border-radius: 1.75rem;
+      box-shadow: 0.4rem 0.4rem 0.8rem 0rem rgba(120, 120, 120, 0.5), -0.4rem -0.4rem 0.8rem 0rem rgba(247, 247, 247, 1)
+    }
+
+    .top-screen {
+      margin-bottom: 2vh;
+    }
+
+    .bottom-screen {
+      margin-bottom: 2vh;
+      padding: 1vh 1vw;
+    }
+
+    .type-text {
+      border-color: rgba(0, 0, 0, 1);
+      border-radius: 2rem;
+      color: rgba(247, 247, 247, 1);
+      padding: 0.25vh 1.5vw;
+      box-shadow: 0.4rem 0.4rem 0.8rem 0rem rgba(120, 120, 120, 0.5);
+    }
+
+    .headers {
+      font-weight: bold;
+    }
+
+    .text {
+      color: rgba(82, 82, 82, 1);
+      padding: 1.5vh 1.25vw;
+    }
+  }
+}
+
+// Small Screens, Laptops --iPad Pro
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  #root {
+    display: grid;
+    background-color: $light-color;
+    grid-template-columns: 1fr 0.9fr ;
+    grid-template-rows: 1fr, 0.75fr;
+    grid-column-gap: calc($l-size * 2);
+    grid-row-gap: $l-size;
+    padding-top: calc($l-size * 4.5);
+
+    #sprite-screen {
+      float: left;
+      grid-area: 2 / 1 / 3 / 2;
+      margin-left: calc($l-size * 1.5);
+
+      .image {
+        display: block;
+        margin: calc($s-size * 0.5);
+        width: 100%;
+      }
+    }
+
+    #stats-screen {
+      float: right;
+      grid-area: 2 / 2 / 3 / 3;
+      margin-right: calc($l-size * 1.5);
+
+      #stats-chart {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    #info-screen {
+      grid-area: 1 / 1 / 2 / 3;
+      margin: 0rem calc($l-size * 1.5);
+      padding-bottom: calc($s-size * 0.75);
+
+      .list-no-bullets {
+        list-style-type: none;
+
+        #number-and-name-list-item {
+          font-size: calc($l-size * 1.2);
+          text-align: center;
+        }
+
+        li {
+          padding: calc($s-size * 0.5);
+        }
+      }
+
+      .list-bulleted {
+        list-style-image: url(../Images/pokeball-bullet.png);
+      }
+    }
+
+    .screen {
+      border: calc($s-size / 2.5) solid $light-color;
+      border-radius: $l-size;
+    }
+
+    .top-screen {
+      margin-bottom: $s-size;
+    }
+
+    .bottom-screen {
+      margin-bottom: calc($m-size * 0.5);
+      padding: $s-size;
+    }
+
+    .screen,
+    .type-text {
+      box-shadow: $box-shadow;
+    }
+
+    .type-text {
+      border-color: $dark-color;
+      border-radius: $s-size;
+      color: $light-color;
+      padding: calc($s-size * 0.75);
+    }
+
+    .headers {
+      color: $dark-color;
+      font-weight: bold;
+    }
+
+    .text {
+      color: $med-color;
+      padding: calc($s-size * 0.75);
+    }
+  }
+}
+
+// Desktops, Large Screens --Laptop
+@media screen and (min-width: 1025px) and (max-width: 1200px) {
+  #root {
+    display: grid;
+    background-color: $light-color;
+    grid-template-columns: 1fr 0.9fr ;
+    grid-template-rows: 1fr, 0.75fr;
+    grid-column-gap: calc($l-size * 2);
+    grid-row-gap: $l-size;
+    padding-top: calc($l-size * 4.5);
+
+    #sprite-screen {
+      float: left;
+      grid-area: 2 / 1 / 3 / 2;
+      margin-left: calc($l-size * 1.5);
+
+      .image {
+        display: block;
+        margin: calc($s-size * 0.5);
+        width: 100%;
+      }
+    }
+
+    #stats-screen {
+      float: right;
+      grid-area: 2 / 2 / 3 / 3;
+      margin-right: calc($l-size * 1.5);
+
+      #stats-chart {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    #info-screen {
+      grid-area: 1 / 1 / 2 / 3;
+      margin: 0rem calc($l-size * 1.5);
+      padding-bottom: calc($s-size * 0.75);
+
+      .list-no-bullets {
+        list-style-type: none;
+
+        #number-and-name-list-item {
+          font-size: calc($l-size * 1.5);
+          text-align: center;
+        }
+
+        li {
+          padding: calc($s-size * 0.5);
+        }
+      }
+
+      .list-bulleted {
+        list-style-image: url(../Images/pokeball-bullet.png);
+      }
+    }
+
+    .screen {
+      border: calc($s-size / 2.5) solid $light-color;
+      border-radius: $l-size;
+    }
+
+    .top-screen {
+      margin-bottom: $s-size;
+    }
+
+    .bottom-screen {
+      margin-bottom: $l-size;
+      padding: $s-size;
+    }
+
+    .screen,
+    .type-text {
+      box-shadow: $box-shadow;
+    }
+
+    .type-text {
+      border-color: $dark-color;
+      border-radius: $s-size;
+      color: $light-color;
+      padding: calc($s-size * 0.75);
+    }
+
+    .headers {
+      color: $dark-color;
+      font-weight: bold;
+    }
+
+    .text {
+      color: $med-color;
+      padding: calc($s-size * 0.75);
+    }
+  }
+}
+
+// Extra Large Screens, TV --MacBook Air
+@media screen and (min-width: 1201px) {
+  #root {
+    display: grid;
+    background-color: $light-color;
+    grid-template-columns: 1fr 0.9fr ;
+    grid-column-gap: calc($l-size * 2);
+    grid-row-gap: $l-size;
+    padding-top: calc($l-size * 4.5);
+
+    #sprite-screen {
+      float: left;
+      grid-area: 2 / 1 / 3 / 2;
+      margin-left: calc($l-size * 1.5);
+
+      .image {
+        display: block;
+        margin: calc($s-size * 0.5);
+        width: 100%;
+      }
+    }
+
+    #stats-screen {
+      float: right;
+      grid-area: 2 / 2 / 3 / 3;
+      margin-right: calc($l-size * 1.5);
+
+      #stats-chart {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    #info-screen {
+      grid-area: 1 / 1 / 2 / 3;
+      margin: 0rem calc($l-size * 1.5);
+      padding-bottom: calc($s-size * 0.75);
+
+      .list-no-bullets {
+        list-style-type: none;
+        padding: 0rem;
+
+        #number-and-name-list-item {
+          font-size: calc($l-size * 1.5);
+          text-align: center;
+        }
+
+      #genus-sub-header-list-item {
+        font-weight: bolder;
+        text-align: center;
+      }
+
+        li {
+          padding: calc($s-size * 0.5);
+        }
+      }
+
+      .list-bulleted {
+        list-style-image: url(../Images/pokeball-bullet.png);
+      }
+    }
+
+    .screen {
+      border: calc($s-size / 2.5) solid $light-color;
+      border-radius: $l-size;
+    }
+
+    .top-screen {
+      margin-bottom: $s-size;
+    }
+
+    .bottom-screen {
+      margin-bottom: $l-size;
+      padding: $s-size;
+    }
+
+    .screen,
+    .type-text {
+      box-shadow: $box-shadow;
+    }
+
+    .type-text {
+      border-color: $dark-color;
+      border-radius: $s-size;
+      color: $light-color;
+      padding: calc($s-size * 0.75);
+    }
+
+    .headers {
+      color: $dark-color;
+      font-weight: bold;
+    }
+
+    .text {
+      color: $med-color;
+      padding: calc($s-size * 0.75);
+    }
+  }
+}

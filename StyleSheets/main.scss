@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+$box-shadow: 0.4rem 0.4rem 0.8rem 0rem rgba(120, 120, 120, 0.5);
+$background-color: rgba(255, 110, 97, 1);
+$dark-color: rgba(0, 0, 0, 1);
+$med-color: rgba(82, 82, 82, 1);
+$light-color: rgba(247, 247, 247, 1);
+$s-size: 0.75rem;
+$m-size: 1rem;
+$l-size: 1.75rem;
+
+// Mobile Devices --iPhone X
+@media screen and (min-width: 320px) and (max-width: 480px) {
+	* {
+		font-family: 'Montserrat', sans-serif;
+		margin: 0%;
+
+		body {
+			background-color: rgba(247, 247, 247, 1);
+			font-size: 1.125rem;
+			overflow-x: hidden;
+		}
+	}
+}
+
+// iPads, Tablets --iPad
+@media screen and (min-width: 481px) and (max-width: 768px) {
+	* {
+		font-family: 'Montserrat', sans-serif;
+		margin: 0%;
+
+		body {
+			background-color:  rgba(247, 247, 247, 1);
+			font-size: 1.125rem;
+			overflow-x: hidden;
+		}
+	}
+}
+
+// Small Screens, Laptops --iPad Pro
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+	* {
+		font-family: 'Montserrat', sans-serif;
+		margin: 0%;
+
+		body {
+			background-color:  rgba(247, 247, 247, 1);
+			font-size: 1.125rem;
+			overflow-x: hidden;
+		}
+	}
+}
+
+// Desktops, Large Screens --Laptop
+@media screen and (min-width: 1025px) and (max-width: 1200px) {
+	* {
+		margin: 0;
+		font-family: 'Montserrat', sans-serif;
+
+		body {
+		  font-size: calc($m-size * 1.5);
+			overflow-x: hidden;
+		}
+	}
+}
+
+// Extra Large Screens, TV --MacBook Air
+@media screen and (min-width: 1201px) {
+	* {
+		margin: 0;
+		font-family: 'Montserrat', sans-serif;
+
+		body {
+		  font-size: calc($m-size * 1.5);
+			overflow-x: hidden;
+		}
+	}
+}

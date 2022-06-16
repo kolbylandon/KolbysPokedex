@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+		<meta name='author' content='Kolby Landon'>
+		<meta name='description' content='Online Pokédex created by Kolby'>
+		<meta name='keywords' content='Online, Pokédex'>
+		<meta name='theme-color' content='rgba(255, 110, 97, 1)'>
+		<meta property='og:description' content='Online Pokédex created by Kolby'>
+		<meta property='og:image:' content='../Images/pokeball.png'>
+		<meta property='og:title' content='Pokédex'>
+		<meta property='og:type' content='website'>
+		<meta property='og:url' content='https://www.kolbyspokedex.io'>
+		<title>Kolby's Pokédex</title>
+		<link href='../Images/pokeball.png' rel='shortcut icon' type='image/png'>
+		<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css'>
+		<link rel='stylesheet' href='../StyleSheets/main.css'>
+		<link rel='stylesheet' href='../StyleSheets/header.css'>
+		<link rel='stylesheet' href='../StyleSheets/root.css'>
+		<script async defer src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+		<script async defer src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js'></script>
+		<script async defer type='module' src='../Scripts/main.js'></script>
+	</head>
+  <body>
+		<header id='header'>
+			<form id='header-form'>
+				<h1 id='header-text'>info</h1>
+				<input id='pokemon-textbox' class='header-element' type='text' maxlength='3' placeholder='Search'/></input>
+				<button id='go-button' class='header-element' type='button'>
+					<span class='button-top'>Go</span>
+				</button>
+				<button id='random-pokemon-button' class='header-element' type='button'>
+					<span class='button-top'>Random Pokémon</span>
+				</button>
+				<button id='previous-button' class='header-element hidden-element' type='button'>
+					<span class='button-top'>Previous</span></button>
+				<button id='next-button' class='header-element hidden-element' type='button'>
+					<span class='button-top'>Next</span>
+				</button>
+				<button id='read-entry-button' class='header-element hidden-element' type='button'>
+					<span class='button-top'>Read Pokédex Entry</span>
+				</button>
+				<button id='clear-button' class='header-element hidden-element' type='button'>
+					<span class='button-top'> X </span>
+				</button>
+			</form>
+		</header>
+		<main id='root' class='hidden-element'>
+			<div id='info-screen' class='screen top-screen'>
+				<ul id='info-unordered-list' class='list-no-bullets'>
+					<li id='number-and-name-list-item' class='info-item'>
+						<span id='number-header' class='headers'></span>
+						<span id='name-header' class='headers'></span>
+					</li>
+					<li id='genus-sub-header-list-item' class='info-item'>
+						<span id='genus-sub-header' class='sub-headers'></span>
+					</li>
+					<li id='generation-list-item' class='info-item'>
+						<span id='generation-header' class='headers'>Generation:</span>
+						<span id='generation-text' class='text'></span>
+					</li>
+					<li id='pokedex-entry-list-item' class='info-item'>
+						<span id='pokedex-entry-header' class='headers'>Pokédex Entry:</span>
+						<span id='pokedex-entry-text' class='text'></span>
+					</li>
+					<li id='height-weight-stats-list-item' class='info-item'>
+						<span id='height-header' class='headers'>Height:</span>
+						<span id='height-text' class='text'></span>
+						<span id='weight-header' class='headers'>Weight:</span>
+						<span id='weight-text' class='text'></span>
+						<span id='stats-header' class='headers'>Base Stats:</span>
+						<span id='stats-text' class='text'></span>
+						<span id='type-header'class='headers'>Types:</span>
+						<span id='type-text' class='type-text'></span>
+						<span id='type-text-2' class='type-text'></span>
+					</li>
+					<li id='abilities-list-item' class='info-item'>
+						<span id='abilities-header' class='headers'>Abilities:</span>
+						<ul id='abilities-unordered-list' class='list-bulleted'></ul>
+					</li>
+				</ul>
+			</div>
+			<div id='sprite-screen' class='screen bottom-screen'>
+				<table id='sprite-table' style='width: 100%'>
+					<tbody>
+						<tr id='sprite-table-front-row'>
+							<td><img id='front-default' class='image front'></td>
+							<td><img id='front-shiny' class='image front'></td>
+						<tr id='sprite-table-back-row'>
+							<td><img id='back-default' class='image back'></td>
+							<td><img id='back-shiny' class='image back'></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id='stats-screen' class='screen bottom-screen'>
+				<canvas id='stats-chart'></canvas>
+			</div>
+		</main>
+  </body>
+</html>
