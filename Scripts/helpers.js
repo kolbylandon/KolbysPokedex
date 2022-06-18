@@ -1,3 +1,4 @@
+'use strict';
 import * as main from './main.js';
 import * as request from './requests.js';
 
@@ -160,7 +161,6 @@ function createArray(elements) {
   }
   return elementArray;
 }
-
 
 function getElementState(elements, state) {
   elements.forEach(element => {

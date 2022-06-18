@@ -1,3 +1,4 @@
+'use strict';
 import * as helpers from './helpers.js';
 import * as statsChart from './statsChart.js';
 import * as main from './main.js';
@@ -15,7 +16,7 @@ const frontDefault = document.getElementById('front-default');
 const frontShiny = document.getElementById('front-shiny');
 const backDefault = document.getElementById('back-default');
 const backShiny = document.getElementById('back-shiny');
-var pokemon = null;
+let pokemon = null;
 
 function populatePage(pokemonResponse, speciesResponse, state) {
   let statTotal = helpers.getStatTotal(pokemonResponse.stats);

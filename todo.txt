@@ -19,11 +19,14 @@ TO DO
 39) Hover over the types and get the strengths and weaknesses of the type.
 42) Host this site so others can see it.
 43) Add media queries for mobile devices.
+44) Make this site into a Progressive Web Application.
 47) Click the Info header text to switch to old css.
+56) Push Enter key to search for Pokémon.
 57) Create two functions for front and back sprites to create less text.
 58) Hover over the held items and create a tooltip to see what they item does.
 59) Get random 'en' flavor text for Pokédex entry.
 61) Have a front/back switch to shiny sprites.
+67) Return the Pokédex number to the textbox if the textbox looses focus.
 68) Recreate API using MongoDB and NodeJS.
 72) See if API has images for Held Items.
 73) Create a getFunctions.js file for all of the functions getting information.
@@ -33,16 +36,17 @@ TO DO
 79) Look into storing the last Pokémon viewed before closing the window.
 80) Look into how to monitor if the width has changed.
 81) Have a matrix background when a member of the Porygon line is selected.
-82) Have gradients instead of a solid border color.
-83) Have the id as a parameter int the URL and pass use that to fetch the requests.
+83) Have the id as a parameter the URL and pass use that to fetch the requests.
+84) Only allow numbers in the search textbox
+85) Switch between forms if the Pokémon has multiple.
+86) Add a tooltip for the short description of the ability on hover.
+88) Break up the helpers.js file.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
-44) Make this site into a Progressive Web Application.
-56) Push Enter key to search for Pokémon.
-67) Return the Pokédex number to the textbox if the textbox looses focus.
 69) Create a custom toast or modal when there is an error.
 75) Create html elements for other screen sizes from the media queries.
+87) Add animations to buttons and root.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -130,3 +134,5 @@ IMPLEMENTED
   Still looking for better options.
 74) Update the Pokémon's ID and name to have it be centered correctly. //The name and ID are now
   centered properly. Padding was added with <li> and had to remove it.
+82) Have gradients instead of a solid border color. //If the Pokémon has multiple types, the border
+  will be a gradient instead of a solid color.

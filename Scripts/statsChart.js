@@ -1,3 +1,4 @@
+'use strict';
 import * as helpers from './helpers.js';
 
 let statsChart = null;

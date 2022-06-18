@@ -1,3 +1,4 @@
+'use strict';
 import * as pokemon from './pokemon.js';
 
 const headers = {
