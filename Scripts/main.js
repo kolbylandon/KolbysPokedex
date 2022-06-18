@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 import * as helpers from './helpers.js';
 import * as pokemon from './pokemon.js';
 
@@ -14,26 +14,29 @@ const screenElements = helpers.createArray(document.getElementsByClassName('scre
 let deviceType = null;
 
 (() => {
+  let id = null;
+  textbox.focus();
   getSystemInformation();
   goButton.onclick = () => {
+    id = textbox.value;
     helpers.stopReadingEntry();
     helpers.generatePokemon(textbox.value, 'visible');
   };
   randomPokemonButton.onclick = () => {
     helpers.stopReadingEntry();
-    let id = ~~(Math.random() * 898) + 1;
+    id = ~~(Math.random() * 898) + 1;
     textbox.value = id;
     helpers.generatePokemon(id, 'visible');
   };
   previousButton.onclick = () => {
     helpers.stopReadingEntry();
-    let id = pokemon.pokemon.id;
+    id = pokemon.pokemon.id;
     helpers.generatePokemon(--id, 'visible');
     textbox.value = id;
   };
   nextButton.onclick = () => {
     helpers.stopReadingEntry();
-    let id = pokemon.pokemon.id;
+    id = pokemon.pokemon.id;
     helpers.generatePokemon(++id, 'visible');
     textbox.value = id;
   };
@@ -65,5 +68,5 @@ function getSystemInformation() {
 export {
   hiddenElements, textbox,
   previousButton, nextButton,
-  screenElements, deviceType
-  }
+  screenElements, deviceType,
+}
