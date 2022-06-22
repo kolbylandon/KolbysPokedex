@@ -1,8 +1,8 @@
-@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 @media screen and (min-width: 320px) and (max-width: 480px) {
   #root {
     background-color: rgb(247, 247, 247);
-    padding-top: 8.5vh;
+    padding-top: 0.5vh;
+    padding-bottom: 8.5vh;
   }
   #root .image {
     display: block;
@@ -18,11 +18,12 @@
     padding: 0.5vh 1.25vw;
   }
   #root .list-no-bullets #number-and-name-list-item {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     text-align: center;
+    font-weight: bolder;
   }
   #root .list-no-bullets #genus-sub-header-list-item {
-    font-weight: bolder;
+    font-weight: bold;
     text-align: center;
   }
   #root .list-no-bullets li {
@@ -33,9 +34,9 @@
     padding: 0.15vh 2vw;
   }
   #root .screen {
+    border: 0.215rem solid rgb(247, 247, 247);
     -o-border-image: linear-gradient(rgb(247, 247, 247), rgb(0, 0, 0));
        border-image: linear-gradient(rgb(247, 247, 247), rgb(0, 0, 0));
-    border-radius: 2rem;
     margin: 1.5vh 3vw;
     box-shadow: 0.4rem 0.4rem 0.8rem 0rem rgba(120, 120, 120, 0.5), -0.4rem -0.4rem 0.8rem 0rem rgb(247, 247, 247);
   }
@@ -297,7 +298,7 @@
     grid-template-columns: 1fr 0.9fr;
     grid-column-gap: 3.5rem;
     grid-row-gap: 1.75rem;
-    padding-top: 7.875rem;
+    padding-top: 6.125rem;
   }
   #root #sprite-screen {
     float: left;
@@ -342,8 +343,7 @@
     list-style-image: url(../Images/pokeball-bullet.png);
   }
   #root .screen {
-    border: 0.3rem solid rgb(247, 247, 247);
-    border-radius: 1.75rem;
+    border: 0.25rem solid transparent;
   }
   #root .top-screen {
     margin-bottom: 0.75rem;
