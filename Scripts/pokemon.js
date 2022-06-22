@@ -26,14 +26,18 @@ function populatePage(pokemonResponse, speciesResponse, state) {
   let genus = helpers.getGenus(speciesResponse.genera);
   getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus);
   let types = helpers.getTypes(pokemon.types);
-  statsChart.displayStatsChart(types, pokemon.hp, pokemon.attack, pokemon.defense, pokemon.spAttack, pokemon.spDefense, pokemon.speed);
-  displayAttributes(pokemon);
+  let backgroundColor =  helpers.convertHexToRgba(types[0], 0.35)
+  let borderColor = helpers.convertHexToRgba(types[1], 0.55)
+  let statsArray = [pokemon.hp, pokemon.attack, pokemon.defense, pokemon.spAttack, pokemon.spDefense, pokemon.speed];
+  let max = helpers.getLargestStat(statsArray);
+  statsChart.displayStatsChart(backgroundColor, borderColor, statsArray, max + 25);
+  displayAttributes();
   helpers.makeButtonsDisappear(pokemon.id);
   helpers.getAbilityList(pokemon.abilities);
   helpers.getElementState(main.hiddenElements, state);
 }
 
-function displayAttributes(pokemon) {
+function displayAttributes() {
   numberHeader.innerText = `#${pokemon.id} `;
   pokemon.name = pokemon.name.includes('mr-') ? pokemon.name.replace('mr-', 'mr. ') :
     pokemon.name.includes('-jr') ? pokemon.name.replace('-jr', ' jr.') :
@@ -44,19 +48,28 @@ function displayAttributes(pokemon) {
   pokedexEntryText.innerText = `${pokemon.pokedexEntry}`;
   heightText.innerText = `${pokemon.height}`;
   weightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
+  statsText.innerText = `${pokemon.baseStatTotal}`;
   if(main.deviceType === 'mobile') {
     weightText.innerHTML += '<br>';
+    statsText.innerHTML += '<br>';
   }
-  statsText.innerText = `${pokemon.baseStatTotal}`;
   if(main.deviceType === 'tablet') {
     statsText.innerHTML += '<br>';
   }
   frontDefault.setAttribute('src', pokemon.frontDefaultSprite);
+  frontDefault.style.width = frontDefault.parentElement.style.width;
+  frontDefault.style.height = frontDefault.parentElement.style.height;
   frontShiny.setAttribute('src', pokemon.frontShinySprite);
   pokemon.backDefaultSprite = pokemon.backDefaultSprite === null ? pokeballPath : pokemon.backDefaultSprite;
+  frontShiny.style.width = frontShiny.parentElement.style.width;
+  frontShiny.style.height = frontShiny.parentElement.style.height;
   backDefault.setAttribute('src', pokemon.backDefaultSprite);
   pokemon.backShinySprite = pokemon.backShinySprite === null ? pokeballPath : pokemon.backShinySprite;
+  backDefault.style.width = backDefault.parentElement.style.width;
+  backDefault.style.height = backDefault.parentElement.style.height;
   backShiny.setAttribute('src', pokemon.backShinySprite);
+  backShiny.style.width = backShiny.parentElement.style.width;
+  backShiny.style.height = backShiny.parentElement.style.height;
 }
 
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
@@ -87,8 +100,6 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     baseStatTotal: statTotal,
     pokedexEntry: entry,
   };
-  console.clear();
-  console.table(pokemon);
   return pokemon;
 }
 

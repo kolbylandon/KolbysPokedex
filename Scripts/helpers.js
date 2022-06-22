@@ -22,8 +22,8 @@ function getAbilityList(abilities) {
   abilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';
   abilitiesUnorderedList.innerHTML = `<ul id='abilities-unordered-list' class='list-bulleted'></ul>`;
   for(let index in abilities) {
-    let listItem = document.createElement('li');
-    let name = upperCaseAfterHyphen(abilities[index].ability.name.capitalize());
+    const listItem = document.createElement('li');
+    const name = upperCaseAfterHyphen(abilities[index].ability.name.capitalize());
     request.requestAbilityEffect(abilities[index].ability.url, listItem, name);
     listItem.style.color = abilities[index].is_hidden === false ? textColor : hiddenAbilityTextColor;
     abilitiesUnorderedList.appendChild(listItem);
@@ -42,7 +42,7 @@ function getPokedexEntry(flavorTextEntries) {
   const regex = /[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000\u000c\n]/g;
   for(let index in flavorTextEntries) {
     if(flavorTextEntries[index].language.name === 'en') {
-      return checkTextForUnwantedCharacters(flavorTextEntries[index].flavor_text, regex, ' ');
+      return flavorTextEntries[index].flavor_text.replace(regex, ' ');
     }
   }
   return null;
@@ -67,44 +67,40 @@ function getWeight(weight) {
 }
 
 function getTypes(types) {
-  let typeArray = [];
-  let firstType = types[0].type.name;
+  const firstType = types[0].type.name;
   let firstColor = getTypeColor(firstType);
-  typeArray.push(firstColor);
-  // spriteScreen.style.borderColor = firstColor;
+  let firstBorderColor = convertHexToRgba(firstColor, 1)
   typeText.innerText = firstType;
   typeText.style.backgroundColor = convertHexToRgba(firstColor, 0.6);
-  typeHeader.innerText = 'Type:';
-  // infoScreen.style.borderColor = firstColor;
-  // statsScreen.style.borderColor = firstColor;
-  infoScreen.style.borderImage = 'linear-gradient(' + convertHexToRgba(firstColor, 1) + ', ' + convertHexToRgba(firstColor, 1) + ') 1';
-  statsScreen.style.borderImage = 'linear-gradient(' + convertHexToRgba(firstColor, 1) + ', ' + convertHexToRgba(firstColor, 1) + ') 1';
-  spriteScreen.style.borderImage = 'linear-gradient(' + convertHexToRgba(firstColor, 1) + ', ' + convertHexToRgba(firstColor, 1) + ') 1';
-  typeText2.hidden = true;
-  if(types.length === 2) {
-    let secondType = types[1].type.name;
-    let secondColor = getTypeColor(secondType);
-    typeHeader.innerText = 'Types:';
-    infoScreen.style.borderColor = secondColor;
+  let secondColor = null;
+  let secondBorderColor = null;
+  if(types.length === 1) {
+    typeHeader.innerText = 'Type:';
+    typeText2.hidden = true;
+    secondColor = firstColor;
+    secondBorderColor = firstBorderColor;
+  } else {
+    const secondType = types[1].type.name;
+    secondColor = getTypeColor(secondType);
+    secondBorderColor = convertHexToRgba(secondColor, 1)
     typeText2.innerText = secondType;
     typeText2.style.backgroundColor = convertHexToRgba(secondColor, 0.6);
+    typeHeader.innerText = 'Types:';
     typeText2.hidden = false;
-    infoScreen.style.borderImage = 'linear-gradient(' + convertHexToRgba(firstColor, 1) + ', ' + convertHexToRgba(secondColor, 1) + ') 1';
-    statsScreen.style.borderImage = 'linear-gradient(' + convertHexToRgba(firstColor, 1) + ', ' + convertHexToRgba(secondColor, 1) + ') 1';
-    spriteScreen.style.borderImage = 'linear-gradient(' + convertHexToRgba(firstColor, 1) + ', ' + convertHexToRgba(secondColor, 1) + ') 1';
-    typeArray.push(secondColor);
-    console.log(typeArray)
-    return secondColor;
   }
-  return firstColor;
+  infoScreen.style.borderImage =`linear-gradient(${firstBorderColor}, ${secondBorderColor}) 1`;
+  spriteScreen.style.borderImage =`linear-gradient(${firstBorderColor}, ${secondBorderColor}) 1`;
+  statsScreen.style.borderImage =`linear-gradient(${firstBorderColor}, ${secondBorderColor}) 1`;
+  return [firstColor, secondColor];
 }
 
-function checkTextForUnwantedCharacters(text, regex, replacementCharacter) {
-  return text.replace(regex, replacementCharacter);
+function getRandomPokemon() {
+  return ~~(Math.random() * 898) + 1
 }
 
 function upperCaseAfterHyphen(hyphenatedString) {
-  return hyphenatedString.replace(/\-[a-z]/g, (match) => {
+  const regex = /\-[a-z]/g
+  return hyphenatedString.replace(regex, (match) => {
     return match.toUpperCase();
   });
 }
@@ -140,15 +136,7 @@ function getTypeColor(type) {
   return cases[type];
 }
 
-function getLargestStat(hp, attack, defense, spAttack, spDefense, speed) {
-  const statsArray = [
-    hp,
-    attack,
-    defense,
-    spAttack,
-    spDefense,
-    speed,
-  ];
+function getLargestStat(statsArray) {
   return Math.round(statsArray.reduce((stat, max) => {
     return stat > max ? stat : max;
   }, 0) / 25) * 25;
@@ -208,7 +196,7 @@ function getDeviceType() {
 }
 
 function headerLayout(deviceType, goButton, randomPokemonButton, previousButton, nextButton, readEntryButton, clearButton) {
-  if(deviceType === 'mobile') {//(screenWidth <= 480) {
+  if(deviceType === 'mobile') {
     goButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-magnifying-glass"></i></span>';
     randomPokemonButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-shuffle"></i></span>';
     previousButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-angle-left"></i></span>';
@@ -216,7 +204,7 @@ function headerLayout(deviceType, goButton, randomPokemonButton, previousButton,
     readEntryButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-book-open-reader"></i></span>';
     clearButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-x"></i></span>';
     return;
-  } else if(deviceType === 'tablet') {//(screenWidth >= 481 && screenWidth <= 768) {
+  } else if(deviceType === 'tablet') {
     randomPokemonButton.innerHTML = '<span class="button-top">Random</span>';
     previousButton.innerHTML = '<span class="button-top">Prev</span>';
   } else {
@@ -238,11 +226,9 @@ String.prototype.capitalize = function() {
 }
 
 export {
-  checkTextForUnwantedCharacters, getStatTotal,
-  getPokedexEntry, getElementState, upperCaseAfterHyphen,
-  convertHexToRgba, getHeight, getWeight, getTypes,
-  getTypeColor, getLargestStat, createArray, generatePokemon,
-  makeButtonsDisappear, readPokedexEntry, stopReadingEntry,
-  getAbilityList, getGenus, headerLayout, getDeviceType,
-  textColor, hiddenAbilityTextColor, statsChart,
+  getStatTotal, getPokedexEntry, getElementState, upperCaseAfterHyphen,
+  convertHexToRgba, getHeight, getWeight, getTypes, getTypeColor,
+  getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
+  readPokedexEntry, stopReadingEntry, getAbilityList, getGenus, getRandomPokemon,
+  headerLayout, getDeviceType, textColor, hiddenAbilityTextColor, statsChart,
 };

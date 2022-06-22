@@ -10,21 +10,19 @@ const nextButton = document.getElementById('next-button');
 const readEntryButton = document.getElementById('read-entry-button');
 const clearButton = document.getElementById('clear-button');
 const hiddenElements = helpers.createArray(document.getElementsByClassName('hidden-element'));
-const screenElements = helpers.createArray(document.getElementsByClassName('screen'));
 let deviceType = null;
+let id = null;
 
 (() => {
-  let id = null;
-  textbox.focus();
   getSystemInformation();
   goButton.onclick = () => {
     id = textbox.value;
     helpers.stopReadingEntry();
-    helpers.generatePokemon(textbox.value, 'visible');
+    helpers.generatePokemon(id, 'visible');
   };
   randomPokemonButton.onclick = () => {
     helpers.stopReadingEntry();
-    id = ~~(Math.random() * 898) + 1;
+    id = helpers.getRandomPokemon();
     textbox.value = id;
     helpers.generatePokemon(id, 'visible');
   };
@@ -54,6 +52,7 @@ let deviceType = null;
     textbox.value = '';
   });
   helpers.getElementState(hiddenElements, 'hidden');
+  textbox.focus();
 }) ();
 
 window.onresize = () => {
@@ -68,5 +67,5 @@ function getSystemInformation() {
 export {
   hiddenElements, textbox,
   previousButton, nextButton,
-  screenElements, deviceType,
+  deviceType,
 }

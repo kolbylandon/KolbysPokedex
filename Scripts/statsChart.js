@@ -3,31 +3,17 @@ import * as helpers from './helpers.js';
 
 let statsChart = null;
 
-function displayStatsChart(color, hp, attack, defense, spAttack, spDefense, speed) {
+function displayStatsChart(backgroundColor, borderColor, stats, max) {
   if(statsChart != null) {
     statsChart.destroy();
   }
   let chart = helpers.statsChart;
   let data = {
-    labels: [
-      'HP',
-      'Attack',
-      'Defense',
-      'Sp.Atk',
-      'Sp.Def',
-      'Speed',
-    ],
+    labels: [ 'HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed', ],
     datasets: [{
-      data: [
-        hp,
-        attack,
-        defense,
-        spAttack,
-        spDefense,
-        speed,
-      ],
-      backgroundColor: helpers.convertHexToRgba(color, 0.35),
-      borderColor: helpers.convertHexToRgba(color, 0.55),
+      data: [ stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], ],
+      backgroundColor,
+      borderColor,
     }],
   };
   let options = {
@@ -53,7 +39,7 @@ function displayStatsChart(color, hp, attack, defense, spAttack, spDefense, spee
     scales: {
       r: {
         min: 0,
-        max: helpers.getLargestStat(hp, attack, defense, spAttack, spDefense, speed) + 25,
+        max,
         ticks: {
           color: helpers.textColor,
           stepSize: 25,
