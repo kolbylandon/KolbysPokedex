@@ -3,6 +3,7 @@ import * as main from './main.js';
 import * as request from './requests.js';
 
 const synth = window.speechSynthesis;
+const toast = document.getElementById('toast');
 const spriteScreen = document.getElementById('sprite-screen');
 const typeText = document.getElementById('type-text');
 const typeText2 = document.getElementById('type-text-2');
@@ -15,6 +16,7 @@ const abilitiesHeader = document.getElementById('abilities-header');
 const nameHeader = document.getElementById('name-header');
 const pokemonEntryText = document.getElementById('pokedex-entry-text');
 const genusSubHeader = document.getElementById('genus-sub-header');
+const toastText = document.getElementById('toast-text');
 const textColor = '#606060';
 const hiddenAbilityTextColor = '#ff6f61';
 
@@ -165,12 +167,18 @@ function makeButtonsDisappear(id) {
 }
 
 function generatePokemon(pokedexNumber, state) {
-  pokedexNumber >= 1 && pokedexNumber <= 898 ? request.requestPokemon(pokedexNumber, state) : alert(`Please enter a valid Pokédex number`); //!Replace with a modal or toast
+  pokedexNumber >= 1 && pokedexNumber <= 898 ? request.requestPokemon(pokedexNumber, state) : showToast('Please enter a valid Pokédex number');
   scrollToTop();
 }
 
 function readPokedexEntry() {
   synth.speaking ? stopReadingEntry() : startReadingEntry(nameHeader.textContent, genusSubHeader.textContent, pokemonEntryText.textContent);
+}
+
+function showToast(text) {
+  toastText.innerText = text;
+  toast.classList.add('toast-active');
+  main.textbox.focus();
 }
 
 function stopReadingEntry() {
@@ -227,7 +235,7 @@ String.prototype.capitalize = function() {
 
 export {
   getStatTotal, getPokedexEntry, getElementState, upperCaseAfterHyphen,
-  convertHexToRgba, getHeight, getWeight, getTypes, getTypeColor,
+  convertHexToRgba, getHeight, getWeight, getTypes, getTypeColor, showToast,
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   readPokedexEntry, stopReadingEntry, getAbilityList, getGenus, getRandomPokemon,
   headerLayout, getDeviceType, textColor, hiddenAbilityTextColor, statsChart,

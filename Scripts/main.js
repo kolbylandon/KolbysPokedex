@@ -9,48 +9,55 @@ const previousButton = document.getElementById('previous-button');
 const nextButton = document.getElementById('next-button');
 const readEntryButton = document.getElementById('read-entry-button');
 const clearButton = document.getElementById('clear-button');
+const closeButton = document.getElementById('close-button');
+const toast = document.getElementById('toast');
 const hiddenElements = helpers.createArray(document.getElementsByClassName('hidden-element'));
 let deviceType = null;
 let id = null;
 
 (() => {
   getSystemInformation();
-  goButton.onclick = () => {
+  goButton.addEventListener('click', () => {
     id = textbox.value;
     helpers.stopReadingEntry();
     helpers.generatePokemon(id, 'visible');
-  };
-  randomPokemonButton.onclick = () => {
+  });
+  randomPokemonButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
     id = helpers.getRandomPokemon();
     textbox.value = id;
     helpers.generatePokemon(id, 'visible');
-  };
-  previousButton.onclick = () => {
+  });
+  previousButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
     id = pokemon.pokemon.id;
     helpers.generatePokemon(--id, 'visible');
     textbox.value = id;
-  };
-  nextButton.onclick = () => {
+  });
+  nextButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
     id = pokemon.pokemon.id;
     helpers.generatePokemon(++id, 'visible');
     textbox.value = id;
-  };
-  readEntryButton.onclick = () => {
+  });
+  readEntryButton.addEventListener('click', () => {
     helpers.readPokedexEntry();
-  };
-  clearButton.onclick = () => {
+  });
+  clearButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
     textbox.value = '';
     helpers.getElementState(hiddenElements, 'hidden');
-    textbox.focus();
+    closeButton.click();
     console.clear();
-  };
+  });
+  closeButton.addEventListener('click', () => {
+    toast.classList.remove('toast-active');
+    textbox.focus();
+  });
   textbox.addEventListener('focus', () => {
     textbox.value = '';
   });
+
   helpers.getElementState(hiddenElements, 'hidden');
   textbox.focus();
 }) ();

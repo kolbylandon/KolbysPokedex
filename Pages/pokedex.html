@@ -18,6 +18,7 @@
 		<link rel='stylesheet' href='../StyleSheets/main.css'>
 		<link rel='stylesheet' href='../StyleSheets/header.css'>
 		<link rel='stylesheet' href='../StyleSheets/root.css'>
+		<!-- <script async defer src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 		<script async defer src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js'></script>
 		<!-- <script async defer src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script> -->
 		<script async defer type='module' src='../Scripts/main.js'></script>
@@ -47,8 +48,15 @@
 				</button>
 			</form>
 		</header>
-		<main id='root' class='hidden-element'>
-			<div id='info-screen' class='screen top-screen'>
+		<main id='root'>
+			<div id='toast' class='toast'>
+				<svg xmlns='http://www.w3.org/2000/svg' fill='non' class='icon' viewBox='0 0 24 24' stroke='currentColor'>
+					<path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'/>
+				</svg>
+				<p id="toast-text" class='text'></p>
+				<button id='close-button' class='close-button'>&#10005;</button>
+			</div>
+			<div id='info-screen' class='screen top-screen hidden-element'>
 				<ul id='info-unordered-list' class='list-no-bullets'>
 					<li id='number-and-name-list-item' class='info-item'>
 						<span id='number-header' class='headers'></span>
@@ -82,7 +90,7 @@
 					</li>
 				</ul>
 			</div>
-			<div id='sprite-screen' class='screen bottom-screen'>
+			<div id='sprite-screen' class='screen bottom-screen hidden-element'>
 				<table id='sprite-table' style='width: 100%'>
 					<tbody>
 						<tr id='sprite-table-front-row'>
@@ -95,7 +103,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div id='stats-screen' class='screen bottom-screen'>
+			<div id='stats-screen' class='screen bottom-screen hidden-element'>
 				<canvas id='stats-chart'></canvas>
 			</div>
 		</main>

@@ -31,17 +31,18 @@ TO DO
 78) Look into how to implement service workers.
 79) Look into storing the last Pokémon viewed before closing the window.
 81) Have a matrix background when a member of the Porygon line is selected.
+83) Have the id as a parameter the URL and pass use that to fetch the requests.
 84) Only allow numbers in the search textbox
 85) Switch between forms if the Pokémon has multiple.
 86) Add a tooltip for the short description of the ability on hover.
 87) Add animations to buttons and root.
 88) Break up the helpers.js file.
+89) Change Read Entry to Stop Reading while synth.speak is active.
+90) Allow to search by Pokémon name.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
-69) Create a custom toast or modal when there is an error.
 75) Create html elements for other screen sizes from the media queries.
-83) Have the id as a parameter the URL and pass use that to fetch the requests.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -131,6 +132,8 @@ IMPLEMENTED
   on what elements are being styled.
 66) Create a Regular Expression to check the Pokédex number. //Created a function to check against
   a Regular Expression to see if number from the input is valid.
+69) Create a custom toast or modal when there is an error. //The toast is now in place and is called
+  when there is an error.
 70) Fix Mr. Mime and Mime Jr.'s names. //The dashes in the names have been fixed on the pokemon.name
   to show periods.
 71) Show a Pokéball when a sprite is unavailable. //Now shows a Pokéball when the sprite is null.

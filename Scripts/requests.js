@@ -1,5 +1,6 @@
 'use strict';
 import * as pokemon from './pokemon.js';
+import * as helpers from './helpers.js';
 
 const headers = {
   accept: 'text/html,application/xhtml+xml',
@@ -26,7 +27,7 @@ async function requestPokemon(pokedexNumber, state) {
   })
   .catch(exception => {
     const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    alert(errorMessage); //!Replace with a modal or toast
+    helpers.showToast(errorMessage);
     console.error(errorMessage);
   });
 }
@@ -50,7 +51,7 @@ async function requestAbilityEffect(url, listItem, name) {
   })
   .catch(exception => {
     const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    alert(errorMessage); //!Replace with a modal or toast
+    helpers.showToast(errorMessage);
     console.error(errorMessage);
   });
 }
