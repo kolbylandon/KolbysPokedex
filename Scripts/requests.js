@@ -28,7 +28,7 @@ async function requestPokemon(pokedexNumber, state) {
   .catch(exception => {
     const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
     helpers.showToast(errorMessage);
-    console.error(errorMessage);
+    console.table(exception);
   });
 }
 
@@ -52,7 +52,7 @@ async function requestAbilityEffect(url, listItem, name) {
   .catch(exception => {
     const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
     helpers.showToast(errorMessage);
-    console.error(errorMessage);
+    console.table(exception);
   });
 }
 
