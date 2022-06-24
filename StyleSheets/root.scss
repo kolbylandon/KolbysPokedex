@@ -142,7 +142,7 @@ $l-size: 1.75rem;
       color: rgba(247, 247, 247, 1);
     }
 
-    .text {
+    #toast-text {
       color: rgba(247, 247, 247, 1);
     }
 
@@ -564,27 +564,27 @@ $l-size: 1.75rem;
       color: rgba(247, 247, 247, 1);
     }
 
-    .text {
-      color: rgba(247, 247, 247, 1);
+    #toast-text {
+      color: rgba(0, 0, 0, 1);
     }
 
     .toast {
       display: flex;
       align-items: center;
       position: absolute;
-      top: 5rem;
+      top: 5.5rem;
       right: -50%;
-      background-color: rgba(0, 0, 0, 1);
+      background-color: rgba(247, 247, 247, 1);
       border-radius: 0.5rem;
       padding: 0.5rem 1rem;
-      border: 0.55rem solid rgba(255, 110, 97, 1);
+      border: 0.25rem solid rgba(255, 110, 97, 1);
       opacity: 0%;
       transition: all 0.25s ease-out;
     }
 
     .show-toast {
-      background-color: rgba(0, 0, 0, 1);
-      color: rgba(247, 247, 247, 1);
+      background-color: rgba(247, 247, 247, 1);
+      color: rgba(0, 0, 0, 1);
       border-radius: 0.5rem;
       padding: 0.5rem;
       cursor: pointer;
@@ -596,8 +596,8 @@ $l-size: 1.75rem;
     }
 
     .close-button {
-      background-color: rgba(0, 0, 0, 1);
-      color: rgba(247, 247, 247, 1);
+      background-color: rgba(247, 247, 247, 1);
+      color: rgba(0, 0, 0, 1);
       border: none;
       cursor: pointer;
     }
