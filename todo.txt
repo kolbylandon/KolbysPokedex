@@ -22,17 +22,15 @@ TO DO
 57) Create two functions for front and back sprites to create less text.
 58) Hover over the held items and create a tooltip to see what they item does.
 59) Get random 'en' flavor text for Pokédex entry.
-67) Return the Pokédex number to the textbox if the textbox looses focus.
 68) Recreate API using MongoDB and NodeJS.
 72) See if API has images for Held Items.
 73) Create a getFunctions.js file for all of the functions getting information.
 76) Create a custom stylized scrollbar.
 77) Recall previously viewed Pokémon via a button.
 78) Look into how to implement service workers.
-79) Look into storing the last Pokémon viewed before closing the window.
 81) Have a matrix background when a member of the Porygon line is selected.
 83) Have the id as a parameter the URL and pass use that to fetch the requests.
-84) Only allow numbers in the search textbox
+84) Only allow numbers in the search textbox.
 85) Switch between forms if the Pokémon has multiple.
 86) Add a tooltip for the short description of the ability on hover.
 87) Add animations to buttons and root.
@@ -132,6 +130,8 @@ IMPLEMENTED
   on what elements are being styled.
 66) Create a Regular Expression to check the Pokédex number. //Created a function to check against
   a Regular Expression to see if number from the input is valid.
+67) Return the Pokédex number to the textbox if the textbox looses focus. //Added a blur event
+  listener to recall the Pokémon's ID
 69) Create a custom toast or modal when there is an error. //The toast is now in place and is called
   when there is an error.
 70) Fix Mr. Mime and Mime Jr.'s names. //The dashes in the names have been fixed on the pokemon.name
@@ -140,6 +140,8 @@ IMPLEMENTED
   Still looking for better options.
 74) Update the Pokémon's ID and name to have it be centered correctly. //The name and ID are now
   centered properly. Padding was added with <li> and had to remove it.
+79) Look into storing the last Pokémon viewed before closing the window. //The last ID is now stored
+  locally and calls the generatePokemon method.
 80) Look into how to monitor if the width has changed. //Using window.onresize, I call
   getSystemInformation() and change elements based on the width.
 82) Have gradients instead of a solid border color. //If the Pokémon has multiple types, the border

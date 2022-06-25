@@ -17,6 +17,10 @@ let id = null;
 
 (() => {
   getSystemInformation();
+  if(localStorage.getItem('id')) {
+    id = localStorage.getItem('id');
+    helpers.generatePokemon(id, 'visible');
+  }
   goButton.addEventListener('click', () => {
     id = textbox.value;
     helpers.stopReadingEntry();
@@ -30,24 +34,25 @@ let id = null;
   });
   previousButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
-    id = pokemon.pokemon.id;
-    helpers.generatePokemon(--id, 'visible');
+    id = --pokemon.pokemon.id;
     textbox.value = id;
+    helpers.generatePokemon(id, 'visible');
   });
   nextButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
-    id = pokemon.pokemon.id;
-    helpers.generatePokemon(++id, 'visible');
+    id = ++pokemon.pokemon.id;
     textbox.value = id;
+    helpers.generatePokemon(id, 'visible');
   });
   readEntryButton.addEventListener('click', () => {
     helpers.readPokedexEntry();
   });
   clearButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
-    textbox.value = '';
+    id = null;
     helpers.getElementState(hiddenElements, 'hidden');
     closeButton.click();
+    localStorage.removeItem('id');
     console.clear();
   });
   closeButton.addEventListener('click', () => {
