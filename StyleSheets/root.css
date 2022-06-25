@@ -456,12 +456,6 @@
     grid-row-gap: 1.75rem;
     padding-top: 6.125rem;
   }
-  #root .icon {
-    height: 2rem;
-    width: 2rem;
-    margin-right: 1rem;
-    color: rgb(247, 247, 247);
-  }
   #root #toast-text {
     color: rgb(0, 0, 0);
   }

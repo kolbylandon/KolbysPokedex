@@ -557,13 +557,6 @@ $l-size: 1.75rem;
     grid-row-gap: $l-size;
     padding-top: calc($l-size * 3.5);
 
-    .icon {
-      height: 2rem;
-      width: 2rem;
-      margin-right: 1rem;
-      color: rgba(247, 247, 247, 1);
-    }
-
     #toast-text {
       color: rgba(0, 0, 0, 1);
     }
