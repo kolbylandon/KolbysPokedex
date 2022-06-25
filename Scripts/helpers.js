@@ -19,24 +19,29 @@ const genusSubHeader = document.getElementById('genus-sub-header');
 const toastText = document.getElementById('toast-text');
 const textColor = '#606060';
 const hiddenAbilityTextColor = '#ff6f61';
+const minimumPokemon = 1;
+const maximumPokemon = 898;
 
 function getAbilityList(abilities) {
   abilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';
   abilitiesUnorderedList.innerHTML = `<ul id='abilities-unordered-list' class='list-bulleted'></ul>`;
-  for(let index in abilities) {
+  let counter = 0;
+  abilities.forEach(ability => {
     const listItem = document.createElement('li');
-    const name = upperCaseAfterHyphen(abilities[index].ability.name.capitalize());
-    request.requestAbilityEffect(abilities[index].ability.url, listItem, name);
-    listItem.style.color = abilities[index].is_hidden === false ? textColor : hiddenAbilityTextColor;
+    listItem.id = `flavor-text-${++counter}`;
+    listItem.classList.add('flavor-text')
+    const name = upperCaseAfterHyphen(ability.ability.name.capitalize());
+    request.requestAbilityEffect(ability.ability.url, listItem, name);
+    listItem.style.color = ability.is_hidden === false ? textColor : hiddenAbilityTextColor;
     abilitiesUnorderedList.appendChild(listItem);
-  }
+  });
 }
 
 function getStatTotal(stats) {
   let statTotal = 0;
-  for(let index in stats) {
-    statTotal += stats[index].base_stat;
-  }
+  stats.forEach(stat => {
+    statTotal += stat.base_stat;
+  });
   return statTotal;
 }
 
@@ -97,7 +102,7 @@ function getTypes(types) {
 }
 
 function getRandomPokemon() {
-  return ~~(Math.random() * 898) + 1
+  return ~~(Math.random() * maximumPokemon) + 1
 }
 
 function upperCaseAfterHyphen(hyphenatedString) {
@@ -162,12 +167,18 @@ function getElementState(elements, state) {
 }
 
 function makeButtonsDisappear(id) {
-  id === 1 ? main.previousButton.style.display = 'none' : main.previousButton.style.display = 'inline-block';
-  id === 898 ? main.nextButton.style.display = 'none' : main.nextButton.style.display = 'inline-block';
+  id === minimumPokemon ? main.previousButton.style.display = 'none' : main.previousButton.style.display = 'inline-block';
+  id === maximumPokemon ? main.nextButton.style.display = 'none' : main.nextButton.style.display = 'inline-block';
+}
+
+function populateStorage(id) {
+  localStorage.removeItem('id');
+  localStorage.setItem('id', id);
 }
 
 function generatePokemon(pokedexNumber, state) {
-  pokedexNumber >= 1 && pokedexNumber <= 898 ? request.requestPokemon(pokedexNumber, state) : showToast('Please enter a valid Pokédex number');
+  pokedexNumber >= minimumPokemon && pokedexNumber <= maximumPokemon ? request.requestPokemon(pokedexNumber, state) : showToast('Please enter a valid Pokédex number');
+  populateStorage(pokedexNumber);
   scrollToTop();
 }
 
@@ -200,7 +211,7 @@ function getDeviceType() {
   } else if(/Mobile|iP(hone|od)|Android|Blackberry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(agent)) {
     return 'mobile';
   }
-  return 'desktop'
+  return 'desktop';
 }
 
 function headerLayout(deviceType, goButton, randomPokemonButton, previousButton, nextButton, readEntryButton, clearButton) {
@@ -208,7 +219,7 @@ function headerLayout(deviceType, goButton, randomPokemonButton, previousButton,
     goButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-magnifying-glass"></i></span>';
     randomPokemonButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-shuffle"></i></span>';
     previousButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-angle-left"></i></span>';
-    nextButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-angle-right"></i></span>'
+    nextButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-angle-right"></i></span>';
     readEntryButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-book-open-reader"></i></span>';
     clearButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-x"></i></span>';
     return;
