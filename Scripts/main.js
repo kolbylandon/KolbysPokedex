@@ -57,7 +57,11 @@ let id = null;
   textbox.addEventListener('focus', () => {
     textbox.value = '';
   });
-
+  textbox.addEventListener('blur', () => {
+    if(textbox.value === '') {
+      textbox.value = id;
+    }
+  });
   helpers.getElementState(hiddenElements, 'hidden');
   textbox.focus();
 }) ();
