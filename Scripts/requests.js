@@ -38,14 +38,14 @@ async function requestAbilityEffect(url, listItem, name) {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
   .then(abilityEffectResponse => {
-    abilityEffectResponse.flavor_text_entries.forEach(element => {
-      if(element.language.name === 'en') {
-        listItem.innerHTML = `<u>${name}:</u> ${element.flavor_text}`;
+    abilityEffectResponse.flavor_text_entries.forEach(entry => {
+      if(entry.language.name === 'en') {
+        listItem.innerHTML = `<u>${name}-</u> ${entry.flavor_text}`;
       }
     });
-    abilityEffectResponse.effect_entries.forEach(element => {
-      if(element.language.name === 'en') {
-        console.info(`${name}: ${element.short_effect}`);
+    abilityEffectResponse.effect_entries.forEach(entry => {
+      if(entry.language.name === 'en') {
+        console.info(`${name}- ${entry.short_effect}`);
       }
     });
   })
@@ -56,6 +56,27 @@ async function requestAbilityEffect(url, listItem, name) {
   });
 }
 
+async function requestHeldItem(url, listItem, name) {
+  await fetch(url, headers)
+  .then(response => {
+    return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
+  })
+  .then(heldItemResponse => {
+    heldItemResponse.effect_entries.forEach(entry => {
+      if(entry.language.name === 'en') {
+        listItem.innerHTML = `<u>${name}-</u> ${entry.short_effect}`;
+        console.info(`${name}- ${entry.effect}`);
+      }
+    });
+  })
+  .catch(exception => {
+    const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
+    helpers.showToast(errorMessage);
+    console.table(exception);
+  });
+}
+
+
 export {
-  requestPokemon, requestAbilityEffect,
+  requestPokemon, requestAbilityEffect, requestHeldItem,
 };

@@ -1,7 +1,6 @@
 TO DO
 -----------------------------------------------------------------------------------------
 06) Show move sets in a grid including other information about the attack.
-07) Show held items in a list format.
 11) Explore https://pokeapi.co/api/v2/ for new items to add to the info screen.
 12) Refactor for efficiency.
 15) Allow generatePreviousPokedexEntry when user has searched by Pokémon name.
@@ -11,7 +10,6 @@ TO DO
 22) Rewrite javascript files in typescript.
 26) Search footprints on the API, if they exist, show them in the info screen.
 30) Add console logs to the script.
-31) Change to female form when clicking on the stats-chart.
 32) If the Pokémon is a baby or ice, have particles.js be snow in the background.
 37) Hover over the abilities and see what the ability does.
 39) Hover over the types and get the strengths and weaknesses of the type.
@@ -31,7 +29,6 @@ TO DO
 81) Have a matrix background when a member of the Porygon line is selected.
 83) Have the id as a parameter the URL and pass use that to fetch the requests.
 84) Only allow numbers in the search textbox.
-85) Switch between forms if the Pokémon has multiple.
 86) Add a tooltip for the short description of the ability on hover.
 87) Add animations to buttons and root.
 88) Break up the helpers.js file.
@@ -40,7 +37,9 @@ TO DO
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
+31) Change to female form when clicking on the stats-chart.
 75) Create html elements for other screen sizes from the media queries.
+85) Switch between forms if the Pokémon has multiple.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -54,6 +53,7 @@ IMPLEMENTED
   makes new fetch requests using the generateNextPokedexEntry function.
 05) Base stats into radar chart. //The chart for stats is generated from the
   displayStatsChart function, convertHexToRgba and getLargestStat are helper functions.
+07) Show held items in a list format.
 08) Make abilities and is_hidden into a property of Pokémon. //Abilities is a property,
   but is_hidden does not make sense to make a property at this time.
 09) Make generation into a property of pokemon. //The property for generation is

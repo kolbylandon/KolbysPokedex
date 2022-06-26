@@ -34,6 +34,7 @@ function populatePage(pokemonResponse, speciesResponse, state) {
   displayAttributes();
   helpers.makeButtonsDisappear(pokemon.id);
   helpers.getAbilityList(pokemon.abilities);
+  helpers.getHeldItemList(pokemon.heldItems);
   helpers.getElementState(main.hiddenElements, state);
 }
 
@@ -74,7 +75,7 @@ function displayAttributes() {
 
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
   pokemon = {
-    id: pokemonResponse.id,
+    id: speciesResponse.id,
     name: pokemonResponse.name,
     genus: genus,
     abilities: pokemonResponse.abilities,
@@ -85,6 +86,7 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     isLegendary: speciesResponse.is_legendary,
     isMythical: speciesResponse.is_mythical,
     types: pokemonResponse.types,
+    varieties: speciesResponse.varieties,
     hp: pokemonResponse.stats[0].base_stat,
     attack: pokemonResponse.stats[1].base_stat,
     defense: pokemonResponse.stats[2].base_stat,
@@ -100,6 +102,8 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     baseStatTotal: statTotal,
     pokedexEntry: entry,
   };
+  // console.clear();
+  console.table(pokemon);
   return pokemon;
 }
 

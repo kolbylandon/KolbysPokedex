@@ -13,6 +13,8 @@ const statsScreen = document.getElementById('stats-screen');
 const statsChart = document.getElementById('stats-chart');
 const abilitiesUnorderedList = document.getElementById('abilities-unordered-list');
 const abilitiesHeader = document.getElementById('abilities-header');
+const heldItemsUnorderedList = document.getElementById('held-items-unordered-list');
+const heldItemsHeader = document.getElementById('held-items-header');
 const nameHeader = document.getElementById('name-header');
 const pokemonEntryText = document.getElementById('pokedex-entry-text');
 const genusSubHeader = document.getElementById('genus-sub-header');
@@ -29,11 +31,32 @@ function getAbilityList(abilities) {
   abilities.forEach(ability => {
     const listItem = document.createElement('li');
     listItem.id = `flavor-text-${++counter}`;
-    listItem.classList.add('flavor-text')
+    listItem.classList.add('flavor-text');
     const name = upperCaseAfterHyphen(ability.ability.name.capitalize());
     request.requestAbilityEffect(ability.ability.url, listItem, name);
     listItem.style.color = ability.is_hidden === false ? textColor : hiddenAbilityTextColor;
     abilitiesUnorderedList.appendChild(listItem);
+  });
+}
+
+function getHeldItemList(heldItems) {
+  if(heldItems.length === 0) {
+    heldItemsHeader.innerText = '';
+  } else if(heldItems.length === 1) {
+    heldItemsHeader.innerText = 'Held Item:';
+  } else {
+    heldItemsHeader.innerText = 'Held Items:';
+  }
+  heldItemsUnorderedList.innerHTML = `<ul id='held-items-unordered-list' class='list-bulleted'></ul>`;
+  let counter = 0;
+  heldItems.forEach(heldItem => {
+    const listItem = document.createElement('li');
+    listItem.id = `held-item-text-${++counter}`;
+    listItem.classList.add('held-item-text');
+    const name = upperCaseAfterHyphen(heldItem.item.name.capitalize());
+    request.requestHeldItem(heldItem.item.url, listItem, name);
+    listItem.style.color = textColor;
+    heldItemsUnorderedList.appendChild(listItem);
   });
 }
 
@@ -246,8 +269,9 @@ String.prototype.capitalize = function() {
 
 export {
   getStatTotal, getPokedexEntry, getElementState, upperCaseAfterHyphen,
-  convertHexToRgba, getHeight, getWeight, getTypes, getTypeColor, showToast,
+  convertHexToRgba, getHeight, getWeight, getTypes, getTypeColor,
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   readPokedexEntry, stopReadingEntry, getAbilityList, getGenus, getRandomPokemon,
-  headerLayout, getDeviceType, textColor, hiddenAbilityTextColor, statsChart,
+  headerLayout, getDeviceType, getHeldItemList, getRandomPokemon, showToast,
+  textColor, hiddenAbilityTextColor, statsChart,
 };
