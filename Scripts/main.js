@@ -12,6 +12,7 @@ const clearButton = document.getElementById('clear-button');
 const closeButton = document.getElementById('close-button');
 const toast = document.getElementById('toast');
 const hiddenElements = helpers.createArray(document.getElementsByClassName('hidden-element'));
+let skipIdValidation = false;
 let deviceType = null;
 let id = null;
 
@@ -19,30 +20,30 @@ let id = null;
   getSystemInformation();
   if(localStorage.getItem('id')) {
     id = localStorage.getItem('id');
-    helpers.generatePokemon(id, 'visible');
+    helpers.generatePokemon(id, 'visible', skipIdValidation);
   }
   goButton.addEventListener('click', () => {
     id = textbox.value;
     helpers.stopReadingEntry();
-    helpers.generatePokemon(id, 'visible');
+    helpers.generatePokemon(id, 'visible', skipIdValidation);
   });
   randomPokemonButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
     id = helpers.getRandomPokemon();
     textbox.value = id;
-    helpers.generatePokemon(id, 'visible');
+    helpers.generatePokemon(id, 'visible', skipIdValidation);
   });
   previousButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
     id = --pokemon.pokemon.id;
     textbox.value = id;
-    helpers.generatePokemon(id, 'visible');
+    helpers.generatePokemon(id, 'visible', skipIdValidation);
   });
   nextButton.addEventListener('click', () => {
     helpers.stopReadingEntry();
     id = ++pokemon.pokemon.id;
     textbox.value = id;
-    helpers.generatePokemon(id, 'visible');
+    helpers.generatePokemon(id, 'visible', skipIdValidation);
   });
   readEntryButton.addEventListener('click', () => {
     helpers.readPokedexEntry();
@@ -56,6 +57,9 @@ let id = null;
     console.clear();
   });
   closeButton.addEventListener('click', () => {
+    toast.classList.remove('toast-active');
+  });
+  toast.addEventListener('click', () => {
     toast.classList.remove('toast-active');
     textbox.focus();
   });

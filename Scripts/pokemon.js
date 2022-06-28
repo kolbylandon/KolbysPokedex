@@ -35,6 +35,7 @@ function populatePage(pokemonResponse, speciesResponse, state) {
   helpers.makeButtonsDisappear(pokemon.id);
   helpers.getAbilityList(pokemon.abilities);
   helpers.getHeldItemList(pokemon.heldItems);
+  helpers.getFormList(pokemon.forms);
   helpers.getElementState(main.hiddenElements, state);
 }
 
@@ -58,17 +59,23 @@ function displayAttributes() {
     statsText.innerHTML += '<br>';
   }
   frontDefault.setAttribute('src', pokemon.frontDefaultSprite);
+  frontDefault.setAttribute('alt', 'Image Not Available');
+  pokemon.frontDefaultSprite = pokemon.frontDefaultSprite === null ? pokeballPath : pokemon.frontDefaultSprite;
   frontDefault.style.width = frontDefault.parentElement.style.width;
   frontDefault.style.height = frontDefault.parentElement.style.height;
   frontShiny.setAttribute('src', pokemon.frontShinySprite);
+  frontShiny.setAttribute('alt', 'Image Not Available');
   pokemon.backDefaultSprite = pokemon.backDefaultSprite === null ? pokeballPath : pokemon.backDefaultSprite;
   frontShiny.style.width = frontShiny.parentElement.style.width;
   frontShiny.style.height = frontShiny.parentElement.style.height;
   backDefault.setAttribute('src', pokemon.backDefaultSprite);
+  backDefault.setAttribute('alt', 'Image Not Available');
   pokemon.backShinySprite = pokemon.backShinySprite === null ? pokeballPath : pokemon.backShinySprite;
   backDefault.style.width = backDefault.parentElement.style.width;
   backDefault.style.height = backDefault.parentElement.style.height;
   backShiny.setAttribute('src', pokemon.backShinySprite);
+  backShiny.setAttribute('alt', 'Image Not Available');
+  pokemon.backShinySprite = pokemon.backShinySprite === null ? pokeballPath : pokemon.backShinySprite;
   backShiny.style.width = backShiny.parentElement.style.width;
   backShiny.style.height = backShiny.parentElement.style.height;
 }
@@ -86,24 +93,36 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     isLegendary: speciesResponse.is_legendary,
     isMythical: speciesResponse.is_mythical,
     types: pokemonResponse.types,
-    varieties: speciesResponse.varieties,
+    forms: speciesResponse.varieties,
     hp: pokemonResponse.stats[0].base_stat,
     attack: pokemonResponse.stats[1].base_stat,
     defense: pokemonResponse.stats[2].base_stat,
     spAttack: pokemonResponse.stats[3].base_stat,
     spDefense: pokemonResponse.stats[4].base_stat,
     speed: pokemonResponse.stats[5].base_stat,
-    hasGenderDifferences: speciesResponse.has_gender_differences,
+    baseStatTotal: statTotal,
+    generation: speciesResponse.generation.name.substring(11).toUpperCase(),
+    pokedexEntry: entry,
     frontDefaultSprite: pokemonResponse.sprites.front_default,
     backDefaultSprite: pokemonResponse.sprites.back_default,
     frontShinySprite: pokemonResponse.sprites.front_shiny,
     backShinySprite: pokemonResponse.sprites.back_shiny,
-    generation: speciesResponse.generation.name.substring(11).toUpperCase(),
-    baseStatTotal: statTotal,
-    pokedexEntry: entry,
+    hasGenderDifferences: speciesResponse.has_gender_differences,
   };
-  // console.clear();
+  if(pokemon.hasGenderDifferences) {
+    pokemon.frontFemaleSprite = pokemonResponse.sprites.front_female;
+    pokemon.backFemaleSprite = pokemonResponse.sprites.back_female;
+    pokemon.frontFemaleShinySprite = pokemonResponse.sprites.front_shiny_female;
+    pokemon.backFemaleShinySprite = pokemonResponse.sprites.back_shiny_female;
+  } else {
+    pokemon.frontFemaleSprite = null;
+    pokemon.backFemaleSprite = null;
+    pokemon.frontFemaleShinySprite = null;
+    pokemon.backFemaleShinySprite = null;
+  }
+  console.clear();
   console.table(pokemon);
+  helpers.populateStorage(pokemon.id);
   return pokemon;
 }
 

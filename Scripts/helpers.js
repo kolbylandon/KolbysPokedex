@@ -14,8 +14,10 @@ const statsChart = document.getElementById('stats-chart');
 const abilitiesUnorderedList = document.getElementById('abilities-unordered-list');
 const abilitiesHeader = document.getElementById('abilities-header');
 const heldItemsUnorderedList = document.getElementById('held-items-unordered-list');
+const formsUnorderedList = document.getElementById('forms-unordered-list');
 const heldItemsHeader = document.getElementById('held-items-header');
 const nameHeader = document.getElementById('name-header');
+const formsHeader = document.getElementById('forms-header');
 const pokemonEntryText = document.getElementById('pokedex-entry-text');
 const genusSubHeader = document.getElementById('genus-sub-header');
 const toastText = document.getElementById('toast-text');
@@ -41,13 +43,17 @@ function getAbilityList(abilities) {
 
 function getHeldItemList(heldItems) {
   if(heldItems.length === 0) {
-    heldItemsHeader.innerText = '';
+    heldItemsHeader.style.display = 'none';
+    heldItemsUnorderedList.style.display = 'none';
+    return;
   } else if(heldItems.length === 1) {
     heldItemsHeader.innerText = 'Held Item:';
   } else {
     heldItemsHeader.innerText = 'Held Items:';
   }
   heldItemsUnorderedList.innerHTML = `<ul id='held-items-unordered-list' class='list-bulleted'></ul>`;
+  heldItemsHeader.style.display = 'block';
+  heldItemsUnorderedList.style.display = 'block';
   let counter = 0;
   heldItems.forEach(heldItem => {
     const listItem = document.createElement('li');
@@ -57,6 +63,30 @@ function getHeldItemList(heldItems) {
     request.requestHeldItem(heldItem.item.url, listItem, name);
     listItem.style.color = textColor;
     heldItemsUnorderedList.appendChild(listItem);
+  });
+}
+
+function getFormList(forms) {
+  if(forms.length === 1) {
+    formsHeader.style.display = 'none';
+    formsUnorderedList.style.display = 'none';
+    return;
+  } else {
+    formsHeader.style.display = 'block';
+    formsUnorderedList.style.display = 'block';
+  }
+  formsUnorderedList.innerHTML = `<ul id='forms-unordered-list' class='list-bulleted'></ul>`;
+  let counter = 0;
+  forms.forEach(form => {
+    const listItem = document.createElement('li');
+    listItem.id = `forms-text-${++counter}`;
+    listItem.classList.add('form-text');
+    request.requestForm(form.pokemon.url, listItem);
+    listItem.style.color = textColor;
+    formsUnorderedList.appendChild(listItem);
+    listItem.addEventListener('click', () => {
+      generatePokemon(form.pokemon.url.substring(34).replace('/', ''), 'visible', true);
+    });
   });
 }
 
@@ -75,7 +105,7 @@ function getPokedexEntry(flavorTextEntries) {
       return flavorTextEntries[index].flavor_text.replace(regex, ' ');
     }
   }
-  return null;
+  return;
 }
 
 function getGenus(genera) {
@@ -199,10 +229,16 @@ function populateStorage(id) {
   localStorage.setItem('id', id);
 }
 
-function generatePokemon(pokedexNumber, state) {
-  pokedexNumber >= minimumPokemon && pokedexNumber <= maximumPokemon ? request.requestPokemon(pokedexNumber, state) : showToast('Please enter a valid Pokédex number');
-  populateStorage(pokedexNumber);
+function generatePokemon(id, state, skipIdValidation) {
   scrollToTop();
+  if(skipIdValidation === false && (id >= minimumPokemon || id <= maximumPokemon)) {
+    request.requestPokemon(id, state);
+    return;
+  } else if(skipIdValidation === true) {
+    request.requestPokemon(id, state);
+    return;
+  }
+    showToast('Please enter a valid Pokédex number');
 }
 
 function readPokedexEntry() {
@@ -263,8 +299,12 @@ function scrollToTop() {
   window.scrollTo(0, 0);
 }
 
-String.prototype.capitalize = function() {
+String.prototype.capitalize = function () {
   return `${this.charAt(0).toUpperCase()}${this.slice(1)}`;
+}
+
+function capitalize(string) {
+  return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
 }
 
 export {
@@ -272,6 +312,6 @@ export {
   convertHexToRgba, getHeight, getWeight, getTypes, getTypeColor,
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   readPokedexEntry, stopReadingEntry, getAbilityList, getGenus, getRandomPokemon,
-  headerLayout, getDeviceType, getHeldItemList, getRandomPokemon, showToast,
-  textColor, hiddenAbilityTextColor, statsChart,
+  headerLayout, getDeviceType, getHeldItemList, showToast, getFormList,
+  capitalize, populateStorage, textColor, hiddenAbilityTextColor, statsChart,
 };
