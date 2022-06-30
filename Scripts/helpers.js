@@ -24,7 +24,7 @@ const toastText = document.getElementById('toast-text');
 const textColor = '#606060';
 const hiddenAbilityTextColor = '#ff6f61';
 const minimumPokemon = 1;
-const maximumPokemon = 898;
+const maximumPokemon = 905;
 
 function getAbilityList(abilities) {
   abilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';

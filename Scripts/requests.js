@@ -3,10 +3,12 @@ import * as pokemon from './pokemon.js';
 import * as helpers from './helpers.js';
 
 const headers = {
-  accept: 'text/html,application/xhtml+xml',
-  method: 'GET',
-  connection: 'keep-alive',
-  host: 'pokeapi.co',
+  'accept': 'text/html,application/xhtml+xml',
+  'accept-encoding': 'gzip, deflate, compress, br',
+  'connection': 'keep-alive',
+  'content-encoding': 'br',
+  'host': 'pokeapi.co',
+  'method': 'GET',
 };
 
 async function requestPokemon(pokedexNumber, state) {

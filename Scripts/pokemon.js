@@ -30,7 +30,7 @@ function populatePage(pokemonResponse, speciesResponse, state) {
   let borderColor = helpers.convertHexToRgba(types[1], 0.55)
   let statsArray = [pokemon.hp, pokemon.attack, pokemon.defense, pokemon.spAttack, pokemon.spDefense, pokemon.speed];
   let max = helpers.getLargestStat(statsArray);
-  statsChart.displayStatsChart(backgroundColor, borderColor, statsArray, max + 25);
+  statsChart.displayStatsChart(backgroundColor, borderColor, statsArray, max + 25, pokemon.name);
   displayAttributes();
   helpers.makeButtonsDisappear(pokemon.id);
   helpers.getAbilityList(pokemon.abilities);
@@ -50,12 +50,11 @@ function displayAttributes() {
   pokedexEntryText.innerText = `${pokemon.pokedexEntry}`;
   heightText.innerText = `${pokemon.height}`;
   weightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
-  statsText.innerText = `${pokemon.baseStatTotal}`;
   if(main.deviceType === 'mobile') {
     weightText.innerHTML += '<br>';
-    statsText.innerHTML += '<br>';
   }
-  if(main.deviceType === 'tablet') {
+  statsText.innerText = `${pokemon.baseStatTotal}`;
+  if(main.deviceType === 'mobile' || main.deviceType === 'tablet') {
     statsText.innerHTML += '<br>';
   }
   frontDefault.setAttribute('src', pokemon.frontDefaultSprite);
@@ -83,7 +82,7 @@ function displayAttributes() {
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
   pokemon = {
     id: speciesResponse.id,
-    name: pokemonResponse.name,
+    name: pokemonResponse.species.name,
     genus: genus,
     abilities: pokemonResponse.abilities,
     heldItems: pokemonResponse.held_items,

@@ -3,7 +3,7 @@ import * as helpers from './helpers.js';
 
 let statsChart = null;
 
-function displayStatsChart(backgroundColor, borderColor, stats, max) {
+function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
   if(statsChart != null) {
     statsChart.destroy();
   }
@@ -39,6 +39,10 @@ function displayStatsChart(backgroundColor, borderColor, stats, max) {
       },
     },
     plugins: {
+      title: {
+        display: true,
+        text: `Stats For ${helpers.capitalize(name)}`,
+      },
       legend: {
         display: false,
       },
