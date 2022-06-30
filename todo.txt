@@ -36,12 +36,16 @@ TO DO
 90) Allow the user to search by Pokémon name.
 91) Fix the header in mobile to stick to the bottom of the screen.
 92) Use the images from the held items as the bullets for the items list.
+93) Use Service Worker to get fetch the other forms' information.
+94) See if other forms have other Pokédex entries.
+96) Fix Pokémon numbers 899-905.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
 31) Change to female form when clicking on the stats-chart.
 75) Create html elements for other screen sizes from the media queries.
 93) Fix the Pokémon name to not have text after the hyphens.
+95) Animate the gradient border.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------

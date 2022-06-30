@@ -73,6 +73,11 @@ $l-size: 1.75rem;
 		body {
 		  font-size: calc($m-size * 1.5);
 			overflow-x: hidden;
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+		body::-webkit-scrollbar {
+			display: none;
 		}
 	}
 }

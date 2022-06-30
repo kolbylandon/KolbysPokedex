@@ -50,5 +50,10 @@
   * body {
     font-size: 1.5rem;
     overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  * body::-webkit-scrollbar {
+    display: none;
   }
 }/*# sourceMappingURL=main.css.map */
