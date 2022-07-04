@@ -1,31 +1,19 @@
 'use strict';
-import * as helpers from './helpers.js';
+import { capitalize, punctuationNameCheck, TextColor, } from './helpers.js';
 
+const RadarChart = document.getElementById('stats-chart');
 let statsChart = null;
 
 function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
   if(statsChart != null) {
     statsChart.destroy();
   }
-  let chart = helpers.statsChart;
+  name = punctuationNameCheck(name);
+  let chart = RadarChart;
   let data = {
-    labels: [
-      'HP',
-      'Attack',
-      'Defense',
-      'Sp.Atk',
-      'Sp.Def',
-      'Speed',
-    ],
+    labels: [ 'HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed', ],
     datasets: [{
-      data: [
-        stats[0],
-        stats[1],
-        stats[2],
-        stats[3],
-        stats[4],
-        stats[5],
-      ],
+      data: [ stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], ],
       backgroundColor,
       borderColor,
     }],
@@ -41,7 +29,7 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
     plugins: {
       title: {
         display: true,
-        text: `Stats For ${helpers.capitalize(name)}`,
+        text: `Stats For ${capitalize(name)}`,
       },
       legend: {
         display: false,
@@ -59,11 +47,11 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
         min: 0,
         max,
         ticks: {
-          color: helpers.textColor,
+          color: TextColor,
           stepSize: 25,
         },
         grid: {
-          color: helpers.textColor,
+          color: TextColor,
         },
       },
     },

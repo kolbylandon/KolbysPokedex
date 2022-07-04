@@ -1,8 +1,8 @@
 'use strict';
-import * as pokemon from './pokemon.js';
-import * as helpers from './helpers.js';
+import { populatePage, } from './pokemon.js';
+import { capitalize, punctuationNameCheck, showToast, } from './helpers.js';
 
-const headers = {
+const Headers = {
   'accept': 'text/html,application/xhtml+xml',
   'accept-encoding': 'gzip, deflate, compress, br',
   'connection': 'keep-alive',
@@ -11,31 +11,32 @@ const headers = {
   'method': 'GET',
 };
 
-async function requestPokemon(pokedexNumber, state) {
+async function requestPokemon(id, visibility) {
   let pokemonResponse  = null;
-  await fetch(`https://pokeapi.co/api/v2/pokemon/${pokedexNumber}`, headers)
+  await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, Headers)
   .then(response => {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
   .then(data => {
     pokemonResponse = data;
-    return fetch(pokemonResponse.species.url, headers);
+    return fetch(pokemonResponse.species.url, Headers);
   })
   .then(response => {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
   .then(speciesResponse => {
-    return pokemon.populatePage(pokemonResponse, speciesResponse, state);
+    return populatePage(pokemonResponse, speciesResponse, visibility);
   })
   .catch(exception => {
-    const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    helpers.showToast(errorMessage);
+    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
+    showToast(ErrorMessage);
     console.table(exception);
   });
 }
 
+//!Remove hyphens
 async function requestAbilityEffect(url, listItem, name) {
-  await fetch(url, headers)
+  await fetch(url, Headers)
   .then(response => {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
@@ -48,48 +49,50 @@ async function requestAbilityEffect(url, listItem, name) {
     });
   })
   .catch(exception => {
-    const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    helpers.showToast(errorMessage);
+    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
+    showToast(ErrorMessage);
     console.table(exception);
   });
 }
 
+//!Remove hyphens
 async function requestHeldItem(url, listItem, name) {
-  await fetch(url, headers)
+  await fetch(url, Headers)
   .then(response => {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
   .then(heldItemResponse => {
     heldItemResponse.effect_entries.forEach(entry => {
       if(entry.language.name === 'en') {
-        listItem.innerHTML = `<u>${name}-</u> ${entry.effect}`;
+        let effect = entry.effect.replaceAll('-', ' ')
+        listItem.innerHTML = `<u>${name}-</u> ${effect}`;
         return;
       }
     });
   })
   .catch(exception => {
-    const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    helpers.showToast(errorMessage);
+    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
+    showToast(ErrorMessage);
     console.table(exception);
   });
 }
 
 async function requestForm(url, listItem) {
-  await fetch(url, headers)
+  await fetch(url, Headers)
   .then(response => {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
   .then(formsResponse => {
     formsResponse.forms.forEach(form => {
-      let name = helpers.upperCaseAfterHyphen(helpers.capitalize(form.name));
+      let name = punctuationNameCheck(form.name);
       name = name.replaceAll('-', ' ');
-      listItem.innerText = name;
+      listItem.innerText = capitalize(name);
       return;
     });
   })
   .catch(exception => {
-    const errorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    helpers.showToast(errorMessage);
+    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
+    showToast(ErrorMessage);
     console.table(exception);
   });
 }

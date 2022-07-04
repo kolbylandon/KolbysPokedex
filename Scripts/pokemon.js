@@ -1,84 +1,79 @@
 'use strict';
-import * as helpers from './helpers.js';
-import * as statsChart from './statsChart.js';
-import * as main from './main.js';
+import { convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus, getHeight, getHeldItemList, getLargestStat,
+  getPokedexEntry, getStatTotal, getTypes, getWeight, makeButtonsDisappear, punctuationNameCheck, populateStorage, } from './helpers.js';
+import { displayStatsChart } from './statsChart.js';
+import { deviceType, HiddenElementsArray } from './main.js';
 
-const pokeballPath = '../Images/pokeball.png';
-const numberHeader = document.getElementById('number-header');
-const nameHeader = document.getElementById('name-header');
-const genusSubHeader = document.getElementById('genus-sub-header');
-const generationText = document.getElementById('generation-text');
-const pokedexEntryText = document.getElementById('pokedex-entry-text');
-const heightText = document.getElementById('height-text');
-const weightText = document.getElementById('weight-text');
-const statsText = document.getElementById('stats-text');
-const frontDefault = document.getElementById('front-default');
-const frontShiny = document.getElementById('front-shiny');
-const backDefault = document.getElementById('back-default');
-const backShiny = document.getElementById('back-shiny');
+const NumberHeader = document.getElementById('number-header');
+const NameHeader = document.getElementById('name-header');
+const GenusSubHeader = document.getElementById('genus-sub-header');
+const GenerationText = document.getElementById('generation-text');
+const PokedexEntryText = document.getElementById('pokedex-entry-text');
+const HeightText = document.getElementById('height-text');
+const WeightText = document.getElementById('weight-text');
+const StatsText = document.getElementById('stats-text');
+const FrontDefault = document.getElementById('front-default');
+const FrontShiny = document.getElementById('front-shiny');
+const BackDefault = document.getElementById('back-default');
+const BackShiny = document.getElementById('back-shiny');
 let pokemon = null;
 
-function populatePage(pokemonResponse, speciesResponse, state) {
-  let statTotal = helpers.getStatTotal(pokemonResponse.stats);
-  let entry = helpers.getPokedexEntry(speciesResponse.flavor_text_entries);
-  let height = helpers.getHeight(pokemonResponse.height);
-  let weight = helpers.getWeight(pokemonResponse.weight);
-  let genus = helpers.getGenus(speciesResponse.genera);
+function populatePage(pokemonResponse, speciesResponse, visibility) {
+  let statTotal = getStatTotal(pokemonResponse.stats);
+  let entry = getPokedexEntry(speciesResponse.flavor_text_entries);
+  let height = getHeight(pokemonResponse.height);
+  let weight = getWeight(pokemonResponse.weight);
+  let genus = getGenus(speciesResponse.genera);
   getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus);
-  let types = helpers.getTypes(pokemon.types);
-  let backgroundColor =  helpers.convertHexToRgba(types[0], 0.35)
-  let borderColor = helpers.convertHexToRgba(types[1], 0.55)
+  let types = getTypes(pokemon.types);
+  let backgroundColor =  convertHexToRgba(types[0], 0.35)
+  let borderColor = convertHexToRgba(types[1], 0.55)
   let statsArray = [pokemon.hp, pokemon.attack, pokemon.defense, pokemon.spAttack, pokemon.spDefense, pokemon.speed];
-  let max = helpers.getLargestStat(statsArray);
-  statsChart.displayStatsChart(backgroundColor, borderColor, statsArray, max + 25, pokemon.name);
+  let max = getLargestStat(statsArray);
+  displayStatsChart(backgroundColor, borderColor, statsArray, max + 25, pokemon.name);
   displayAttributes();
-  helpers.makeButtonsDisappear(pokemon.id);
-  helpers.getAbilityList(pokemon.abilities);
-  helpers.getHeldItemList(pokemon.heldItems);
-  helpers.getFormList(pokemon.forms);
-  helpers.getElementState(main.hiddenElements, state);
+  makeButtonsDisappear(pokemon.id);
+  getAbilityList(pokemon.abilities);
+  getHeldItemList(pokemon.heldItems);
+  getFormList(pokemon.forms);
+  getElementVisibility(HiddenElementsArray, visibility);
 }
 
 function displayAttributes() {
-  numberHeader.innerText = `#${pokemon.id} `;
-  pokemon.name = pokemon.name.includes('mr-') ? pokemon.name.replace('mr-', 'mr. ') :
-    pokemon.name.includes('-jr') ? pokemon.name.replace('-jr', ' jr.') :
-    pokemon.name;
-  nameHeader.innerText = `${pokemon.name.toUpperCase()}`;
-  genusSubHeader.innerText = `The ${pokemon.genus}`;
-  generationText.innerText = `${pokemon.generation}`;
-  pokedexEntryText.innerText = `${pokemon.pokedexEntry}`;
-  heightText.innerText = `${pokemon.height}`;
-  weightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
-  if(main.deviceType === 'mobile') {
-    weightText.innerHTML += '<br>';
+  NumberHeader.innerText = `#${pokemon.id} `;
+  pokemon.name = punctuationNameCheck(pokemon.name);
+  NameHeader.innerText = `${pokemon.name.toUpperCase()}`;
+  GenusSubHeader.innerText = `The ${pokemon.genus}`;
+  GenerationText.innerText = `${pokemon.generation}`;
+  PokedexEntryText.innerText = `${pokemon.pokedexEntry}`;
+  HeightText.innerText = `${pokemon.height}`;
+  WeightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
+  if(deviceType === 'mobile') {
+    WeightText.innerHTML += '<br>';
   }
-  statsText.innerText = `${pokemon.baseStatTotal}`;
-  if(main.deviceType === 'mobile' || main.deviceType === 'tablet') {
-    statsText.innerHTML += '<br>';
+  StatsText.innerText = `${pokemon.baseStatTotal}`;
+  if(deviceType === 'mobile' || deviceType === 'tablet') {
+    StatsText.innerHTML += '<br>';
   }
-  frontDefault.setAttribute('src', pokemon.frontDefaultSprite);
-  frontDefault.setAttribute('alt', 'Image Not Available');
-  pokemon.frontDefaultSprite = pokemon.frontDefaultSprite === null ? pokeballPath : pokemon.frontDefaultSprite;
-  frontDefault.style.width = frontDefault.parentElement.style.width;
-  frontDefault.style.height = frontDefault.parentElement.style.height;
-  frontShiny.setAttribute('src', pokemon.frontShinySprite);
-  frontShiny.setAttribute('alt', 'Image Not Available');
-  pokemon.backDefaultSprite = pokemon.backDefaultSprite === null ? pokeballPath : pokemon.backDefaultSprite;
-  frontShiny.style.width = frontShiny.parentElement.style.width;
-  frontShiny.style.height = frontShiny.parentElement.style.height;
-  backDefault.setAttribute('src', pokemon.backDefaultSprite);
-  backDefault.setAttribute('alt', 'Image Not Available');
-  pokemon.backShinySprite = pokemon.backShinySprite === null ? pokeballPath : pokemon.backShinySprite;
-  backDefault.style.width = backDefault.parentElement.style.width;
-  backDefault.style.height = backDefault.parentElement.style.height;
-  backShiny.setAttribute('src', pokemon.backShinySprite);
-  backShiny.setAttribute('alt', 'Image Not Available');
-  pokemon.backShinySprite = pokemon.backShinySprite === null ? pokeballPath : pokemon.backShinySprite;
-  backShiny.style.width = backShiny.parentElement.style.width;
-  backShiny.style.height = backShiny.parentElement.style.height;
+  FrontDefault.setAttribute('src', pokemon.FrontDefaultSprite);
+  FrontDefault.setAttribute('alt', 'Front Sprite Not Available');
+  FrontDefault.style.width = FrontDefault.parentElement.style.width;
+  FrontDefault.style.height = FrontDefault.parentElement.style.height;
+  FrontShiny.setAttribute('src', pokemon.FrontShinySprite);
+  FrontShiny.setAttribute('alt', 'Front Shiny Sprite Not Available');
+  FrontShiny.style.width = FrontShiny.parentElement.style.width;
+  FrontShiny.style.height = FrontShiny.parentElement.style.height;
+  BackDefault.setAttribute('src', pokemon.BackDefaultSprite);
+  BackDefault.setAttribute('alt', 'Back Sprite Not Available');
+  BackDefault.style.width = BackDefault.parentElement.style.width;
+  BackDefault.style.height = BackDefault.parentElement.style.height;
+  BackShiny.setAttribute('src', pokemon.BackShinySprite);
+  BackShiny.setAttribute('alt', 'Back Shiny Sprite Not Available');
+  BackShiny.style.width = BackShiny.parentElement.style.width;
+  BackShiny.style.height = BackShiny.parentElement.style.height;
 }
 
+//! Combine stats into an array
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
   pokemon = {
     id: speciesResponse.id,
@@ -102,10 +97,10 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     baseStatTotal: statTotal,
     generation: speciesResponse.generation.name.substring(11).toUpperCase(),
     pokedexEntry: entry,
-    frontDefaultSprite: pokemonResponse.sprites.front_default,
-    backDefaultSprite: pokemonResponse.sprites.back_default,
-    frontShinySprite: pokemonResponse.sprites.front_shiny,
-    backShinySprite: pokemonResponse.sprites.back_shiny,
+    FrontDefaultSprite: pokemonResponse.sprites.front_default,
+    BackDefaultSprite: pokemonResponse.sprites.back_default,
+    FrontShinySprite: pokemonResponse.sprites.front_shiny,
+    BackShinySprite: pokemonResponse.sprites.back_shiny,
     hasGenderDifferences: speciesResponse.has_gender_differences,
   };
   if(pokemon.hasGenderDifferences) {
@@ -121,10 +116,10 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
   }
   console.clear();
   console.table(pokemon);
-  helpers.populateStorage(pokemon.id);
+  populateStorage(pokemon.id);
   return pokemon;
 }
 
 export {
-  populatePage, getPokemonObject, pokemon,
+  populatePage, pokemon,
 };

@@ -1,91 +1,92 @@
 'use strict';
-import * as helpers from './helpers.js';
-import * as pokemon from './pokemon.js';
+import { createArray, generatePokemon, getDeviceType, getElementVisibility,
+  getRandomPokemon, headerLayout, readPokedexEntry, Synth, } from './helpers.js';
+import { pokemon } from './pokemon.js';
 
-const textbox = document.getElementById('pokemon-textbox');
-const goButton = document.getElementById('go-button');
-const randomPokemonButton = document.getElementById('random-pokemon-button');
-const previousButton = document.getElementById('previous-button');
-const nextButton = document.getElementById('next-button');
-const readEntryButton = document.getElementById('read-entry-button');
-const clearButton = document.getElementById('clear-button');
-const closeButton = document.getElementById('close-button');
-const toast = document.getElementById('toast');
-const hiddenElements = helpers.createArray(document.getElementsByClassName('hidden-element'));
+const Textbox = document.getElementById('pokemon-textbox');
+const GoButton = document.getElementById('go-button');
+const RandomPokemonButton = document.getElementById('random-pokemon-button');
+const PreviousButton = document.getElementById('previous-button');
+const NextButton = document.getElementById('next-button');
+const ReadEntryButton = document.getElementById('read-entry-button');
+const ClearButton = document.getElementById('clear-button');
+const CloseButton = document.getElementById('close-button');
+const Toast = document.getElementById('toast');
+const HiddenElementsArray = createArray(document.getElementsByClassName('hidden-element'));
 let skipIdValidation = false;
 let deviceType = null;
 let id = null;
 
+//! Combine some of the Event listeners into one function
 (() => {
   getSystemInformation();
   if(localStorage.getItem('id')) {
     id = localStorage.getItem('id');
-    helpers.generatePokemon(id, 'visible', skipIdValidation);
+    generatePokemon(id, 'visible', skipIdValidation);
   }
-  goButton.addEventListener('click', () => {
-    id = textbox.value;
-    helpers.stopReadingEntry();
-    helpers.generatePokemon(id, 'visible', skipIdValidation);
+  GoButton.addEventListener('click', () => {
+    Synth.cancel();
+    id = Textbox.value;
+    generatePokemon(id, 'visible', skipIdValidation);
   });
-  randomPokemonButton.addEventListener('click', () => {
-    helpers.stopReadingEntry();
-    id = helpers.getRandomPokemon();
-    textbox.value = id;
-    helpers.generatePokemon(id, 'visible', skipIdValidation);
+  RandomPokemonButton.addEventListener('click', () => {
+    Synth.cancel();
+    id = getRandomPokemon();
+    Textbox.value = id;
+    generatePokemon(id, 'visible', skipIdValidation);
   });
-  previousButton.addEventListener('click', () => {
-    helpers.stopReadingEntry();
-    id = --pokemon.pokemon.id;
-    textbox.value = id;
-    helpers.generatePokemon(id, 'visible', skipIdValidation);
+  PreviousButton.addEventListener('click', () => {
+    Synth.cancel();
+    id = --pokemon.id;
+    Textbox.value = id;
+    generatePokemon(id, 'visible', skipIdValidation);
   });
-  nextButton.addEventListener('click', () => {
-    helpers.stopReadingEntry();
-    id = ++pokemon.pokemon.id;
-    textbox.value = id;
-    helpers.generatePokemon(id, 'visible', skipIdValidation);
+  NextButton.addEventListener('click', () => {
+    Synth.cancel();
+    id = ++pokemon.id;
+    Textbox.value = id;
+    generatePokemon(id, 'visible', skipIdValidation);
   });
-  readEntryButton.addEventListener('click', () => {
-    helpers.readPokedexEntry();
+  ReadEntryButton.addEventListener('click', () => {
+    readPokedexEntry();
   });
-  clearButton.addEventListener('click', () => {
-    helpers.stopReadingEntry();
+  ClearButton.addEventListener('click', () => {
+    Synth.cancel();
     id = null;
-    helpers.getElementState(hiddenElements, 'hidden');
-    closeButton.click();
+    getElementVisibility(HiddenElementsArray, 'hidden');
+    CloseButton.click();
     localStorage.removeItem('id');
     console.clear();
   });
-  closeButton.addEventListener('click', () => {
-    toast.classList.remove('toast-active');
+  CloseButton.addEventListener('click', () => {
+    Toast.classList.remove('Toast-active');
   });
-  toast.addEventListener('click', () => {
-    toast.classList.remove('toast-active');
-    textbox.focus();
+  Toast.addEventListener('click', () => {
+    Toast.classList.remove('Toast-active');
+    Textbox.focus();
   });
-  textbox.addEventListener('focus', () => {
-    textbox.value = '';
+  Textbox.addEventListener('focus', () => {
+    Textbox.value = '';
   });
-  textbox.addEventListener('blur', () => {
-    if(textbox.value === '') {
-      textbox.value = id;
+  Textbox.addEventListener('blur', () => {
+    if(Textbox.value === '') {
+      Textbox.value = id;
     }
   });
-  helpers.getElementState(hiddenElements, 'hidden');
-  textbox.focus();
+  getElementVisibility(HiddenElementsArray, 'hidden');
+  Textbox.focus();
 }) ();
 
 window.onresize = () => {
   getSystemInformation();
 }
 
+//! Move getSystemInformation to helpers.js
 function getSystemInformation() {
-  deviceType = helpers.getDeviceType();
-  helpers.headerLayout(deviceType, goButton, randomPokemonButton, previousButton, nextButton, readEntryButton, clearButton);
+  deviceType = getDeviceType();
+  headerLayout(deviceType, GoButton, RandomPokemonButton, PreviousButton, NextButton, ReadEntryButton, ClearButton);
 }
 
 export {
-  hiddenElements, textbox,
-  previousButton, nextButton,
-  deviceType,
+  HiddenElementsArray, PreviousButton, NextButton, Textbox, Toast, deviceType,
 }
