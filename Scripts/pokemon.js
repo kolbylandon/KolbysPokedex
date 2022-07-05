@@ -28,9 +28,8 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   let types = getTypes(pokemon.types);
   let backgroundColor =  convertHexToRgba(types[0], 0.35)
   let borderColor = convertHexToRgba(types[1], 0.55)
-  let statsArray = [pokemon.hp, pokemon.attack, pokemon.defense, pokemon.spAttack, pokemon.spDefense, pokemon.speed];
-  let max = getLargestStat(statsArray);
-  displayStatsChart(backgroundColor, borderColor, statsArray, max + 25, pokemon.name);
+  let max = getLargestStat(pokemon.statsArray);
+  displayStatsChart(backgroundColor, borderColor, pokemon.statsArray, max + 25, pokemon.name);
   displayAttributes();
   makeButtonsDisappear(pokemon.id);
   getAbilityList(pokemon.abilities);
@@ -73,7 +72,6 @@ function displayAttributes() {
   BackShiny.style.height = BackShiny.parentElement.style.height;
 }
 
-//! Combine stats into an array
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
   pokemon = {
     id: speciesResponse.id,
@@ -88,12 +86,8 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     isMythical: speciesResponse.is_mythical,
     types: pokemonResponse.types,
     forms: speciesResponse.varieties,
-    hp: pokemonResponse.stats[0].base_stat,
-    attack: pokemonResponse.stats[1].base_stat,
-    defense: pokemonResponse.stats[2].base_stat,
-    spAttack: pokemonResponse.stats[3].base_stat,
-    spDefense: pokemonResponse.stats[4].base_stat,
-    speed: pokemonResponse.stats[5].base_stat,
+    statsArray: [pokemonResponse.stats[0].base_stat, pokemonResponse.stats[1].base_stat, pokemonResponse.stats[2].base_stat,
+      pokemonResponse.stats[3].base_stat, pokemonResponse.stats[4].base_stat, pokemonResponse.stats[5].base_stat],
     baseStatTotal: statTotal,
     generation: speciesResponse.generation.name.substring(11).toUpperCase(),
     pokedexEntry: entry,
