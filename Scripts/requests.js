@@ -34,7 +34,6 @@ async function requestPokemon(id, visibility) {
   });
 }
 
-//!Remove hyphens
 async function requestAbilityEffect(url, listItem, name) {
   await fetch(url, Headers)
   .then(response => {
@@ -43,6 +42,7 @@ async function requestAbilityEffect(url, listItem, name) {
   .then(abilityEffectResponse => {
     abilityEffectResponse.flavor_text_entries.forEach(entry => {
       if(entry.language.name === 'en') {
+        name = name.replaceAll('-', ' ');
         listItem.innerHTML = `<u>${name}-</u> ${entry.flavor_text}`;
         return;
       }
@@ -55,7 +55,6 @@ async function requestAbilityEffect(url, listItem, name) {
   });
 }
 
-//!Remove hyphens
 async function requestHeldItem(url, listItem, name) {
   await fetch(url, Headers)
   .then(response => {
@@ -64,8 +63,8 @@ async function requestHeldItem(url, listItem, name) {
   .then(heldItemResponse => {
     heldItemResponse.effect_entries.forEach(entry => {
       if(entry.language.name === 'en') {
-        let effect = entry.effect.replaceAll('-', ' ')
-        listItem.innerHTML = `<u>${name}-</u> ${effect}`;
+        name = name.replaceAll('-', ' ');
+        listItem.innerHTML = `<u>${name}-</u> ${entry.effect}`;
         return;
       }
     });
