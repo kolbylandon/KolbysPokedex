@@ -97,9 +97,9 @@ function getStatTotal(stats) {
   return statTotal;
 }
 
-function getPokedexEntry(flavorTextEntries) { //!TODO: Look at the different pokemon entries
+function getPokedexEntry(flavorTextEntries) { //! Look at the different english pokemon entries
   const RegEx = /[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000\u000c\n]/g;
-  for(let index in flavorTextEntries) { //!TODO: Try map instead of for loop
+  for(let index in flavorTextEntries) { //! Try map instead of for loop
     if(flavorTextEntries[index].language.name === 'en') {
       return flavorTextEntries[index].flavor_text.replaceAll(RegEx, ' ');
     }
@@ -228,12 +228,13 @@ function makeButtonsDisappear(id) {
   id === MaximumId ? NextButton.style.display = 'none' : NextButton.style.display = 'inline-block';
 }
 
+//! Is there a localStorage.replace() function?
 function populateStorage(id) {
   localStorage.removeItem('id');
   localStorage.setItem('id', id);
 }
 
-//!Fix generatePokemon
+//! Fix generatePokemon
 function generatePokemon(id, visibility, skipIdValidation) {
   window.scrollTo(0, 0);
   if(skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) {
@@ -310,5 +311,5 @@ export {
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   readPokedexEntry, getAbilityList, getGenus, getRandomPokemon,
   headerLayout, getDeviceType, getHeldItemList, showToast, getFormList,
-  capitalize, populateStorage, TextColor, StatsChart, Synth
+  capitalize, populateStorage, TextColor, StatsChart, Synth, MinimumId, MaximumId,
 };

@@ -43,7 +43,7 @@ async function requestAbilityEffect(url, listItem, name) {
     abilityEffectResponse.flavor_text_entries.forEach(entry => {
       if(entry.language.name === 'en') {
         name = name.replaceAll('-', ' ');
-        listItem.innerHTML = `<u>${name}-</u> ${entry.flavor_text}`;
+        listItem.innerHTML = `<u>${name}</u>- ${entry.flavor_text}`;
         return;
       }
     });
@@ -64,7 +64,7 @@ async function requestHeldItem(url, listItem, name) {
     heldItemResponse.effect_entries.forEach(entry => {
       if(entry.language.name === 'en') {
         name = name.replaceAll('-', ' ');
-        listItem.innerHTML = `<u>${name}-</u> ${entry.effect}`;
+        listItem.innerHTML = `<u>${name}</u>- ${entry.effect}`;
         return;
       }
     });
