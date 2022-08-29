@@ -60,10 +60,10 @@ let id = null;
     console.clear();
   });
   CloseButton.addEventListener('click', () => {
-    Toast.classList.remove('Toast-active');
+    Toast.classList.remove('toast-active');
   });
   Toast.addEventListener('click', () => {
-    Toast.classList.remove('Toast-active');
+    Toast.classList.remove('toast-active');
     Textbox.focus();
   });
   Textbox.addEventListener('input', () => {

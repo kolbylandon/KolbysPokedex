@@ -1,5 +1,6 @@
 'use strict';
-import { Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, NextButton, ReadEntryButton, ClearButton} from './main.js';
+import { Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, 
+  NextButton, ReadEntryButton, ClearButton} from './main.js';
 import { requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, } from './requests.js';
 
 const Synth = window.speechSynthesis;
