@@ -1,8 +1,9 @@
 'use strict';
-import { convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus, getHeight, getHeldItemList, getLargestStat,
-  getPokedexEntry, getStatTotal, getTypes, getWeight, makeButtonsDisappear, punctuationNameCheck, populateStorage, } from './helpers.js';
-import { displayStatsChart } from './statsChart.js';
-import { deviceType, HiddenElementsArray } from './main.js';
+import { convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus, 
+  getHeight, getHeldItemList, getLargestStat, getPokedexEntry, getStatTotal, getTypes, 
+  getWeight, makeButtonsDisappear, punctuationNameCheck, populateStorage, } from './helpers.js';
+import { displayStatsChart, } from './statsChart.js';
+import { deviceType, HiddenElementsArray, } from './main.js';
 
 const NumberHeader = document.getElementById('number-header');
 const NameHeader = document.getElementById('name-header');
@@ -86,8 +87,9 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     isMythical: speciesResponse.is_mythical,
     types: pokemonResponse.types,
     forms: speciesResponse.varieties,
-    statsArray: [pokemonResponse.stats[0].base_stat, pokemonResponse.stats[1].base_stat, pokemonResponse.stats[2].base_stat,
-      pokemonResponse.stats[3].base_stat, pokemonResponse.stats[4].base_stat, pokemonResponse.stats[5].base_stat],
+    statsArray: [pokemonResponse.stats[0].base_stat, pokemonResponse.stats[1].base_stat, 
+      pokemonResponse.stats[2].base_stat, pokemonResponse.stats[3].base_stat, 
+      pokemonResponse.stats[4].base_stat, pokemonResponse.stats[5].base_stat],
     baseStatTotal: statTotal,
     generation: speciesResponse.generation.name.substring(11).toUpperCase(),
     pokedexEntry: entry,
@@ -108,7 +110,7 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     pokemon.frontFemaleShinySprite = null;
     pokemon.backFemaleShinySprite = null;
   }
-  console.clear();
+  // console.clear();
   console.table(pokemon);
   populateStorage(pokemon.id);
   return pokemon;

@@ -34,7 +34,6 @@ TO DO
 088) Break up the helpers.js file.
 089) Change Read Entry to Stop Reading while synth.speak is active.
 090) Allow the user to search by Pokémon name.
-091) Fix the header in mobile to stick to the bottom of the screen.
 092) Use the images from the held items as the bullets for the items list.
 093) Use Service Worker to get fetch the other forms' information.
 094) See if other forms have other Pokédex entries.
@@ -42,6 +41,7 @@ TO DO
 097) Rewrite with TailwindCSS.
 098) Rewrite in a JS framework, most likely React or Svelte.
 100) Create a service worker to fetch other forms' data in the background.
+103) Add a button for speech recognition. Example: https://blog.openreplay.com/recognizing-speech-with-vanilla-javascript
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
@@ -157,7 +157,13 @@ IMPLEMENTED
   will be a gradient instead of a solid color.
 085) Switch between forms if the Pokémon has multiple. //Creates a list of forms and allows the user
   to switch between the forms.
+091) Fix the header in mobile to stick to the bottom of the screen. //The header is now fixed to the
+  bottom of the screen for mobile.
 099) Capitalize all of the const variables and only import what is needed. //The const variables
   have been capitalized and only the necessary modules have been imported.
 101) Fix the Pokémon name in the title to not have text after the hyphens. //The Pokémon name in the
   title now does not have the form name after the hyphens.
+102) Turn the cursor to a Pokéball on hover for the Forms list. //used pokeball-bullet.png as the 
+  image when hovering.
+104) If the user inputs a number outside the Pokédex range, turn the text red. //The user number is 
+  now red if outside of the range and the normal text color while inside the range.

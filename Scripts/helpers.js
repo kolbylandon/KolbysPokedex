@@ -1,6 +1,6 @@
 'use strict';
-import { NextButton, PreviousButton, Textbox, Toast, } from './main.js';
-import { requestAbilityEffect, requestForm, requestHeldItem, requestPokemon } from './requests.js';
+import { Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, NextButton, ReadEntryButton, ClearButton} from './main.js';
+import { requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, } from './requests.js';
 
 const Synth = window.speechSynthesis;
 const SpriteScreen = document.getElementById('sprite-screen');
@@ -89,6 +89,11 @@ function getFormList(forms) {
   });
 }
 
+function getSystemInformation() {
+  let deviceType = getDeviceType();
+  headerLayout(deviceType, GoButton, RandomPokemonButton, PreviousButton, NextButton, ReadEntryButton, ClearButton);
+}
+
 function getStatTotal(stats) {
   let statTotal = 0;
   stats.forEach(stat => {
@@ -126,7 +131,8 @@ function getWeight(weight) {
 
 function punctuationNameCheck(name) {
   name = capitalizeAfterHyphen(name);
-  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : name.includes('-Jr') ? name.replace('-Jr', ' Jr.') : name.includes('hd') ? name.replace('hd', "h'd") : name;
+  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : name.includes('-Jr') ? 
+    name.replace('-Jr', ' Jr.') : name.includes('hd') ? name.replace('hd', "h'd") : name;
 }
 
 function getTypes(types) {
@@ -228,10 +234,14 @@ function makeButtonsDisappear(id) {
   id === MaximumId ? NextButton.style.display = 'none' : NextButton.style.display = 'inline-block';
 }
 
-//! Is there a localStorage.replace() function?
 function populateStorage(id) {
-  localStorage.removeItem('id');
   localStorage.setItem('id', id);
+  localStorage.setItem('dateTime', getDateTime());
+}
+
+function getDateTime() {
+  let now = new Date();
+  return `${now.getFullYear()}/${now.getMonth()-1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 }
 
 //! Fix generatePokemon
@@ -244,7 +254,7 @@ function generatePokemon(id, visibility, skipIdValidation) {
     requestPokemon(id, visibility);
     return;
   }
-    showToast('Please enter a valid Pokédex number');
+  showToast('Please enter a valid Pokédex number');
 }
 
 function readPokedexEntry() {
@@ -311,5 +321,6 @@ export {
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   readPokedexEntry, getAbilityList, getGenus, getRandomPokemon,
   headerLayout, getDeviceType, getHeldItemList, showToast, getFormList,
-  capitalize, populateStorage, TextColor, StatsChart, Synth, MinimumId, MaximumId,
+  capitalize, populateStorage, getSystemInformation, TextColor, 
+  HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId,
 };

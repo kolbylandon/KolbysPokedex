@@ -1,7 +1,8 @@
 'use strict';
-import { createArray, generatePokemon, getDeviceType, getElementVisibility,
-  getRandomPokemon, headerLayout, readPokedexEntry, Synth, } from './helpers.js';
-import { pokemon } from './pokemon.js';
+import { createArray, generatePokemon, getElementVisibility,
+  getRandomPokemon, readPokedexEntry, Synth, HiddenAbilityTextColor,
+  TextColor, MinimumId, MaximumId, getSystemInformation, } from './helpers.js';
+import { pokemon, } from './pokemon.js';
 
 const Textbox = document.getElementById('pokemon-textbox');
 const GoButton = document.getElementById('go-button');
@@ -65,6 +66,13 @@ let id = null;
     Toast.classList.remove('Toast-active');
     Textbox.focus();
   });
+  Textbox.addEventListener('input', () => {
+    if(Textbox.value < MinimumId || Textbox.value > MaximumId) {
+    Textbox.style.color = HiddenAbilityTextColor;
+    } else {
+      Textbox.style.color = TextColor;
+    }
+  });
   Textbox.addEventListener('focus', () => {
     Textbox.value = '';
   });
@@ -73,20 +81,14 @@ let id = null;
       Textbox.value = id;
     }
   });
+  window.onresize = () => {
+    getSystemInformation();
+  }
   getElementVisibility(HiddenElementsArray, 'hidden');
   Textbox.focus();
 }) ();
 
-window.onresize = () => {
-  getSystemInformation();
-}
-
-//! Move getSystemInformation to helpers.js
-function getSystemInformation() {
-  deviceType = getDeviceType();
-  headerLayout(deviceType, GoButton, RandomPokemonButton, PreviousButton, NextButton, ReadEntryButton, ClearButton);
-}
-
 export {
-  HiddenElementsArray, PreviousButton, NextButton, Textbox, Toast, deviceType,
+  HiddenElementsArray, Textbox, Toast, GoButton, RandomPokemonButton, 
+  PreviousButton, NextButton, ReadEntryButton, ClearButton, deviceType, 
 }
