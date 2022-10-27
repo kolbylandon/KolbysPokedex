@@ -1,6 +1,6 @@
 'use strict';
 import { populatePage, } from './pokemon.js';
-import { capitalize, punctuationNameCheck, showToast, } from './helpers.js';
+import { capitalizeFirstLetter, punctuationNameCheck, showToast, } from './helpers.js';
 
 const Headers = {
   'accept': 'text/html,application/xhtml+xml',
@@ -85,7 +85,7 @@ async function requestForm(url, listItem) {
     formsResponse.forms.forEach(form => {
       let name = punctuationNameCheck(form.name);
       name = name.replaceAll('-', ' ');
-      listItem.innerText = capitalize(name);
+      listItem.innerText = capitalizeFirstLetter(name);
       return;
     });
   })

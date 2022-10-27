@@ -35,7 +35,7 @@ function getAbilityList(abilities) {
     const ListItem = document.createElement('li');
     ListItem.id = `flavor-text-${++counter}`;
     ListItem.classList.add('flavor-text');
-    const Name = capitalizeAfterHyphen(ability.ability.name.capitalize());
+    const Name = capitalizeAfterHyphen(capitalizeFirstLetter(ability.ability.name));
     requestAbilityEffect(ability.ability.url, ListItem, Name);
     ListItem.style.color = ability.is_hidden === false ? TextColor : HiddenAbilityTextColor;
     AbilitiesUnorderedList.appendChild(ListItem);
@@ -60,7 +60,7 @@ function getHeldItemList(heldItems) {
     const ListItem = document.createElement('li');
     ListItem.id = `held-item-text-${++counter}`;
     ListItem.classList.add('held-item-text');
-    const Name = capitalizeAfterHyphen(heldItem.item.name.capitalize());
+    const Name = capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name));
     requestHeldItem(heldItem.item.url, ListItem, Name);
     ListItem.style.color = TextColor;
     HeldItemsUnorderedList.appendChild(ListItem);
@@ -268,7 +268,7 @@ function onGeoError() {
   localStorage.setItem('coordinates', 'Failed to get your location!');
 } //onGeoError
 
-//! Does this need to be refactor
+//! Does this need to be refactored
 function generatePokemon(id, visibility, skipIdValidation) { //! Fix generatePokemon for all sizes of windows and have all pokemon show sprites and all the same sizes- #773
   window.scrollTo(0, 0);
   if(skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) { //! Refactor this and see about adding an else and creating a toast notifier
@@ -332,14 +332,10 @@ function headerLayout(deviceType, goButton, randomPokemonButton, PreviousButton,
 } //headerLayout
 
 function validPokedexNumberCheck() {
-  (Textbox.value < MinimumId || Textbox.value > MaximumId) ? Textbox.style.color = HiddenAbilityTextColor : Textbox.style.color = TextColor;
+  return (Textbox.value < MinimumId || Textbox.value > MaximumId) ? Textbox.style.color = HiddenAbilityTextColor : Textbox.style.color = TextColor;
 } //validPokedexNumberCheck
 
-String.prototype.capitalize = function () { //! Find a way to get rid of this
-  return `${this.charAt(0).toUpperCase()}${this.slice(1)}`;
-} //String.prototype.capitalize
-
-function capitalize(string) {
+function capitalizeFirstLetter(string) {
   return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
 } //capitalize
 
@@ -349,6 +345,6 @@ export {
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   readPokedexEntry, getAbilityList, getGenus, getRandomPokemon,
   headerLayout, getDeviceType, getHeldItemList, showToast, getFormList,
-  capitalize, populateLocalStorage, getSystemInformation, validPokedexNumberCheck,
+  capitalizeFirstLetter, populateLocalStorage, getSystemInformation, validPokedexNumberCheck,
   TextColor, HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId,
 };

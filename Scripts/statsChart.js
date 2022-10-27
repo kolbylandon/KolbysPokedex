@@ -1,5 +1,5 @@
 'use strict';
-import { capitalize, punctuationNameCheck, TextColor, } from './helpers.js';
+import { capitalizeFirstLetter, punctuationNameCheck, TextColor, } from './helpers.js';
 
 const RadarChart = document.getElementById('stats-chart');
 let statsChart = null;
@@ -29,7 +29,7 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
     plugins: {
       title: {
         display: true,
-        text: `Stats For ${capitalize(name)}`,
+        text: `Stats For ${capitalizeFirstLetter(name)}`,
       },
       legend: {
         display: false,

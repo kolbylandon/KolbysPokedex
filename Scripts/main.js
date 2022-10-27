@@ -18,7 +18,7 @@ const HiddenElementsArray = createArray(document.getElementsByClassName('hidden-
 let deviceType = null;
 let id = null;
 
-(() => { //! Combine some of the Event listeners into one function
+(() => { //! Combine some of the event listeners into one function
   getSystemInformation();
   if(localStorage.getItem('id')) {
     id = localStorage.getItem('id');
