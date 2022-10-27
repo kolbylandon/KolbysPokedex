@@ -1,5 +1,5 @@
 'use strict';
-import { createArray, generatePokemon, getElementVisibility,
+import { createArray, generatePokemon, getElementVisibility, inputCheck,
   getRandomPokemon, readPokedexEntry, Synth, getSystemInformation, 
   validPokedexNumberCheck, } from './helpers.js';
 import { pokemon, } from './pokemon.js';
@@ -70,6 +70,7 @@ let id = null;
     Textbox.focus();
   });
   Textbox.addEventListener('input', () => {
+    inputCheck(Textbox.value)
     validPokedexNumberCheck();
   });
   Textbox.addEventListener('focus', () => {

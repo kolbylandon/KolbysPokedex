@@ -179,6 +179,13 @@ function capitalizeAfterHyphen(hyphenatedString) {
   });
 } //capitalizeAfterHyphen
 
+function inputCheck(input) {
+  const RegEx = /\D/g;
+  if(RegEx.test(input)) {
+    Textbox.value = input.slice(0, -1);
+  } 
+} //inputCheck
+
 function convertHexToRgba(color, alpha) {
   let r = (`0x${color.substring(1).split('').join('')}`>>16)&255;
   let g = (`0x${color.substring(1).split('').join('')}`>>8)&255;
@@ -273,9 +280,11 @@ function generatePokemon(id, visibility, skipIdValidation) { //! Fix generatePok
   window.scrollTo(0, 0);
   if(skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) { //! Refactor this and see about adding an else and creating a toast notifier
     requestPokemon(id, visibility);
+    Textbox.style.color = TextColor;
     return;
   } else if(skipIdValidation === true) {
     requestPokemon(id, visibility);
+    Textbox.style.color = TextColor;
     return;
   }
   showToast('Please enter a valid Pokédex number');
@@ -301,9 +310,11 @@ function startReadingEntry(name, genus, entry) {
 
 function getDeviceType() {
   const Agent = navigator.userAgent;
-  if(/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(Agent)) {
+  const RegExTablet = /(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i;
+  const RegExMobile = /Mobile|iP(hone|od)|Android|Blackberry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i;
+  if(RegExTablet.test(Agent)) {
     return 'tablet';
-  } else if(/Mobile|iP(hone|od)|Android|Blackberry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(Agent)) {
+  } else if(RegExMobile.test(Agent)) {  
     return 'mobile';
   }
   return 'desktop';
@@ -343,8 +354,8 @@ export {
   getStatTotal, getPokedexEntry, getElementVisibility,
   convertHexToRgba, getHeight, getWeight, getTypes, punctuationNameCheck,
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
-  readPokedexEntry, getAbilityList, getGenus, getRandomPokemon,
-  headerLayout, getDeviceType, getHeldItemList, showToast, getFormList,
+  readPokedexEntry, getAbilityList, getGenus, getRandomPokemon, inputCheck,
+  headerLayout, getDeviceType, getHeldItemList, showToast, getFormList, 
   capitalizeFirstLetter, populateLocalStorage, getSystemInformation, validPokedexNumberCheck,
   TextColor, HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId,
 };
