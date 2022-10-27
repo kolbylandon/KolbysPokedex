@@ -1,7 +1,7 @@
 'use strict';
 import { createArray, generatePokemon, getElementVisibility,
-  getRandomPokemon, readPokedexEntry, Synth, HiddenAbilityTextColor,
-  TextColor, MinimumId, MaximumId, getSystemInformation, validPokedexNumber, } from './helpers.js';
+  getRandomPokemon, readPokedexEntry, Synth, getSystemInformation, 
+  validPokedexNumberCheck, } from './helpers.js';
 import { pokemon, } from './pokemon.js';
 
 const Textbox = document.getElementById('pokemon-textbox');
@@ -17,7 +17,6 @@ const Toast = document.getElementById('toast');
 const HiddenElementsArray = createArray(document.getElementsByClassName('hidden-element'));
 let deviceType = null;
 let id = null;
-
 
 (() => { //! Combine some of the Event listeners into one function
   getSystemInformation();

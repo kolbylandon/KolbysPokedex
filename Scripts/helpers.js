@@ -268,15 +268,14 @@ function onGeoError() {
   localStorage.setItem('coordinates', 'Failed to get your location!');
 } //onGeoError
 
+//! Does this need to be refactor
 function generatePokemon(id, visibility, skipIdValidation) { //! Fix generatePokemon for all sizes of windows and have all pokemon show sprites and all the same sizes- #773
   window.scrollTo(0, 0);
   if(skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) { //! Refactor this and see about adding an else and creating a toast notifier
     requestPokemon(id, visibility);
-    Textbox.style.color = TextColor;
     return;
   } else if(skipIdValidation === true) {
     requestPokemon(id, visibility);
-    Textbox.style.color = TextColor;
     return;
   }
   showToast('Please enter a valid Pokédex number');
@@ -333,12 +332,8 @@ function headerLayout(deviceType, goButton, randomPokemonButton, PreviousButton,
 } //headerLayout
 
 function validPokedexNumberCheck() {
-  if(Textbox.value < MinimumId || Textbox.value > MaximumId) {
-    Textbox.style.color = HiddenAbilityTextColor;
-  } else {
-    Textbox.style.color = TextColor;
-  }
-}
+  (Textbox.value < MinimumId || Textbox.value > MaximumId) ? Textbox.style.color = HiddenAbilityTextColor : Textbox.style.color = TextColor;
+} //validPokedexNumberCheck
 
 String.prototype.capitalize = function () { //! Find a way to get rid of this
   return `${this.charAt(0).toUpperCase()}${this.slice(1)}`;
