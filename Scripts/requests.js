@@ -32,7 +32,7 @@ async function requestPokemon(id, visibility) {
     showToast(ErrorMessage);
     console.table(exception);
   });
-}
+} //requestPokemon
 
 async function requestAbilityEffect(url, listItem, name) {
   await fetch(url, Headers)
@@ -53,7 +53,7 @@ async function requestAbilityEffect(url, listItem, name) {
     showToast(ErrorMessage);
     console.table(exception);
   });
-}
+} //requestAbilityEffect
 
 async function requestHeldItem(url, listItem, name) {
   await fetch(url, Headers)
@@ -74,7 +74,7 @@ async function requestHeldItem(url, listItem, name) {
     showToast(ErrorMessage);
     console.table(exception);
   });
-}
+} //requestHeldItem
 
 async function requestForm(url, listItem) {
   await fetch(url, Headers)
@@ -94,7 +94,7 @@ async function requestForm(url, listItem) {
     showToast(ErrorMessage);
     console.table(exception);
   });
-}
+} //requestForm
 
 export {
   requestPokemon, requestAbilityEffect, requestHeldItem, requestForm,

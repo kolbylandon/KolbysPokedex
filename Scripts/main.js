@@ -1,7 +1,7 @@
 'use strict';
 import { createArray, generatePokemon, getElementVisibility,
   getRandomPokemon, readPokedexEntry, Synth, HiddenAbilityTextColor,
-  TextColor, MinimumId, MaximumId, getSystemInformation, } from './helpers.js';
+  TextColor, MinimumId, MaximumId, getSystemInformation, validPokedexNumber, } from './helpers.js';
 import { pokemon, } from './pokemon.js';
 
 const Textbox = document.getElementById('pokemon-textbox');
@@ -10,46 +10,50 @@ const RandomPokemonButton = document.getElementById('random-pokemon-button');
 const PreviousButton = document.getElementById('previous-button');
 const NextButton = document.getElementById('next-button');
 const ReadEntryButton = document.getElementById('read-entry-button');
+const FemaleSpritesButton = document.getElementById('female-sprite-button');
 const ClearButton = document.getElementById('clear-button');
 const CloseButton = document.getElementById('close-button');
 const Toast = document.getElementById('toast');
 const HiddenElementsArray = createArray(document.getElementsByClassName('hidden-element'));
-let skipIdValidation = false;
 let deviceType = null;
 let id = null;
 
-//! Combine some of the Event listeners into one function
-(() => {
+
+(() => { //! Combine some of the Event listeners into one function
   getSystemInformation();
   if(localStorage.getItem('id')) {
     id = localStorage.getItem('id');
-    generatePokemon(id, 'visible', skipIdValidation);
+    generatePokemon(id, 'visible', false);
   }
   GoButton.addEventListener('click', () => {
     Synth.cancel();
     id = Textbox.value;
-    generatePokemon(id, 'visible', skipIdValidation);
+    generatePokemon(id, 'visible', false);
   });
   RandomPokemonButton.addEventListener('click', () => {
     Synth.cancel();
     id = getRandomPokemon();
     Textbox.value = id;
-    generatePokemon(id, 'visible', skipIdValidation);
+    generatePokemon(id, 'visible', false);
   });
   PreviousButton.addEventListener('click', () => {
     Synth.cancel();
     id = --pokemon.id;
     Textbox.value = id;
-    generatePokemon(id, 'visible', skipIdValidation);
+    generatePokemon(id, 'visible', false);
   });
   NextButton.addEventListener('click', () => {
     Synth.cancel();
     id = ++pokemon.id;
     Textbox.value = id;
-    generatePokemon(id, 'visible', skipIdValidation);
+    generatePokemon(id, 'visible', false);
   });
   ReadEntryButton.addEventListener('click', () => {
     readPokedexEntry();
+  });
+  FemaleSpritesButton.addEventListener('click', () => {
+    Synth.cancel();
+    alert('Hello! Fix me!'); //! Create a function in helpers.js to add functionality
   });
   ClearButton.addEventListener('click', () => {
     Synth.cancel();
@@ -67,11 +71,7 @@ let id = null;
     Textbox.focus();
   });
   Textbox.addEventListener('input', () => {
-    if(Textbox.value < MinimumId || Textbox.value > MaximumId) {
-    Textbox.style.color = HiddenAbilityTextColor;
-    } else {
-      Textbox.style.color = TextColor;
-    }
+    validPokedexNumberCheck();
   });
   Textbox.addEventListener('focus', () => {
     Textbox.value = '';
@@ -79,6 +79,7 @@ let id = null;
   Textbox.addEventListener('blur', () => {
     if(Textbox.value === '') {
       Textbox.value = id;
+      validPokedexNumberCheck();
     }
   });
   window.onresize = () => {
@@ -86,9 +87,10 @@ let id = null;
   }
   getElementVisibility(HiddenElementsArray, 'hidden');
   Textbox.focus();
-}) ();
+})();
 
 export {
   HiddenElementsArray, Textbox, Toast, GoButton, RandomPokemonButton, 
-  PreviousButton, NextButton, ReadEntryButton, ClearButton, deviceType, 
+  PreviousButton, NextButton, ReadEntryButton, FemaleSpritesButton, 
+  ClearButton, deviceType, 
 }

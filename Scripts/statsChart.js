@@ -63,7 +63,7 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
   });
   chart.style.width = chart.parentElement.style.width;
   chart.style.height = chart.parentElement.style.height;
-}
+} //displayStatsChart
 
 export {
   displayStatsChart,

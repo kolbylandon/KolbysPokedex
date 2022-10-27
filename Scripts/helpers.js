@@ -1,6 +1,6 @@
 'use strict';
 import { Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, 
-  NextButton, ReadEntryButton, ClearButton} from './main.js';
+  NextButton, ReadEntryButton, FemaleSpritesButton, ClearButton, } from './main.js';
 import { requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, } from './requests.js';
 
 const Synth = window.speechSynthesis;
@@ -21,6 +21,7 @@ const FormsHeader = document.getElementById('forms-header');
 const PokemonEntryText = document.getElementById('pokedex-entry-text');
 const GenusSubHeader = document.getElementById('genus-sub-header');
 const ToastText = document.getElementById('toast-text');
+const BoxShadow = '0.4rem 0.4rem 0.8rem 0rem';
 const TextColor = '#606060';
 const HiddenAbilityTextColor = '#ff6f61';
 const MinimumId = 1;
@@ -39,7 +40,7 @@ function getAbilityList(abilities) {
     ListItem.style.color = ability.is_hidden === false ? TextColor : HiddenAbilityTextColor;
     AbilitiesUnorderedList.appendChild(ListItem);
   });
-}
+} //getAbilityList
 
 function getHeldItemList(heldItems) {
   if(heldItems.length === 0) {
@@ -64,7 +65,7 @@ function getHeldItemList(heldItems) {
     ListItem.style.color = TextColor;
     HeldItemsUnorderedList.appendChild(ListItem);
   });
-}
+} //getHeldItemList
 
 function getFormList(forms) {
   if(forms.length === 1) {
@@ -88,12 +89,12 @@ function getFormList(forms) {
       generatePokemon(form.pokemon.url.substring(34).replaceAll('/', ''), 'visible', true);
     });
   });
-}
+} //getFormList
 
 function getSystemInformation() {
   let deviceType = getDeviceType();
   headerLayout(deviceType, GoButton, RandomPokemonButton, PreviousButton, NextButton, ReadEntryButton, ClearButton);
-}
+} //getSystemInformation
 
 function getStatTotal(stats) {
   let statTotal = 0;
@@ -101,16 +102,16 @@ function getStatTotal(stats) {
     statTotal += stat.base_stat;
   });
   return statTotal;
-}
+} //getStatTotal
 
-function getPokedexEntry(flavorTextEntries) { //! Look at the different english pokemon entries
+function getPokedexEntry(flavorTextEntries) { //! Look at randomizing the different english pokemon entries
   const RegEx = /[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000\u000c\n]/g;
   for(let index in flavorTextEntries) { //! Try map instead of for loop
     if(flavorTextEntries[index].language.name === 'en') {
       return flavorTextEntries[index].flavor_text.replaceAll(RegEx, ' ');
     }
   }
-}
+} //getPokedexEntry
 
 function getGenus(genera) {
   for(let index in genera) {
@@ -118,23 +119,23 @@ function getGenus(genera) {
       return genera[index].genus;
     }
   }
-}
+} //getGenus
 
 function getHeight(height) {
   let feet = ~~(Math.round(height * 3.93701) / 12);
   let inches = Math.round(height * 3.93701) % 12;
   return feet > 0 ? `${feet}'${inches}"` : `${inches}"`;
-}
+} //getHeight
 
 function getWeight(weight) {
   return Math.round((weight / 4.536), 2).toFixed(1);
-}
+} //getWeight
 
 function punctuationNameCheck(name) {
   name = capitalizeAfterHyphen(name);
-  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : name.includes('-Jr') ? 
-    name.replace('-Jr', ' Jr.') : name.includes('hd') ? name.replace('hd', "h'd") : name;
-}
+  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : name.includes('-Jr') ? name.replace('-Jr', ' Jr.') : 
+    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') : name.includes('hd') ? name.replace('hd', `h'd`) : name;
+} //punctuationNameCheck
 
 function getTypes(types) {
   const FirstType = types[0].type.name;
@@ -158,29 +159,32 @@ function getTypes(types) {
     TypeHeader.innerText = 'Types:';
     TypeText2.hidden = false;
   }
-  InfoScreen.style.borderImage = `linear-gradient(${firstBorderColor}, ${secondBorderColor}) 1`;
-  SpriteScreen.style.borderImage = `linear-gradient(${firstBorderColor}, ${secondBorderColor}) 1`;
-  StatsScreen.style.borderImage = `linear-gradient(${firstBorderColor}, ${secondBorderColor}) 1`;
+  InfoScreen.style.borderColor = firstBorderColor;
+  SpriteScreen.style.borderColor = firstBorderColor;
+  StatsScreen.style.borderColor = firstBorderColor;
+  InfoScreen.style.boxShadow = `${BoxShadow} ${secondBorderColor}`;
+  SpriteScreen.style.boxShadow = `${BoxShadow} ${secondBorderColor}`;
+  StatsScreen.style.boxShadow = `${BoxShadow} ${secondBorderColor}`;
   return [firstColor, secondColor];
-}
+} //getTypes
 
 function getRandomPokemon() {
   return ~~(Math.random() * MaximumId) + 1;
-}
+} //getRandomPokemon
 
 function capitalizeAfterHyphen(hyphenatedString) {
   const RegEx = /\-[a-z]/g;
   return hyphenatedString.replaceAll(RegEx, match => {
     return match.toUpperCase();
   });
-}
+} //capitalizeAfterHyphen
 
 function convertHexToRgba(color, alpha) {
   let r = (`0x${color.substring(1).split('').join('')}`>>16)&255;
   let g = (`0x${color.substring(1).split('').join('')}`>>8)&255;
   let b = (`0x${color.substring(1).split('').join('')}`)&255;
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
+} //convertHexToRgba
 
 function getTypeColor(type) {
   const Types = {
@@ -204,13 +208,13 @@ function getTypeColor(type) {
     'dark': '#2B1E16',
   };
   return Types[type];
-}
+} //getTypeColor
 
 function getLargestStat(statsArray) {
   return Math.round(statsArray.reduce((stat, max) => {
     return stat > max ? stat : max;
   }, 0) / 25) * 25;
-}
+} //getLargestStat
 
 function createArray(elements) {
   let elementArray = [];
@@ -218,55 +222,75 @@ function createArray(elements) {
     elementArray.push(elements[index]);
   }
   return elementArray;
-}
+} //createArray
 
 function getElementVisibility(elements, visibility) {
   Synth.cancel();
-  elements.forEach(element => {
-    if(typeof element.style !== 'undefined') {
-      element.style.visibility = visibility;
-    }
-  });
+  if(Array.isArray(elements)) {
+    elements.forEach(element => {
+      if(typeof element.style !== 'undefined') {
+        element.style.visibility = visibility;
+      }
+    });
+  } else { //! Is this else necessary?
+    elements.style.visibility = visibility;
+  }
   window.scrollTo(0, 0);
-}
+} //getElementVisibility
 
-function makeButtonsDisappear(id) {
+function makeButtonsDisappear(id, hasGenderDifferences) {
   id === MinimumId ? PreviousButton.style.display = 'none' : PreviousButton.style.display = 'inline-block';
   id === MaximumId ? NextButton.style.display = 'none' : NextButton.style.display = 'inline-block';
-}
+  hasGenderDifferences ? FemaleSpritesButton.style.display = 'inline-block' : FemaleSpritesButton.style.display = 'none';
+} //makeButtonsDisappear
 
-function populateStorage(id) {
+function populateLocalStorage(id) {
   localStorage.setItem('id', id);
   localStorage.setItem('dateTime', getDateTime());
-}
+  getGeoLocation();
+} //populateLocalStorage
 
 function getDateTime() {
   let now = new Date();
   return `${now.getFullYear()}/${now.getMonth()-1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-}
+} //getDateTime
 
-//! Fix generatePokemon
-function generatePokemon(id, visibility, skipIdValidation) {
+function getGeoLocation() {
+  navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+} //getGeoLocation
+
+function onGeoSuccess(position) {
+  const { latitude, longitude } = position.coords;
+  localStorage.setItem('coordinates',`${latitude},${longitude}`);
+} //onGeoSuccess
+
+function onGeoError() {
+  localStorage.setItem('coordinates', 'Failed to get your location!');
+} //onGeoError
+
+function generatePokemon(id, visibility, skipIdValidation) { //! Fix generatePokemon for all sizes of windows and have all pokemon show sprites and all the same sizes- #773
   window.scrollTo(0, 0);
-  if(skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) {
+  if(skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) { //! Refactor this and see about adding an else and creating a toast notifier
     requestPokemon(id, visibility);
+    Textbox.style.color = TextColor;
     return;
   } else if(skipIdValidation === true) {
     requestPokemon(id, visibility);
+    Textbox.style.color = TextColor;
     return;
   }
   showToast('Please enter a valid Pokédex number');
-}
+} //generatePokemon
 
 function readPokedexEntry() {
   Synth.speaking ? Synth.cancel() : startReadingEntry(NameHeader.textContent, GenusSubHeader.textContent, PokemonEntryText.textContent);
-}
+} //readPokedexEntry
 
 function showToast(text) {
   ToastText.innerText = text;
   Toast.classList.add('toast-active');
   Textbox.focus();
-}
+} //showToast
 
 function startReadingEntry(name, genus, entry) {
   Synth.speak(new SpeechSynthesisUtterance(name));
@@ -274,7 +298,7 @@ function startReadingEntry(name, genus, entry) {
   Synth.pause();
   Synth.resume();
   Synth.speak(new SpeechSynthesisUtterance(entry));
-}
+} //startReadingEntry
 
 function getDeviceType() {
   const Agent = navigator.userAgent;
@@ -284,7 +308,7 @@ function getDeviceType() {
     return 'mobile';
   }
   return 'desktop';
-}
+} //getDeviceType
 
 function headerLayout(deviceType, goButton, randomPokemonButton, PreviousButton, NextButton, readEntryButton, clearButton) {
   if(deviceType === 'mobile') {
@@ -306,15 +330,23 @@ function headerLayout(deviceType, goButton, randomPokemonButton, PreviousButton,
   NextButton.innerHTML = '<span class="button-top">Next</span>';
   readEntryButton.innerHTML = '<span class="button-top">Read Entry</span>';
   clearButton.innerHTML = '<span class="button-top"> X </span>';
+} //headerLayout
+
+function validPokedexNumberCheck() {
+  if(Textbox.value < MinimumId || Textbox.value > MaximumId) {
+    Textbox.style.color = HiddenAbilityTextColor;
+  } else {
+    Textbox.style.color = TextColor;
+  }
 }
 
-String.prototype.capitalize = function () {
+String.prototype.capitalize = function () { //! Find a way to get rid of this
   return `${this.charAt(0).toUpperCase()}${this.slice(1)}`;
-}
+} //String.prototype.capitalize
 
 function capitalize(string) {
   return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
-}
+} //capitalize
 
 export {
   getStatTotal, getPokedexEntry, getElementVisibility,
@@ -322,6 +354,6 @@ export {
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   readPokedexEntry, getAbilityList, getGenus, getRandomPokemon,
   headerLayout, getDeviceType, getHeldItemList, showToast, getFormList,
-  capitalize, populateStorage, getSystemInformation, TextColor, 
-  HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId,
+  capitalize, populateLocalStorage, getSystemInformation, validPokedexNumberCheck,
+  TextColor, HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId,
 };
