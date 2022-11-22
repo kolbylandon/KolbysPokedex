@@ -1,10 +1,14 @@
 {
   "cSpell.words": [
     "claymorphism",
+    "Farfetch'd",
+    "Glassmorphism",
     "Kolby",
     "Kolby's",
+    "mobi",
     "neumorphism",
     "onresize",
+    "Pikachu",
     "pokeapi",
     "pokeball",
     "Pokéball",
@@ -12,7 +16,10 @@
     "Pokédex",
     "Porygon",
     "Rgba",
+    "Sirfetch'd",
     "textbox"
   ],
-  "todo-tree.tree.scanMode": "workspace only"
+  "projectManager.git.baseFolders": [
+    "https://github.com/kolbylandon?tab=repositories"
+  ]
 }

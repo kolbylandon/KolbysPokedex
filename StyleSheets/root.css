@@ -1,4 +1,4 @@
-@media screen and (min-width: 320px) and (max-width: 480px) {
+@media screen and (max-width: 480px) {
   #root {
     background-color: rgb(247, 247, 247);
     padding-top: 0.5vh;
@@ -72,6 +72,9 @@
     list-style-image: url(../Images/pokeball-bullet.png);
     padding: 0.15vh 2vw;
   }
+  #root .list-bulleted .form-text {
+    cursor: url(../Images/pokeball-bullet.png), auto;
+  }
   #root .screen {
     border: 0.215rem solid rgb(247, 247, 247);
     -o-border-image: linear-gradient(rgb(247, 247, 247), rgb(0, 0, 0));
@@ -84,7 +87,7 @@
   }
   #root .type-text {
     border-color: rgb(0, 0, 0);
-    border-radius: 0.75rem;
+    border-radius: 0.95rem;
     color: rgb(247, 247, 247);
     padding: 0.35vh 1.5vw;
     box-shadow: 0.4rem 0.4rem 0.8rem 0rem rgba(120, 120, 120, 0.5);
@@ -187,6 +190,9 @@
   #root #info-screen .list-bulleted {
     list-style-image: url(../Images/pokeball-bullet.png);
     padding: 0.15vh 2vw;
+  }
+  #root #info-screen .list-bulleted .form-text {
+    cursor: url(../Images/pokeball-bullet.png), auto;
   }
   #root .screen {
     border: 0.33rem solid rgb(247, 247, 247);
@@ -300,6 +306,9 @@
   }
   #root #info-screen .list-bulleted {
     list-style-image: url(../Images/pokeball-bullet.png);
+  }
+  #root #info-screen .list-bulleted .form-text {
+    cursor: url(../Images/pokeball-bullet.png), auto;
   }
   #root .screen {
     border: 0.3rem solid rgb(247, 247, 247);
@@ -417,6 +426,9 @@
   #root #info-screen .list-bulleted {
     list-style-image: url(../Images/pokeball-bullet.png);
   }
+  #root #info-screen .list-bulleted .form-text {
+    cursor: url(../Images/pokeball-bullet.png), auto;
+  }
   #root .screen {
     border: 0.3rem solid rgb(247, 247, 247);
     border-radius: 1.75rem;
@@ -531,8 +543,12 @@
   #root #info-screen .list-bulleted {
     list-style-image: url(../Images/pokeball-bullet.png);
   }
+  #root #info-screen .list-bulleted .form-text {
+    cursor: url(../Images/pokeball-bullet.png), auto;
+  }
   #root .screen {
     border: 0.25rem solid transparent;
+    border-radius: 2.5rem;
   }
   #root .top-screen {
     margin-bottom: 0.75rem;

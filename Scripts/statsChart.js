@@ -1,5 +1,5 @@
 'use strict';
-import { capitalizeFirstLetter, punctuationNameCheck, TextColor, } from './helpers.js';
+import { capitalizeFirstLetter, punctuationNameCheck, TextColor, TransparentColor, } from './helpers.js';
 
 const RadarChart = document.getElementById('stats-chart');
 let statsChart = null;
@@ -47,7 +47,8 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
         min: 0,
         max,
         ticks: {
-          color: TextColor,
+          fontColor: TextColor,
+          backdropColor: TransparentColor,
           stepSize: 25,
         },
         grid: {

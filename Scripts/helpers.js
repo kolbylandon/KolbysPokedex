@@ -4,12 +4,12 @@ import { Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton,
 import { requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, } from './requests.js';
 
 const Synth = window.speechSynthesis;
-const SpriteScreen = document.getElementById('sprite-screen');
+const SpriteCard = document.getElementById('sprite-card');
 const TypeText = document.getElementById('type-text');
 const TypeText2 = document.getElementById('type-text-2');
 const TypeHeader = document.getElementById('type-header');
-const InfoScreen = document.getElementById('info-screen');
-const StatsScreen = document.getElementById('stats-screen');
+const InfoCard = document.getElementById('info-card');
+const StatsCard = document.getElementById('stats-card');
 const StatsChart = document.getElementById('stats-chart');
 const AbilitiesUnorderedList = document.getElementById('abilities-unordered-list');
 const AbilitiesHeader = document.getElementById('abilities-header');
@@ -21,9 +21,9 @@ const FormsHeader = document.getElementById('forms-header');
 const PokemonEntryText = document.getElementById('pokedex-entry-text');
 const GenusSubHeader = document.getElementById('genus-sub-header');
 const ToastText = document.getElementById('toast-text');
-const BoxShadow = '0.4rem 0.4rem 0.8rem 0rem';
-const TextColor = '#606060';
-const HiddenAbilityTextColor = '#ff6f61';
+const TextColor =  'rgba(98, 98, 98, 0.95)'
+const HiddenAbilityTextColor = 'rgba(255, 111, 97, 0.95)';
+const TransparentColor = 'rgba(0, 0, 0, 0)';
 const MinimumId = 1;
 const MaximumId = 905;
 
@@ -93,7 +93,7 @@ function getFormList(forms) {
 
 function getSystemInformation() {
   let deviceType = getDeviceType();
-  headerLayout(deviceType, GoButton, RandomPokemonButton, PreviousButton, NextButton, ReadEntryButton, ClearButton);
+  headerLayout(deviceType);
 } //getSystemInformation
 
 function getStatTotal(stats) {
@@ -140,31 +140,28 @@ function punctuationNameCheck(name) {
 function getTypes(types) {
   const FirstType = types[0].type.name;
   let firstColor = getTypeColor(FirstType);
-  let firstBorderColor = convertHexToRgba(firstColor, 1);
+  let firstBackgroundColor = convertHexToRgba(firstColor, 0.2);
   TypeText.innerText = FirstType;
   TypeText.style.backgroundColor = convertHexToRgba(firstColor, 0.6);
   let secondColor = null;
-  let secondBorderColor = null;
+  let secondBackgroundColor = null;
   if(types.length === 1) {
     TypeHeader.innerText = 'Type:';
     TypeText2.hidden = true;
     secondColor = firstColor;
-    secondBorderColor = firstBorderColor;
+    secondBackgroundColor = firstBackgroundColor;
   } else {
     const SecondType = types[1].type.name;
     secondColor = getTypeColor(SecondType);
-    secondBorderColor = convertHexToRgba(secondColor, 1);
+    secondBackgroundColor = convertHexToRgba(secondColor, 0.2);
     TypeText2.innerText = SecondType;
     TypeText2.style.backgroundColor = convertHexToRgba(secondColor, 0.6);
     TypeHeader.innerText = 'Types:';
     TypeText2.hidden = false;
   }
-  InfoScreen.style.borderColor = firstBorderColor;
-  SpriteScreen.style.borderColor = firstBorderColor;
-  StatsScreen.style.borderColor = firstBorderColor;
-  InfoScreen.style.boxShadow = `${BoxShadow} ${secondBorderColor}`;
-  SpriteScreen.style.boxShadow = `${BoxShadow} ${secondBorderColor}`;
-  StatsScreen.style.boxShadow = `${BoxShadow} ${secondBorderColor}`;
+  InfoCard.style.background = `radial-gradient(circle, ${firstBackgroundColor} 0%, ${secondBackgroundColor} 100%)`;
+  SpriteCard.style.background = `radial-gradient(circle, ${firstBackgroundColor} 0%, ${secondBackgroundColor} 100%)`;
+  StatsCard.style.background = `radial-gradient(circle, ${firstBackgroundColor} 0%, ${secondBackgroundColor} 100%)`;
   return [firstColor, secondColor];
 } //getTypes
 
@@ -239,10 +236,7 @@ function getElementVisibility(elements, visibility) {
         element.style.visibility = visibility;
       }
     });
-  } else { //! Is this else necessary?
-    elements.style.visibility = visibility;
   }
-  window.scrollTo(0, 0);
 } //getElementVisibility
 
 function makeButtonsDisappear(id, hasGenderDifferences) {
@@ -254,6 +248,7 @@ function makeButtonsDisappear(id, hasGenderDifferences) {
 function populateLocalStorage(id) {
   localStorage.setItem('id', id);
   localStorage.setItem('dateTime', getDateTime());
+  localStorage.setItem('pokemonCounter', 15);
   getGeoLocation();
 } //populateLocalStorage
 
@@ -277,7 +272,6 @@ function onGeoError() {
 
 //! Does this need to be refactored
 function generatePokemon(id, visibility, skipIdValidation) { //! Fix generatePokemon for all sizes of windows and have all pokemon show sprites and all the same sizes- #773
-  window.scrollTo(0, 0);
   if(skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) { //! Refactor this and see about adding an else and creating a toast notifier
     requestPokemon(id, visibility);
     Textbox.style.color = TextColor;
@@ -320,26 +314,19 @@ function getDeviceType() {
   return 'desktop';
 } //getDeviceType
 
-function headerLayout(deviceType, goButton, randomPokemonButton, PreviousButton, NextButton, readEntryButton, clearButton) {
+function headerLayout(deviceType) {
   if(deviceType === 'mobile') {
-    goButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-magnifying-glass"></i></span>';
-    randomPokemonButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-shuffle"></i></span>';
-    PreviousButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-angle-left"></i></span>';
-    NextButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-angle-right"></i></span>';
-    readEntryButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-book-open-reader"></i></span>';
-    clearButton.innerHTML = '<span class="button-top"><i class="fa-solid fa-x"></i></span>';
+    GoButton.innerHTML = `<span id='go-button-top' class='button-top'><i class='fa-solid fa-magnifying-glass'></i></span>`;
+    RandomPokemonButton.innerHTML = `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i></span>`;
+    PreviousButton.innerHTML = `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-angle-left'></i></span>`;
+    NextButton.innerHTML = `<span id='next-button-top' class='button-top'><i class='fa-solid fa-angle-right'></i></span>`;
+    ReadEntryButton.innerHTML = `<span id='read-entry-button-top' class='button-top'><i class='fa-solid fa-book-open-reader'></i></span>`;
+    ClearButton.innerHTML = `<span id='clear-button-top' class='button-top'><i class='fa-solid fa-x'></i></span>`;
     return;
   } else if(deviceType === 'tablet') {
-    randomPokemonButton.innerHTML = '<span class="button-top">Random</span>';
-    PreviousButton.innerHTML = '<span class="button-top">Prev</span>';
-  } else {
-    randomPokemonButton.innerHTML = '<span class="button-top">Random Pokémon</span>';
-    PreviousButton.innerHTML = '<span class="button-top">Previous</span>';
+    RandomPokemonButton.innerHTML = `<span id='random-pokemon-button-top' class='button-top'>Random</span>`;
+    PreviousButton.innerHTML = `<span id='previous-button-top' class='button-top'>Prev</span>`;
   }
-  goButton.innerHTML = '<span class="button-top">Go</span>';
-  NextButton.innerHTML = '<span class="button-top">Next</span>';
-  readEntryButton.innerHTML = '<span class="button-top">Read Entry</span>';
-  clearButton.innerHTML = '<span class="button-top"> X </span>';
 } //headerLayout
 
 function validPokedexNumberCheck() {
@@ -357,5 +344,5 @@ export {
   readPokedexEntry, getAbilityList, getGenus, getRandomPokemon, inputCheck,
   headerLayout, getDeviceType, getHeldItemList, showToast, getFormList, 
   capitalizeFirstLetter, populateLocalStorage, getSystemInformation, validPokedexNumberCheck,
-  TextColor, HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId,
+  TextColor, HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId, TransparentColor,
 };

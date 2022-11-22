@@ -10,7 +10,7 @@ $m-size: 1rem;
 $l-size: 1.75rem;
 
 // Mobile Devices --iPhone X
-@media screen and (min-width: 320px) and (max-width: 480px) {
+@media screen and (max-width: 480px) {
 	* {
 		font-family: 'Montserrat', sans-serif;
 		margin: 0%;

@@ -42,11 +42,11 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
 function displayAttributes() {
   NumberHeader.innerText = `#${pokemon.id} `;
   pokemon.name = punctuationNameCheck(pokemon.name);
-  NameHeader.innerText = `${pokemon.name.toUpperCase()}`;
+  NameHeader.innerText = pokemon.name.toUpperCase();
   GenusSubHeader.innerText = `The ${pokemon.genus}`;
-  GenerationText.innerText = `${pokemon.generation}`;
-  PokedexEntryText.innerText = `${pokemon.pokedexEntry}`;
-  HeightText.innerText = `${pokemon.height}`;
+  GenerationText.innerText = pokemon.generation;
+  PokedexEntryText.innerText = pokemon.pokedexEntry;
+  HeightText.innerText = pokemon.height;
   WeightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
   if(deviceType === 'mobile') {
     WeightText.innerHTML += '<br>';
@@ -100,8 +100,6 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     hasGenderDifferences: speciesResponse.has_gender_differences,
   };
   checkForGenderDifferences(pokemonResponse);
-  // console.clear();
-  console.table(pokemon);
   populateLocalStorage(pokemon.id);
   return pokemon;
 } //getPokemonObject
@@ -121,5 +119,5 @@ function checkForGenderDifferences(pokemonResponse) {
 } //checkForGenderDifferences
 
 export {
-  populatePage, pokemon,
+  populatePage, pokemon, 
 };

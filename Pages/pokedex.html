@@ -15,11 +15,8 @@
 		<title>Kolby's Pokédex</title>
 		<link href='../Images/pokeball.png' rel='shortcut icon' type='image/png'>
 		<link rel='dns-prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css'>
-		<link rel='stylesheet' href='../StyleSheets/main.css'>
-		<link rel='stylesheet' href='../StyleSheets/header.css'>
-		<link rel='stylesheet' href='../StyleSheets/root.css'>
+		<link rel='stylesheet' href='../StyleSheets/glass.css'>
 		<script async defer src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js'></script>
-		<!-- <script async defer src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script> -->
 		<script async defer type='module' src='../Scripts/main.js'></script>
 	</head>
   <body>
@@ -28,34 +25,37 @@
 				<h1 id='header-text'>info</h1>
 				<input id='pokemon-textbox' class='header-element' type='text' maxlength='3' placeholder='Search'/></input>
 				<button id='go-button' class='header-element' type='button'>
-					<span class='button-top'>Go</span>
+					<span id='go-button-top' class='button-top'>Go</span>
 				</button>
 				<button id='random-pokemon-button' class='header-element' type='button'>
-					<span class='button-top'>Random Pokémon</span>
+					<span id='random-pokemon-button-top' class='button-top'>Random Pokémon</span>
 				</button>
 				<button id='previous-button' class='header-element hidden-element' type='button'>
-					<span class='button-top'>Previous</span>
+					<span id='previous-button-top' class='button-top'>Previous</span>
 				</button>
 				<button id='next-button' class='header-element hidden-element' type='button'>
-					<span class='button-top'>Next</span>
+					<span id='next-button-top'class='button-top'>Next</span>
+				</button>
+				<button id='recall-button' class='header-element hidden-element' type='button'>
+					<span id='recall-button-top' class='button-top'>Recall</span>
 				</button>
 				<button id='read-entry-button' class='header-element hidden-element' type='button'>
-					<span class='button-top'>Read Pokédex Entry</span>
+					<span id='read-entry-button-top' class='button-top'>Read Pokédex Entry</span>
 				</button>
 				<button id='female-sprite-button' class='header-element hidden-element' type='button'>
-					<span class='button-top'>Female Sprites</span>
+					<span id='female-sprite-button-top' class='button-top'>Female Sprites</span>
 				</button>
 				<button id='clear-button' class='header-element hidden-element' type='button'>
-					<span class='button-top'>&#10005;</span>
+					<span id='clear-button-top' class='button-top'>&#10005;</span>
 				</button>
 			</form>
 		</header>
 		<main id='root'>
 			<div id='toast' class='toast'>
-				<p id="toast-text" class='text'></p>
+				<p id='toast-text' class='text'></p>
 				<button id='close-button' class='close-button'>&#10005;</button>
 			</div>
-			<div id='info-screen' class='screen top-screen hidden-element'>
+			<div id='info-card' class='card top-card hidden-element'>
 				<ul id='info-unordered-list' class='list-no-bullets'>
 					<li id='number-and-name-list-item' class='info-item'>
 						<span id='number-header' class='headers'></span>
@@ -97,7 +97,7 @@
 					</li>
 				</ul>
 			</div>
-			<div id='sprite-screen' class='screen bottom-screen hidden-element'>
+			<div id='sprite-card' class='card bottom-card hidden-element'>
 				<table id='sprite-table' style='width: 100%'>
 					<tbody>
 						<tr id='sprite-table-front-row'>
@@ -118,7 +118,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div id='stats-screen' class='screen bottom-screen hidden-element'>
+			<div id='stats-card' class='card bottom-card hidden-element'>
 				<canvas id='stats-chart'></canvas>
 			</div>
 		</main>
