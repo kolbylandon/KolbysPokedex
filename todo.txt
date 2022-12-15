@@ -22,13 +22,16 @@ TO DO
 068) Recreate API using MongoDB and NodeJS.
 072) See if API has images for Held Items.
 073) Create a getFunctions.js file for all of the functions getting information.
+076) Create a custom stylized scrollbar.
 077) Recall previously viewed Pokémon via a button.
 078) Look into how to implement service workers.
 081) Have a matrix background when a member of the Porygon line is selected.
 083) Have the id as a parameter the URL and pass use that to fetch the requests.
 086) Add a tooltip for the short description of the ability on hover.
+087) Add animations to buttons and root when the elements appear and disappear. 
 088) Break up the helpers.js file into smaller modules.
 089) Change "Read Entry" to "Stop Reading" while synth.speak is active.
+090) Switch to searching by Pokémon name by clicking the info text in the header.
 092) Use the images from the held items as the bullets for the items list.
 093) Use Service Worker to get fetch the other forms' information.
 094) See if other forms have other Pokédex entries.
@@ -37,19 +40,17 @@ TO DO
 098) Rewrite in a JS framework, most likely React or Svelte.
 103) Add a button for speech recognition. Example: https://blog.openreplay.com/recognizing-speech-with-vanilla-javascript
 113) Combine functions that manipulate the Pokémon name and call it manipulateName.
+115) Use the DeviceOrientation event listener when the device is mobile or tablet.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
 056) Push Enter key to search for Pokémon.
 075) Create html elements for other screen sizes from the media queries.
-076) Create a custom stylized scrollbar.
-087) Add animations to buttons and root when the elements appear and disappear. 
-090) Switch to searching by Pokémon name by clicking the info text in the header.
 100) Create a service worker to fetch other forms' data in the background.
 110) Have a Pokémon counter that shows how many the user has viewed in LocalStorage.
 111) Switch Female to Male when the female sprites are showing.
 112) Dynamically call CSS modules.
-114) Hide Recall button if the lastPokemon is null.
+116) Click on the Types and pull up a list of all Pokémon with that type.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -179,13 +180,15 @@ IMPLEMENTED
   now red if outside of the range and the normal text color while inside the range.
 105) Fix Pikachu Ph.D. // added a check to the punctuationNameCheck function. This specifically checks 
   for '-Phd'.
-106) Use Glassmorphism everywhere or only with the type div. //I am using Glassmorphism 
-  for the background of my cards and the header.
-107) Glassmorphism with gradients for multi-type Pokémon. //I have a radius gradient 
-  for the background of my cards.
-108) Rename "Screen" to "Card" in the codebase. //I have replaced all instances of 
-  "Screen" with "Card".
+106) Use Glassmorphism everywhere or only with the type div. //I am using Glassmorphism for the 
+  background of the cards and the header.
+107) Glassmorphism with gradients for multi-type Pokémon. //I have a radius gradient for the background 
+  of the cards.
+108) Rename "Screen" to "Card" in the codebase. //I have replaced all instances of "Screen" with 
+ "Card".
 109) Be able to click on something and it takes you to the top of the page. //The user is returned to 
   the top when you click on one of the bottom cards
 110) Create a Recall button that will retrieve the last viewed Pokémon. //There is a LocalStorage item
   that is called when the Recall button is pressed.
+114) Hide Recall button if the lastPokemon is null. //I have added a check in the makeButtonsDisappear
+  function.

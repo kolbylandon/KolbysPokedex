@@ -1,6 +1,6 @@
 'use strict';
-import { Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, 
-  NextButton, ReadEntryButton, FemaleSpritesButton, ClearButton, } from './main.js';
+import { Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, NextButton, 
+  RecallButton, ReadEntryButton, FemaleSpritesButton, ClearButton, } from './main.js';
 import { requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, } from './requests.js';
 
 const Synth = window.speechSynthesis;
@@ -16,10 +16,7 @@ const AbilitiesHeader = document.getElementById('abilities-header');
 const HeldItemsUnorderedList = document.getElementById('held-items-unordered-list');
 const FormsUnorderedList = document.getElementById('forms-unordered-list');
 const HeldItemsHeader = document.getElementById('held-items-header');
-const NameHeader = document.getElementById('name-header');
 const FormsHeader = document.getElementById('forms-header');
-const PokemonEntryText = document.getElementById('pokedex-entry-text');
-const GenusSubHeader = document.getElementById('genus-sub-header');
 const ToastText = document.getElementById('toast-text');
 const TextColor =  'rgba(98, 98, 98, 0.95)'
 const HiddenAbilityTextColor = 'rgba(255, 111, 97, 0.95)';
@@ -90,11 +87,6 @@ function getFormList(forms) {
     });
   });
 } //getFormList
-
-function getSystemInformation() {
-  let deviceType = getDeviceType();
-  headerLayout(deviceType);
-} //getSystemInformation
 
 function getStatTotal(stats) {
   let statTotal = 0;
@@ -232,7 +224,7 @@ function getElementVisibility(elements, visibility) {
   Synth.cancel();
   if(Array.isArray(elements)) {
     elements.forEach(element => {
-      if(typeof element.style !== 'undefined') {
+      if(element.style !== undefined) {
         element.style.visibility = visibility;
       }
     });
@@ -240,9 +232,10 @@ function getElementVisibility(elements, visibility) {
 } //getElementVisibility
 
 function makeButtonsDisappear(id, hasGenderDifferences) {
-  id === MinimumId ? PreviousButton.style.display = 'none' : PreviousButton.style.display = 'inline-block';
-  id === MaximumId ? NextButton.style.display = 'none' : NextButton.style.display = 'inline-block';
+  id !== MinimumId ? PreviousButton.style.display = 'inline-block' : PreviousButton.style.display = 'none';
+  id !== MaximumId ? NextButton.style.display = 'inline-block' : NextButton.style.display = 'none';
   hasGenderDifferences ? FemaleSpritesButton.style.display = 'inline-block' : FemaleSpritesButton.style.display = 'none';
+  localStorage.getItem('lastPokemon').length !== 0 ? RecallButton.style.display = 'inline-block' : RecallButton.style.display = 'none';  
 } //makeButtonsDisappear
 
 function populateLocalStorage(id) {
@@ -283,10 +276,6 @@ function generatePokemon(id, visibility, skipIdValidation) { //! Fix generatePok
   }
   showToast('Please enter a valid Pokédex number');
 } //generatePokemon
-
-function readPokedexEntry() {
-  Synth.speaking ? Synth.cancel() : startReadingEntry(NameHeader.textContent, GenusSubHeader.textContent, PokemonEntryText.textContent);
-} //readPokedexEntry
 
 function showToast(text) {
   ToastText.innerText = text;
@@ -341,8 +330,8 @@ export {
   getStatTotal, getPokedexEntry, getElementVisibility,
   convertHexToRgba, getHeight, getWeight, getTypes, punctuationNameCheck,
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
-  readPokedexEntry, getAbilityList, getGenus, getRandomPokemon, inputCheck,
+  startReadingEntry, getAbilityList, getGenus, getRandomPokemon, inputCheck,
   headerLayout, getDeviceType, getHeldItemList, showToast, getFormList, 
-  capitalizeFirstLetter, populateLocalStorage, getSystemInformation, validPokedexNumberCheck,
+  capitalizeFirstLetter, populateLocalStorage, validPokedexNumberCheck,
   TextColor, HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId, TransparentColor,
 };

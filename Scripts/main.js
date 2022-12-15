@@ -1,8 +1,7 @@
 'use strict';
-import { createArray, generatePokemon, getElementVisibility, inputCheck,
-  getRandomPokemon, readPokedexEntry, Synth, getSystemInformation, 
-  validPokedexNumberCheck, } from './helpers.js';
-import { pokemon, } from './pokemon.js';
+import { createArray, generatePokemon, getElementVisibility, getRandomPokemon, 
+  startReadingEntry, Synth, inputCheck, validPokedexNumberCheck, showToast, 
+  getDeviceType, headerLayout } from './helpers.js';
 
 const Textbox = document.getElementById('pokemon-textbox');
 const GoButton = document.getElementById('go-button');
@@ -21,74 +20,51 @@ const FemaleSpritesButton = document.getElementById('female-sprite-button');
 const FemaleSpritesButtonTop = document.getElementById('female-sprite-button-top');
 const ClearButton = document.getElementById('clear-button');
 const ClearButtonTop = document.getElementById('clear-button-top');
-const CloseButton = document.getElementById('close-button');
 const Toast = document.getElementById('toast');
+const ToastCloseButton = document.getElementById('toast-close-button');
+const NumberHeader = document.getElementById('number-header');
+const NameHeader = document.getElementById('name-header');
+const PokemonEntryText = document.getElementById('pokedex-entry-text');
+const GenusSubHeader = document.getElementById('genus-sub-header');
 const StatsChart = document.getElementById('stats-chart');
 const SpriteTable = document.getElementById('sprite-table');
 const HiddenElementsArray = createArray(document.getElementsByClassName('hidden-element'));
 let deviceType = null;
 let id = null;
 
-(async () => { //! Combine some of the event listeners into one function
+(() => { //! Combine some of the event listeners into one function
   getSystemInformation();
-  if(localStorage.getItem('id')) {
-    id = localStorage.getItem('id');
-    generatePokemon(id, 'visible', false);
-  }
+  checkLocalStorageItems();
+  loadLastViewedPokemon();
   GoButton.addEventListener('click', () => {
-    Synth.cancel();
-    id = Textbox.value;
-    generatePokemon(id, 'visible', false);
+    buttonClick('Go', true, true);
   });
   RandomPokemonButton.addEventListener('click', () => {
-    Synth.cancel();
-    localStorage.setItem('lastPokemon', Textbox.value);
-    id = getRandomPokemon();
-    Textbox.value = id;
-    generatePokemon(id, 'visible', false);
+    buttonClick('Random', true, true);
   });
   PreviousButton.addEventListener('click', () => {
-    Synth.cancel();
-    localStorage.setItem('lastPokemon', Textbox.value);
-    id = --pokemon.id;
-    Textbox.value = id;
-    generatePokemon(id, 'visible', false);
+    buttonClick('Previous', true, true);
   });
   NextButton.addEventListener('click', () => {
-    Synth.cancel();
-    localStorage.setItem('lastPokemon', Textbox.value);
-    id = ++pokemon.id;
-    Textbox.value = id;
-    generatePokemon(id, 'visible', false);
+    buttonClick('Next', true, true);
   });
   RecallButton.addEventListener('click', () => {
-    Synth.cancel();
-    id = localStorage.getItem('lastPokemon');
-    Textbox.value = id;
-    generatePokemon(id, 'visible', false);
+    buttonClick('Recall', true, true);
   });
   ReadEntryButton.addEventListener('click', () => {
-    readPokedexEntry();
+    buttonClick('ReadEntry', false, false);
   });
   FemaleSpritesButton.addEventListener('click', () => {
-    Synth.cancel();
-    alert('Hello! Fix me!'); //! Create a function in helpers.js to add functionality
+    buttonClick('FemaleSprites', false, false);
   });
   ClearButton.addEventListener('click', () => {
-    Synth.cancel();
-    localStorage.setItem('lastPokemon', Textbox.value);
-    id = null;
-    getElementVisibility(HiddenElementsArray, 'hidden');
-    CloseButton.click();
-    localStorage.removeItem('id');
-    console.clear();
+    buttonClick('Clear', true, false);
   });
-  CloseButton.addEventListener('click', () => {
-    Toast.classList.remove('toast-active');
+  ToastCloseButton.addEventListener('click', () => {
+    buttonClick('ToastClose', true, false);
   });
   Toast.addEventListener('click', () => {
-    Toast.classList.remove('toast-active');
-    Textbox.focus();
+    buttonClick('Toast', true, false);
   });
   StatsChart.addEventListener('click', () => {
     window.scroll(0, 0);
@@ -97,16 +73,22 @@ let id = null;
     window.scroll(0, 0);
   });
   Textbox.addEventListener('input', () => {
-    inputCheck(Textbox.value)
+    inputCheck(Textbox.value);
     validPokedexNumberCheck();
   });
   Textbox.addEventListener('focus', () => {
     Textbox.value = '';
+    validPokedexNumberCheck();
   });
   Textbox.addEventListener('blur', () => {
     if(Textbox.value === '') {
       Textbox.value = id;
       validPokedexNumberCheck();
+    }
+  });
+  Textbox.addEventListener('keydown', (event) => { //! Fix this
+    if(event.key === 'Enter') {
+      buttonClick('Enter', true, true);
     }
   });
   window.onresize = () => {
@@ -115,6 +97,89 @@ let id = null;
   getElementVisibility(HiddenElementsArray, 'hidden');
   Textbox.focus();
 })();
+
+function getSystemInformation() {
+  let deviceType = getDeviceType();
+  headerLayout(deviceType);
+} //getSystemInformation
+
+function loadLastViewedPokemon() {
+  if(localStorage.getItem('id')) {
+    id = localStorage.getItem('id');
+    generatePokemon(id, 'visible', false);
+  }
+} //loadLastViewedPokemon
+
+function checkLocalStorageItems() {
+  if(localStorage.getItem('id') === localStorage.getItem('lastPokemon')) {
+    localStorage.removeItem('lastPokemon');
+  }
+} //checkLocalStorageItems
+
+function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
+  if(cancelSynth) {
+    Synth.cancel();
+  }
+  switch(buttonClicked) {
+    case 'Go':
+    case 'Enter':
+      if(ClearButton.style.display !== 'none') {
+        localStorage.setItem('lastPokemon', NumberHeader.innerText.substring(1));
+      }
+      id = Textbox.value;
+      break;
+    case 'Random':
+      localStorage.setItem('lastPokemon', Textbox.value);
+      id = getRandomPokemon();
+      Textbox.value = id;
+      break;
+    case 'Previous':
+      localStorage.setItem('lastPokemon', Textbox.value);
+      id = (parseInt(Textbox.value) - 1).toString();
+      Textbox.value = id;
+      break;
+    case 'Next':
+      localStorage.setItem('lastPokemon', Textbox.value);
+      id = (parseInt(Textbox.value) + 1).toString();
+      Textbox.value = id;
+      break;
+    case 'Recall':
+      if(localStorage.getItem('lastPokemon') !== null && localStorage.getItem('lastPokemon') !== localStorage.getItem('id') && localStorage.getItem('lastPokemon') !== '') {
+        let currentNumber = localStorage.getItem('id');
+        id = localStorage.getItem('lastPokemon');
+        Textbox.value = id;
+        localStorage.setItem('lastPokemon', currentNumber);
+        generatePokemon(id, 'visible', false);
+      } else {
+        showToast('No previous Pokémon to recall.');
+      }
+      break;
+    case 'ReadEntry':
+      Synth.speaking ? Synth.cancel() : startReadingEntry(NameHeader.textContent, GenusSubHeader.textContent, PokemonEntryText.textContent);
+      break;
+    case 'FemaleSprites':
+      alert('This feature is not yet implemented.'); //! Create a function in helpers.js to add functionality
+      break;
+    case 'Clear':
+      Textbox.value = '';
+      localStorage.setItem('lastPokemon', Textbox.value);
+      id = null;
+      ToastCloseButton.click();
+      getElementVisibility(HiddenElementsArray, 'hidden');
+      localStorage.removeItem('id');
+      localStorage.removeItem('lastPokemon');
+      console.clear();
+      break;
+    case 'ToastClose':
+    case 'Toast':
+      Toast.classList.remove('toast-active');
+      Textbox.focus();
+      break;
+  }
+  if(callGeneratePokemon) {
+    generatePokemon(id, 'visible', false);
+  }
+} //buttonClick
 
 export {
   HiddenElementsArray, Textbox, Toast, GoButton, GoButtonTop, RandomPokemonButton, 

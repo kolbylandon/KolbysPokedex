@@ -45,7 +45,7 @@
   border: 0.2rem solid rgba(0, 0, 0, 0.75);
   background-color: rgba(247, 247, 247, 0.75);
   text-align: center;
-  width: 10%;
+  width: 8%;
   font-weight: bold;
   padding: 0.15rem 0.55rem;
 }
@@ -110,7 +110,7 @@
   right: 5%;
   opacity: 100%;
 }
-#root .close-button {
+#root .toast-close-button {
   background-color: rgba(247, 247, 247, 0.95);
   color: rgba(0, 0, 0, 0);
   border: none;
