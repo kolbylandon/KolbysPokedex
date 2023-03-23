@@ -96,6 +96,81 @@ async function requestForm(url, listItem) {
   });
 } //requestForm
 
+async function requestType(type) {
+  switch(type) {
+    case 'normal':
+      type = 1;
+      break;
+    case 'fighting':
+      type = 2;
+      break;
+    case 'flying':
+      type = 3;
+      break;
+    case 'poison':
+      type = 4;
+      break;
+    case 'ground':
+      type = 5;
+      break;
+    case 'rock':
+      type = 6;
+      break;
+    case 'bug':
+      type = 7;
+      break;
+    case 'ghost':
+      type = 8;
+      break;
+    case 'steel':
+      type = 9;
+      break;
+    case 'fire':
+      type = 10;
+      break;
+    case 'water':
+      type = 11;
+      break;
+    case 'grass':
+      type = 12;
+      break;
+    case 'electric':
+      type = 13;
+      break;
+    case 'psychic':
+      type = 14;
+      break;
+    case 'ice':
+      type = 15;
+      break;
+    case 'dragon':
+      type = 16;
+      break;
+    case 'dark':
+      type = 17;
+      break;
+    case 'fairy':
+      type = 18;
+      break;
+  }
+  await fetch(`https://pokeapi.co/api/v2/type/${type}`, Headers)
+  .then(response => {
+    return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
+  })
+  .then(typeResponse => {
+    typeResponse.pokemon.forEach(pokemon => {
+      let name = punctuationNameCheck(pokemon.pokemon.name);
+      name = name.replaceAll('-', ' ');
+      console.table(name);
+    });
+  })
+  .catch(exception => {
+    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
+    showToast(ErrorMessage);
+    console.table(exception);
+  });
+} //requestType
+
 export {
-  requestPokemon, requestAbilityEffect, requestHeldItem, requestForm,
+  requestPokemon, requestAbilityEffect, requestHeldItem, requestForm, requestType
 };

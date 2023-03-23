@@ -23,7 +23,6 @@ TO DO
 072) See if API has images for Held Items.
 073) Create a getFunctions.js file for all of the functions getting information.
 076) Create a custom stylized scrollbar.
-077) Recall previously viewed Pokémon via a button.
 078) Look into how to implement service workers.
 081) Have a matrix background when a member of the Porygon line is selected.
 083) Have the id as a parameter the URL and pass use that to fetch the requests.
@@ -38,18 +37,23 @@ TO DO
 096) Fix issues Pokémon numbers 899-905.
 097) Rewrite with TailwindCSS.
 098) Rewrite in a JS framework, most likely React or Svelte.
+100) Create a service worker to fetch other forms' data in the background.
 103) Add a button for speech recognition. Example: https://blog.openreplay.com/recognizing-speech-with-vanilla-javascript
+110) Have a Pokémon counter that shows how many the user has viewed in LocalStorage.
+112) Dynamically call CSS modules.
 113) Combine functions that manipulate the Pokémon name and call it manipulateName.
 115) Use the DeviceOrientation event listener when the device is mobile or tablet.
+116) Create UI chips to go under the Header buttons to display what to show.
+117) Look into ChalkJs for better logging.
+118) Create a tooltip the type buttons to let the user know what clicking does.
+119) Recreate UI for Flat UI look.
+120) Recreate UI with NES.CSS (https://nostalgic-css.github.io/NES.css/).
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
 056) Push Enter key to search for Pokémon.
 075) Create html elements for other screen sizes from the media queries.
-100) Create a service worker to fetch other forms' data in the background.
-110) Have a Pokémon counter that shows how many the user has viewed in LocalStorage.
 111) Switch Female to Male when the female sprites are showing.
-112) Dynamically call CSS modules.
 116) Click on the Types and pull up a list of all Pokémon with that type.
 
 IMPLEMENTED
@@ -156,6 +160,8 @@ IMPLEMENTED
   Still looking for better options.
 074) Update the Pokémon's ID and name to have it be centered correctly. //The name and ID are now
   centered properly. Padding was added with <li> and had to remove it.
+077) Recall previously viewed Pokémon via a button. //Created the Recall button to show the last 
+  Pokémon that was viewed.
 079) Look into storing the last Pokémon viewed before closing the window. //The last ID is now stored
   locally and calls the generatePokemon method.
 080) Look into how to monitor if the width has changed. //Using window.onresize, I call

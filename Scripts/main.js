@@ -2,6 +2,7 @@
 import { createArray, generatePokemon, getElementVisibility, getRandomPokemon, 
   startReadingEntry, Synth, inputCheck, validPokedexNumberCheck, showToast, 
   getDeviceType, headerLayout } from './helpers.js';
+import { requestType } from './requests.js';
 
 const Textbox = document.getElementById('pokemon-textbox');
 const GoButton = document.getElementById('go-button');
@@ -16,8 +17,8 @@ const ReadEntryButton = document.getElementById('read-entry-button');
 const ReadEntryButtonTop = document.getElementById('read-entry-button-top');
 const RecallButton = document.getElementById('recall-button');
 const RecallButtonTop = document.getElementById('recall-button-top');
-const FemaleSpritesButton = document.getElementById('female-sprite-button');
-const FemaleSpritesButtonTop = document.getElementById('female-sprite-button-top');
+// const FemaleSpritesButton = document.getElementById('female-sprite-button');
+// const FemaleSpritesButtonTop = document.getElementById('female-sprite-button-top');
 const ClearButton = document.getElementById('clear-button');
 const ClearButtonTop = document.getElementById('clear-button-top');
 const Toast = document.getElementById('toast');
@@ -29,6 +30,8 @@ const GenusSubHeader = document.getElementById('genus-sub-header');
 const StatsChart = document.getElementById('stats-chart');
 const SpriteTable = document.getElementById('sprite-table');
 const HiddenElementsArray = createArray(document.getElementsByClassName('hidden-element'));
+const TypeText = document.getElementById('type-text');
+const TypeText2 = document.getElementById('type-text-2');
 let deviceType = null;
 let id = null;
 
@@ -54,11 +57,17 @@ let id = null;
   ReadEntryButton.addEventListener('click', () => {
     buttonClick('ReadEntry', false, false);
   });
-  FemaleSpritesButton.addEventListener('click', () => {
-    buttonClick('FemaleSprites', false, false);
-  });
+  // FemaleSpritesButton.addEventListener('click', () => {
+  //   buttonClick('FemaleSprites', false, false);
+  // });
   ClearButton.addEventListener('click', () => {
     buttonClick('Clear', true, false);
+  });
+  TypeText.addEventListener('click', () => {
+    buttonClick('TypeText', true, false);
+  });
+  TypeText2.addEventListener('click', () => {
+    buttonClick('TypeText2', true, false);
   });
   ToastCloseButton.addEventListener('click', () => {
     buttonClick('ToastClose', true, false);
@@ -170,6 +179,12 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       localStorage.removeItem('lastPokemon');
       console.clear();
       break;
+    case 'TypeText':
+      requestType(TypeText.innerText);
+      break;
+    case 'TypeText2':
+      requestType(TypeText2.innerText);
+      break;
     case 'ToastClose':
     case 'Toast':
       Toast.classList.remove('toast-active');
@@ -184,6 +199,6 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
 export {
   HiddenElementsArray, Textbox, Toast, GoButton, GoButtonTop, RandomPokemonButton, 
   RandomPokemonButtonTop, PreviousButton, PreviousButtonTop, NextButton, NextButtonTop, 
-  ReadEntryButton, ReadEntryButtonTop, FemaleSpritesButton, FemaleSpritesButtonTop, 
+  ReadEntryButton, ReadEntryButtonTop, //FemaleSpritesButton, FemaleSpritesButtonTop, 
   RecallButton, RecallButtonTop, ClearButton, ClearButtonTop, deviceType, 
 }

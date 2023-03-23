@@ -1,6 +1,7 @@
 'use strict';
 import { Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, NextButton, 
-  RecallButton, ReadEntryButton, FemaleSpritesButton, ClearButton, } from './main.js';
+  RecallButton, ReadEntryButton, //FemaleSpritesButton, 
+  ClearButton, } from './main.js';
 import { requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, } from './requests.js';
 
 const Synth = window.speechSynthesis;
@@ -22,7 +23,7 @@ const TextColor =  'rgba(98, 98, 98, 0.95)'
 const HiddenAbilityTextColor = 'rgba(255, 111, 97, 0.95)';
 const TransparentColor = 'rgba(0, 0, 0, 0)';
 const MinimumId = 1;
-const MaximumId = 905;
+const MaximumId = 1008;
 
 function getAbilityList(abilities) {
   AbilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';
@@ -57,8 +58,9 @@ function getHeldItemList(heldItems) {
     const ListItem = document.createElement('li');
     ListItem.id = `held-item-text-${++counter}`;
     ListItem.classList.add('held-item-text');
-    const Name = capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name));
-    requestHeldItem(heldItem.item.url, ListItem, Name);
+    // const Name = capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name));
+    // requestHeldItem(heldItem.item.url, ListItem, Name);
+    requestHeldItem(heldItem.item.url, ListItem, capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name)));
     ListItem.style.color = TextColor;
     HeldItemsUnorderedList.appendChild(ListItem);
   });
@@ -234,14 +236,13 @@ function getElementVisibility(elements, visibility) {
 function makeButtonsDisappear(id, hasGenderDifferences) {
   id !== MinimumId ? PreviousButton.style.display = 'inline-block' : PreviousButton.style.display = 'none';
   id !== MaximumId ? NextButton.style.display = 'inline-block' : NextButton.style.display = 'none';
-  hasGenderDifferences ? FemaleSpritesButton.style.display = 'inline-block' : FemaleSpritesButton.style.display = 'none';
+  // hasGenderDifferences ? FemaleSpritesButton.style.display = 'inline-block' : FemaleSpritesButton.style.display = 'none';
   localStorage.getItem('lastPokemon').length !== 0 ? RecallButton.style.display = 'inline-block' : RecallButton.style.display = 'none';  
 } //makeButtonsDisappear
 
 function populateLocalStorage(id) {
   localStorage.setItem('id', id);
   localStorage.setItem('dateTime', getDateTime());
-  localStorage.setItem('pokemonCounter', 15);
   getGeoLocation();
 } //populateLocalStorage
 

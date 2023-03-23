@@ -110,11 +110,13 @@ function checkForGenderDifferences(pokemonResponse) {
     pokemon.backFemaleSprite = pokemonResponse.sprites.back_female;
     pokemon.frontFemaleShinySprite = pokemonResponse.sprites.front_shiny_female;
     pokemon.backFemaleShinySprite = pokemonResponse.sprites.back_shiny_female;
+    return;
   } else {
     pokemon.frontFemaleSprite = null;
     pokemon.backFemaleSprite = null;
     pokemon.frontFemaleShinySprite = null;
     pokemon.backFemaleShinySprite = null;
+    return;
   }
 } //checkForGenderDifferences
 
