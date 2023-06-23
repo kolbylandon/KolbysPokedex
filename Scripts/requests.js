@@ -167,6 +167,7 @@ async function requestType(type) {
   .catch(exception => {
     const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
     showToast(ErrorMessage);
+    console.clear();
     console.table(exception);
   });
 } //requestType

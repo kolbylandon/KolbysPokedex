@@ -48,6 +48,7 @@ TO DO
 118) Create a tooltip the type buttons to let the user know what clicking does.
 119) Recreate UI for Flat UI look.
 120) Recreate UI with NES.CSS (https://nostalgic-css.github.io/NES.css/).
+121) Create a toggle list of all headers to be shown or hidden in 'info-card'.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
@@ -55,6 +56,7 @@ IN PROGRESS
 075) Create html elements for other screen sizes from the media queries.
 111) Switch Female to Male when the female sprites are showing.
 116) Click on the Types and pull up a list of all Pokémon with that type.
+122) Fix localStorage so that it is populated at the beginning of the application.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------

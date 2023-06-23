@@ -14,6 +14,7 @@
 		<meta property='og:url' content='https://www.kolbyspokedex.io'>
 		<title>Kolby's Pokédex</title>
 		<link href='../Images/pokeball.png' rel='shortcut icon' type='image/png'>
+		<!-- <link href='../Images/pokeball.png' rel='preload' type='image/png'>˚ -->
 		<link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css' rel='dns-prefetch'>
 		<link href='../StyleSheets/glass.css' rel="stylesheet">
 		<script async defer src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js'></script>
@@ -22,8 +23,10 @@
   <body>
 		<header id='header'>
 			<form id='header-form'>
-				<h1 id='header-text'>info</h1>
-				<input id='pokemon-textbox' class='header-element' type='text' maxlength='3' placeholder='Search'/></input>
+				<button id='header-text-button'>
+					<h1 id='header-text'>info</h1>
+				</button>
+				<input id='pokemon-textbox' class='header-element' type='text' maxlength='4' placeholder='Search'/></input>
 				<button id='go-button' class='header-element' type='button'>
 					<span id='go-button-top' class='button-top'>Go</span>
 				</button>
@@ -121,6 +124,12 @@
 			<div id='stats-card' class='card bottom-card hidden-element'>
 				<canvas id='stats-chart'></canvas>
 			</div>
+			<!-- <div id='types-card' class='card hidden-card hidden-element'>
+				<li id='types-list-item' class='info-item'>
+					<span id='types-header' class='headers'>Type:</span>
+					<ul id='types-unordered-list' class='list-bulleted'></ul>
+				</li>
+			</div> -->
 		</main>
   </body>
 </html>

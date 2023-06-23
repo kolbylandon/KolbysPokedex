@@ -27,11 +27,14 @@
   position: fixed;
   width: 100%;
 }
+#header form #header-text-button {
+  background-color: transparent; 
+}
 #header form #header-text {
   color: rgba(247, 247, 247, 0.95);
   display: inline-block;
   font-size: 1.5rem;
-  padding: 0.5vh 1vw;
+  padding: 0.5vh 0.35vw;
 }
 #header form .header-element {
   border-radius: 00.75rem;
@@ -78,7 +81,7 @@
 /* ROOT */
 #root {
   display: grid;
-  background-color: rgba(247, 247, 247, 0.95);
+  background-color: transparent;
   grid-template-columns: 1fr 0.9fr;
   grid-column-gap: 3.5rem;
   grid-row-gap: 1.75rem;
@@ -165,11 +168,12 @@
   cursor: url(../Images/pokeball-bullet.png), auto;
 }
 #root .card {
-  border: 0.25rem solid transparent;
-  border-radius: 2.5rem;
-  backdrop-filter: blur(0.4rem);
-  -webkit-backdrop-filter: blur(0.4rem);
-  background: rgba(255, 255, 255, 0.11);
+  backdrop-filter: blur(0.25rem);
+  background: rgba( 255, 255, 255, 0.25 );
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 2rem 0 rgba( 31, 38, 135, 0.37 );
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  -webkit-backdrop-filter: blur(0.25rem);
 }
 #root .top-card {
   margin-bottom: 0.75rem;
