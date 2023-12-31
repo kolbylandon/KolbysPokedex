@@ -1,6 +1,10 @@
 'use strict';
-import { populatePage, } from './pokemon.js';
-import { capitalizeFirstLetter, punctuationNameCheck, showToast, } from './helpers.js';
+import { 
+  populatePage, 
+} from './pokemon.js';
+import { 
+  capitalizeFirstLetter, punctuationNameCheck, showToast, 
+} from './helpers.js';
 
 const Headers = {
   'accept': 'text/html,application/xhtml+xml',
@@ -84,7 +88,13 @@ async function requestForm(url, listItem) {
   .then(formsResponse => {
     formsResponse.forms.forEach(form => {
       let name = punctuationNameCheck(form.name);
-      name = name.replaceAll('-', ' ');
+      if(!name.includes('kommo-o')) {
+        name = name.replaceAll('-', ' ');
+      } else if(name === 'kommo-o') {
+        name = 'kommo-o';
+      } else {
+        name = 'kommo-o Totem';
+      }
       listItem.innerText = capitalizeFirstLetter(name);
       return;
     });

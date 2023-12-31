@@ -1,5 +1,7 @@
 'use strict';
-import { capitalizeFirstLetter, punctuationNameCheck, TextColor, TransparentColor, } from './helpers.js';
+import { 
+  capitalizeFirstLetter, punctuationNameCheck, TextColor, TransparentColor, 
+} from './helpers.js';
 
 const RadarChart = document.getElementById('stats-chart');
 let statsChart = null;

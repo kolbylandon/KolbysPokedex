@@ -22,6 +22,7 @@ TO DO
 068) Recreate API using MongoDB and NodeJS.
 072) See if API has images for Held Items.
 073) Create a getFunctions.js file for all of the functions getting information.
+075) Create html elements for other screen sizes from the media queries.
 076) Create a custom stylized scrollbar.
 078) Look into how to implement service workers.
 081) Have a matrix background when a member of the Porygon line is selected.
@@ -40,6 +41,7 @@ TO DO
 100) Create a service worker to fetch other forms' data in the background.
 103) Add a button for speech recognition. Example: https://blog.openreplay.com/recognizing-speech-with-vanilla-javascript
 110) Have a Pokémon counter that shows how many the user has viewed in LocalStorage.
+111) Switch Female to Male when the female sprites are showing.
 112) Dynamically call CSS modules.
 113) Combine functions that manipulate the Pokémon name and call it manipulateName.
 115) Use the DeviceOrientation event listener when the device is mobile or tablet.
@@ -53,10 +55,9 @@ TO DO
 IN PROGRESS
 -----------------------------------------------------------------------------------------
 056) Push Enter key to search for Pokémon.
-075) Create html elements for other screen sizes from the media queries.
-111) Switch Female to Male when the female sprites are showing.
-116) Click on the Types and pull up a list of all Pokémon with that type.
 122) Fix localStorage so that it is populated at the beginning of the application.
+124) Make the Toast static so that it does not move when the user scrolls.
+126) Click on the Types and pull up a list of all Pokémon with that type.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -200,3 +201,7 @@ IMPLEMENTED
   that is called when the Recall button is pressed.
 114) Hide Recall button if the lastPokemon is null. //I have added a check in the makeButtonsDisappear
   function.
+123) Get rid of Toast when the user clicks on a button. //I have added the removal of the Toast to the 
+  bottom of buttonClick in main.js.
+125) Fix KOMMO-O's Pokédex forms (784). //Added logic to the requestForm function in requests.js where I
+  had hard coded KOMMO-O's name.

@@ -1,10 +1,11 @@
 'use strict';
 import {
   Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, NextButton,
-  RecallButton, ReadEntryButton, //FemaleSpritesButton, 
-  ClearButton,
+  RecallButton, ReadEntryButton, ClearButton,
 } from './main.js';
-import { requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, } from './requests.js';
+import { 
+  requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, 
+} from './requests.js';
 
 const Synth = window.speechSynthesis;
 const Body = document.body;
@@ -23,7 +24,7 @@ const TextColor = 'rgba(98, 98, 98, 0.95)'
 const HiddenAbilityTextColor = 'rgba(255, 111, 97, 0.95)';
 const TransparentColor = 'rgba(0, 0, 0, 0)';
 const MinimumId = 1;
-let MaximumId = localStorage.getItem('maximumId');
+const MaximumId = 1025;
 
 function getAbilityList(abilities) {
   AbilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';
@@ -66,8 +67,6 @@ function getHeldItemList(heldItems) {
     const ListItem = document.createElement('li');
     ListItem.id = `held-item-text-${++counter}`;
     ListItem.classList.add('held-item-text');
-    // const Name = capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name));
-    // requestHeldItem(heldItem.item.url, ListItem, Name);
     requestHeldItem(heldItem.item.url, ListItem, capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name)));
     ListItem.style.color = TextColor;
     HeldItemsUnorderedList.appendChild(ListItem);
@@ -75,7 +74,7 @@ function getHeldItemList(heldItems) {
 } //getHeldItemList
 
 function getFormList(forms) {
-  if(forms.length === 1 || localStorage.getItem('originalPokedex') === 'true') {
+  if (forms.length === 1) {
     FormsHeader.style.display = 'none';
     FormsUnorderedList.style.display = 'none';
     return;
@@ -135,8 +134,12 @@ function getWeight(weight) {
 
 function punctuationNameCheck(name) {
   name = capitalizeAfterHyphen(name);
-  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : name.includes('-Jr') ? name.replace('-Jr', ' Jr.') :
-    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') : name.includes('hd') ? name.replace('hd', `h'd`) : name;
+  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : 
+    name.includes('-Jr') ? name.replace('-Jr', ' Jr.') :
+    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') : 
+    name.includes('hd') ? name.replace('hd', `h'd`) : 
+    name.includes('o-O') ? name.replace('o-O', 'o-o') : 
+    name;
 } //punctuationNameCheck
 
 function getTypes(types) {
@@ -161,7 +164,6 @@ function getTypes(types) {
     TypeHeader.innerText = 'Types:';
     TypeText2.hidden = false;
   }
-
   Body.style.background = `radial-gradient(circle, ${firstBackgroundColor} 0%, ${secondBackgroundColor} 100%)`;
   return [firstColor, secondColor];
 } //getTypes
@@ -243,7 +245,6 @@ function getElementVisibility(elements, visibility) {
 function makeButtonsDisappear(id, hasGenderDifferences) {
   id !== MinimumId ? PreviousButton.style.display = 'inline-block' : PreviousButton.style.display = 'none';
   id !== MaximumId ? NextButton.style.display = 'inline-block' : NextButton.style.display = 'none';
-  // hasGenderDifferences ? FemaleSpritesButton.style.display = 'inline-block' : FemaleSpritesButton.style.display = 'none';
   localStorage.getItem('lastPokemon').length !== 0 ? RecallButton.style.display = 'inline-block' : RecallButton.style.display = 'none';
 } //makeButtonsDisappear
 
@@ -272,7 +273,7 @@ function onGeoError() {
 } //onGeoError
 
 //! Does this need to be refactored
-function generatePokemon(id, visibility, skipIdValidation) { //! Fix generatePokemon for all sizes of windows and have all pokemon show sprites and all the same sizes- #773
+function generatePokemon(id, visibility, skipIdValidation) { //! Fix generatePokemon for all sizes of windows, have all pokemon show sprites, all the same sizes- #773
   if (skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) { //! Refactor this and see about adding an else and creating a toast notifier
     requestPokemon(id, visibility);
     Textbox.style.color = TextColor;

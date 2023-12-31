@@ -1,10 +1,12 @@
 'use strict';
 import { createArray, generatePokemon, getElementVisibility, getRandomPokemon, 
   startReadingEntry, Synth, inputCheck, validPokedexNumberCheck, showToast, 
-  getDeviceType, headerLayout, Body, convertHexToRgba} from './helpers.js';
-import { requestType } from './requests.js';
+  getDeviceType, headerLayout, Body, convertHexToRgba, 
+} from './helpers.js';
+import { 
+  requestType 
+} from './requests.js';
 
-const HeaderTextButton = document.getElementById('header-text-button');
 const Textbox = document.getElementById('pokemon-textbox');
 const GoButton = document.getElementById('go-button');
 const GoButtonTop = document.getElementById('go-button-top');
@@ -18,8 +20,6 @@ const ReadEntryButton = document.getElementById('read-entry-button');
 const ReadEntryButtonTop = document.getElementById('read-entry-button-top');
 const RecallButton = document.getElementById('recall-button');
 const RecallButtonTop = document.getElementById('recall-button-top');
-// const FemaleSpritesButton = document.getElementById('female-sprite-button');
-// const FemaleSpritesButtonTop = document.getElementById('female-sprite-button-top');
 const ClearButton = document.getElementById('clear-button');
 const ClearButtonTop = document.getElementById('clear-button-top');
 const Toast = document.getElementById('toast');
@@ -33,19 +33,14 @@ const SpriteTable = document.getElementById('sprite-table');
 const HiddenElementsArray = createArray(document.getElementsByClassName('hidden-element'));
 const TypeText = document.getElementById('type-text');
 const TypeText2 = document.getElementById('type-text-2');
-// const TypesHeader = document.getElementById('types-header');
 let deviceType = null;
 let id = null;
-let showOnlyOriginalPokemon = null;
 
 (() => { //! Combine some of the event listeners into one function
   getElementVisibility(HiddenElementsArray, 'hidden');
   getSystemInformation();
   checkLocalStorageItems();
   loadLastViewedPokemon();
-  HeaderTextButton.addEventListener('click', () => {
-    buttonClick('HeaderTextButton', true, false);
-  });
   GoButton.addEventListener('click', () => {
     buttonClick('Go', true, true);
   });
@@ -64,9 +59,6 @@ let showOnlyOriginalPokemon = null;
   ReadEntryButton.addEventListener('click', () => {
     buttonClick('ReadEntry', false, false);
   });
-  // FemaleSpritesButton.addEventListener('click', () => {
-  //   buttonClick('FemaleSprites', false, false);
-  // });
   ClearButton.addEventListener('click', () => {
     buttonClick('Clear', true, false);
   });
@@ -98,7 +90,7 @@ let showOnlyOriginalPokemon = null;
   });
   Textbox.addEventListener('blur', () => {
     if(Textbox.value === '') {
-      Textbox.value = id;
+      Textbox.value = id;      
       validPokedexNumberCheck();
     }
   });
@@ -131,11 +123,9 @@ function checkLocalStorageItems() {
     localStorage.removeItem('lastPokemon');
   }
   if('originalPokedex' in localStorage && localStorage.getItem('originalPokedex') === 'true') {
-    showOnlyOriginalPokemon = true;
     localStorage.setItem('originalPokedex', true);
     localStorage.setItem('maximumId', 151);
   } else {
-    showOnlyOriginalPokemon = false;
     localStorage.setItem('originalPokedex', false);
     localStorage.setItem('maximumId', 1010);
   }
@@ -146,17 +136,6 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
     Synth.cancel();
   }
   switch(buttonClicked) {
-    case 'HeaderTextButton':
-      if(localStorage.getItem('originalPokedex') === 'true' || localStorage.getItem('originalPokedex') === '' ) {
-        showOnlyOriginalPokemon = false;
-        localStorage.setItem('originalPokedex', false);
-        localStorage.setItem('maximumId', 1010);
-      } else {
-        showOnlyOriginalPokemon = true;
-        localStorage.setItem('originalPokedex', true);
-        localStorage.setItem('maximumId', 151);
-      }
-      break;
     case 'Go':
     case 'Enter':
       if(ClearButton.style.display !== 'none') {
@@ -192,9 +171,6 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
     case 'ReadEntry':
       Synth.speaking ? Synth.cancel() : startReadingEntry(NameHeader.textContent, GenusSubHeader.textContent, PokemonEntryText.textContent);
       break;
-    // case 'FemaleSprites':
-    //   alert('This feature is not yet implemented.'); //! Create a function in helpers.js to add functionality
-    //   break;
     case 'Clear':
       Textbox.value = '';
       Body.style.background = convertHexToRgba('#ffffff', 1);
@@ -204,30 +180,28 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       getElementVisibility(HiddenElementsArray, 'hidden');
       localStorage.removeItem('id'); //! Rename 'id' to 'currentPokemon'
       localStorage.removeItem('lastPokemon');
-      // console.clear();
+      clearScrollbar();
       break;
     case 'TypeText':
       requestType(TypeText.innerText);
-      // TypesHeader.innerText(`Type: ${TypeText.innerText}`);
       break;
     case 'TypeText2':
       requestType(TypeText2.innerText);
-      // TypesHeader.innerText(`Type: ${TypeText2.innerText}`);
       break;
     case 'ToastClose':
     case 'Toast':
-      Toast.classList.remove('toast-active');
       Textbox.focus();
       break;
   }
   if(callGeneratePokemon) {
     generatePokemon(id, 'visible', false);
   }
+  Toast.classList.remove('toast-active');
 } //buttonClick
 
 export {
   HiddenElementsArray, Textbox, Toast, GoButton, GoButtonTop, RandomPokemonButton, 
   RandomPokemonButtonTop, PreviousButton, PreviousButtonTop, NextButton, NextButtonTop, 
-  ReadEntryButton, ReadEntryButtonTop, //FemaleSpritesButton, FemaleSpritesButtonTop, 
-  RecallButton, RecallButtonTop, ClearButton, ClearButtonTop, deviceType, 
+  ReadEntryButton, ReadEntryButtonTop, RecallButton, RecallButtonTop, ClearButton, 
+  ClearButtonTop, deviceType, 
 }
