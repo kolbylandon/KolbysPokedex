@@ -135,11 +135,11 @@ function getWeight(weight) {
 
 function punctuationNameCheck(name) {
   name = capitalizeAfterHyphen(name);
-  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : 
-    name.includes('-Jr') ? name.replace('-Jr', ' Jr.') :
-    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') : 
-    name.includes('hd') ? name.replace('hd', `h'd`) : 
-    name.includes('o-O') ? name.replace('o-O', 'o-o') : 
+  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : //Mr. Mime
+    name.includes('-Jr') ? name.replace('-Jr', ' Jr.') :      //Mime Jr.
+    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') :  //Pikachu Ph.D.
+    name.includes('hd') ? name.replace('hd', `h'd`) :         //Farfetch'd
+    name.includes('o-O') ? name.replace('o-O', 'o-o') :       //Kommo-o
     name;
 } //punctuationNameCheck
 

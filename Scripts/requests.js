@@ -88,9 +88,13 @@ async function requestForm(url, listItem) {
   .then(formsResponse => {
     formsResponse.forms.forEach(form => {
       let name = punctuationNameCheck(form.name);
-      !name.includes('kommo-o') ? name.replaceAll('-', ' ') :
-      name === 'kommo-o' ? name = 'kommo-o' :
-      name = 'kommo-o Totem';
+      if(!name.includes('kommo-o')) {
+        name = name.replaceAll('-', ' ');
+      } else if(name === 'kommo-o') {
+        name = 'kommo-o';
+      } else {
+        name = 'kommo-o Totem';
+      }
       listItem.innerText = capitalizeFirstLetter(name);
       return;
     });
