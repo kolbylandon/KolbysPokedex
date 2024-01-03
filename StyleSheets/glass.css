@@ -93,7 +93,7 @@
 #root .toast {
   display: flex;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: 6rem;
   right: -50%;
   background-color: rgba(247, 247, 247, 0.95);

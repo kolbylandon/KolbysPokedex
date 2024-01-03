@@ -56,8 +56,8 @@ IN PROGRESS
 -----------------------------------------------------------------------------------------
 056) Push Enter key to search for Pokémon.
 122) Fix localStorage so that it is populated at the beginning of the application.
-124) Make the Toast static so that it does not move when the user scrolls.
 126) Click on the Types and pull up a list of all Pokémon with that type.
+127) Add '(Hidden)' to the hidden abilities.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -203,5 +203,7 @@ IMPLEMENTED
   function.
 123) Get rid of Toast when the user clicks on a button. //I have added the removal of the Toast to the 
   bottom of buttonClick in main.js.
+124) Make the Toast static so that it does not move when the user scrolls. //Changed the position of 
+  #root .toast to fixed in the glass.css file.
 125) Fix KOMMO-O's Pokédex forms (784). //Added logic to the requestForm function in requests.js where I
   had hard coded KOMMO-O's name.

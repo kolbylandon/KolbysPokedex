@@ -24,6 +24,7 @@ const TextColor = 'rgba(98, 98, 98, 0.95)'
 const HiddenAbilityTextColor = 'rgba(255, 111, 97, 0.95)';
 const TransparentColor = 'rgba(0, 0, 0, 0)';
 const MinimumId = 1;
+const OriginalMaximumId = 151;
 const MaximumId = 1025;
 
 function getAbilityList(abilities) {
@@ -245,11 +246,11 @@ function getElementVisibility(elements, visibility) {
 function makeButtonsDisappear(id, hasGenderDifferences) {
   id !== MinimumId ? PreviousButton.style.display = 'inline-block' : PreviousButton.style.display = 'none';
   id !== MaximumId ? NextButton.style.display = 'inline-block' : NextButton.style.display = 'none';
-  localStorage.getItem('lastPokemon').length !== 0 ? RecallButton.style.display = 'inline-block' : RecallButton.style.display = 'none';
+  localStorage.getItem('lastPokémon').length !== 0 ? RecallButton.style.display = 'inline-block' : RecallButton.style.display = 'none';
 } //makeButtonsDisappear
 
 function populateLocalStorage(id) {
-  localStorage.setItem('id', id);
+  localStorage.setItem('currentPokémon', id);
   localStorage.setItem('dateTime', getDateTime());
   getGeoLocation();
 } //populateLocalStorage
@@ -342,5 +343,6 @@ export {
   startReadingEntry, getAbilityList, getGenus, getRandomPokemon, inputCheck,
   headerLayout, getDeviceType, getHeldItemList, showToast, getFormList,
   capitalizeFirstLetter, populateLocalStorage, validPokedexNumberCheck, getPokedexType,
-  TextColor, HiddenAbilityTextColor, StatsChart, Synth, MinimumId, MaximumId, TransparentColor, Body,
+  TextColor, HiddenAbilityTextColor, StatsChart, Synth, MinimumId, OriginalMaximumId, 
+  MaximumId, TransparentColor, Body,
 };

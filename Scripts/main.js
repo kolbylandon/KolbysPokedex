@@ -1,7 +1,7 @@
 'use strict';
 import { createArray, generatePokemon, getElementVisibility, getRandomPokemon, 
   startReadingEntry, Synth, inputCheck, validPokedexNumberCheck, showToast, 
-  getDeviceType, headerLayout, Body, convertHexToRgba, 
+  getDeviceType, headerLayout, Body, convertHexToRgba, OriginalMaximumId, MaximumId
 } from './helpers.js';
 import { 
   requestType 
@@ -119,15 +119,15 @@ function loadLastViewedPokemon() {
 } //loadLastViewedPokemon
 
 function checkLocalStorageItems() {
-  if(localStorage.getItem('id') === localStorage.getItem('lastPokemon')) {
-    localStorage.removeItem('lastPokemon');
+  if(localStorage.getItem('currentPokémon') === localStorage.getItem('lastPokémon')) {
+    localStorage.removeItem('lastPokémon');
   }
-  if('originalPokedex' in localStorage && localStorage.getItem('originalPokedex') === 'true') {
-    localStorage.setItem('originalPokedex', true);
-    localStorage.setItem('maximumId', 151);
+  if('originalPokédex' in localStorage && localStorage.getItem('originalPokédex') === 'true') {
+    localStorage.setItem('originalPokédex', true);
+    localStorage.setItem('maximumId', OriginalMaximumId);
   } else {
-    localStorage.setItem('originalPokedex', false);
-    localStorage.setItem('maximumId', 1010);
+    localStorage.setItem('originalPokédex', false);
+    localStorage.setItem('maximumId', MaximumId);
   }
 } //checkLocalStorageItems
 
@@ -139,30 +139,30 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
     case 'Go':
     case 'Enter':
       if(ClearButton.style.display !== 'none') {
-        localStorage.setItem('lastPokemon', NumberHeader.innerText.substring(1));
+        localStorage.setItem('lastPokémon', NumberHeader.innerText.substring(1));
       }
       id = Textbox.value;
       break;
     case 'Random':
-      localStorage.setItem('lastPokemon', Textbox.value);
+      localStorage.setItem('lastPokémon', Textbox.value);
       id = getRandomPokemon();
       Textbox.value = id;
       break;
     case 'Previous':
-      localStorage.setItem('lastPokemon', Textbox.value);
+      localStorage.setItem('lastPokémon', Textbox.value);
       id = (parseInt(NumberHeader.innerText.substring(1)) - 1).toString();
       Textbox.value = id;
       break;
     case 'Next':
-      localStorage.setItem('lastPokemon', Textbox.value);
+      localStorage.setItem('lastPokémon', Textbox.value);
       id = (parseInt(NumberHeader.innerText.substring(1)) + 1).toString();
       Textbox.value = id;
       break;
     case 'Recall':
-      if(localStorage.getItem('lastPokemon') !== null && localStorage.getItem('lastPokemon') !== localStorage.getItem('id') && localStorage.getItem('lastPokemon') !== '') {
-        id = localStorage.getItem('lastPokemon');
+      if(localStorage.getItem('lastPokémon') !== null && localStorage.getItem('lastPokémon') !== localStorage.getItem('currentPokémon') && localStorage.getItem('lastPokémon') !== '') {
+        id = localStorage.getItem('lastPokémon');
         Textbox.value = id;
-        localStorage.setItem('lastPokemon', localStorage.getItem('id'));
+        localStorage.setItem('lastPokémon', localStorage.getItem('currentPokémon'));
         generatePokemon(id, 'visible', false);
       } else {
         showToast('No previous Pokémon to recall.');
@@ -174,13 +174,12 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
     case 'Clear':
       Textbox.value = '';
       Body.style.background = convertHexToRgba('#ffffff', 1);
-      localStorage.setItem('lastPokemon', Textbox.value);
+      localStorage.setItem('lastPokémon', Textbox.value);
       id = null;
       ToastCloseButton.click();
       getElementVisibility(HiddenElementsArray, 'hidden');
-      localStorage.removeItem('id'); //! Rename 'id' to 'currentPokemon'
-      localStorage.removeItem('lastPokemon');
-      clearScrollbar();
+      localStorage.removeItem('currentPokémon');
+      localStorage.removeItem('lastPokémon');
       break;
     case 'TypeText':
       requestType(TypeText.innerText);
