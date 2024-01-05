@@ -51,13 +51,16 @@ TO DO
 119) Recreate UI for Flat UI look.
 120) Recreate UI with NES.CSS (https://nostalgic-css.github.io/NES.css/).
 121) Create a toggle list of all headers to be shown or hidden in 'info-card'.
+128) Format the dateTime variable in local storage.
+129) Fix undefined genera and Pokédex entries (1016) by leaving them blank.
+130) Fix blank abilities in the abilities list (1010).
+131) Create a slideshow that includes the official artwork on the sprite-card.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
 056) Push Enter key to search for Pokémon.
 122) Fix localStorage so that it is populated at the beginning of the application.
 126) Click on the Types and pull up a list of all Pokémon with that type.
-127) Add '(Hidden)' to the hidden abilities.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -207,3 +210,5 @@ IMPLEMENTED
   #root .toast to fixed in the glass.css file.
 125) Fix KOMMO-O's Pokédex forms (784). //Added logic to the requestForm function in requests.js where I
   had hard coded KOMMO-O's name.
+127) Add '(Hidden)' to the hidden abilities in the abilities list. //Added an if check in the helpers.js
+  file to add '(Hidden)' after the name. For the time being, I am leaving it read as well.

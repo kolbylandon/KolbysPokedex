@@ -1,7 +1,9 @@
 'use strict';
-import { convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus, 
+import { 
+  convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus, 
   getHeight, getHeldItemList, getLargestStat, getPokedexEntry, getStatTotal, getTypes, 
-  getWeight, makeButtonsDisappear, punctuationNameCheck, populateLocalStorage, } from './helpers.js';
+  getWeight, makeButtonsDisappear, punctuationNameCheck, populateLocalStorage, 
+} from './helpers.js';
 import { 
   displayStatsChart, 
 } from './statsChart.js';
@@ -21,6 +23,8 @@ const FrontDefault = document.getElementById('front-default');
 const FrontShiny = document.getElementById('front-shiny');
 const BackDefault = document.getElementById('back-default');
 const BackShiny = document.getElementById('back-shiny');
+let DefaultArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
+let ShinyArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/'
 let pokemon = null;
 
 function populatePage(pokemonResponse, speciesResponse, visibility) {
@@ -47,7 +51,7 @@ function displayAttributes() {
   NumberHeader.innerText = `#${pokemon.id} `;
   pokemon.name = punctuationNameCheck(pokemon.name);
   NameHeader.innerText = pokemon.name.toUpperCase();
-  GenusSubHeader.innerText = `The ${pokemon.genus}`;
+  GenusSubHeader.innerText = pokemon.genus;
   GenerationText.innerText = pokemon.generation;
   PokedexEntryText.innerText = pokemon.pokedexEntry;
   HeightText.innerText = pokemon.height;
@@ -97,7 +101,7 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
       pokemonResponse.stats[2].base_stat, 
       pokemonResponse.stats[3].base_stat, 
       pokemonResponse.stats[4].base_stat, 
-      pokemonResponse.stats[5].base_stat
+      pokemonResponse.stats[5].base_stat,
     ],
     baseStatTotal: statTotal,
     generation: speciesResponse.generation.name.substring(11).toUpperCase(),
@@ -106,6 +110,8 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     BackDefaultSprite: pokemonResponse.sprites.back_default,
     FrontShinySprite: pokemonResponse.sprites.front_shiny,
     BackShinySprite: pokemonResponse.sprites.back_shiny,
+    FrontDefaultOfficialArtwork: `${DefaultArtwork}${speciesResponse.id}.png`,
+    FrontShinyOfficialArtwork: `${ShinyArtwork}${speciesResponse.id}.png`,
     hasGenderDifferences: speciesResponse.has_gender_differences,
   };
   checkForGenderDifferences(pokemonResponse);

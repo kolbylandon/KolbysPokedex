@@ -1,5 +1,6 @@
 'use strict';
-import { createArray, generatePokemon, getElementVisibility, getRandomPokemon, 
+import { 
+  createArray, generatePokemon, getElementVisibility, getRandomPokemon, 
   startReadingEntry, Synth, inputCheck, validPokedexNumberCheck, showToast, 
   getDeviceType, headerLayout, Body, convertHexToRgba, OriginalMaximumId, MaximumId
 } from './helpers.js';

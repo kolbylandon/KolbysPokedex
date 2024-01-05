@@ -13,9 +13,23 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
   name = punctuationNameCheck(name);
   let chart = RadarChart;
   let data = {
-    labels: [ 'HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed', ],
+    labels: [ 
+      'HP', 
+      'Attack', 
+      'Defense', 
+      'Sp.Atk', 
+      'Sp.Def', 
+      'Speed', 
+    ],
     datasets: [{
-      data: [ stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], ],
+      data: [ 
+        stats[0], 
+        stats[1], 
+        stats[2], 
+        stats[3], 
+        stats[4], 
+        stats[5], 
+      ],
       backgroundColor,
       borderColor,
     }],

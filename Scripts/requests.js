@@ -6,6 +6,7 @@ import {
   capitalizeFirstLetter, punctuationNameCheck, showToast, 
 } from './helpers.js';
 
+const ApiAddress = 'https://pokeapi.co/api/v2';
 const Headers = {
   'accept': 'text/html,application/xhtml+xml',
   'accept-encoding': 'gzip, deflate, compress, br',
@@ -17,7 +18,7 @@ const Headers = {
 
 async function requestPokemon(id, visibility) {
   let pokemonResponse  = null;
-  await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, Headers)
+  await fetch(`${ApiAddress}/pokemon/${id}`, Headers)
   .then(response => {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
@@ -47,7 +48,10 @@ async function requestAbilityEffect(url, listItem, name) {
     abilityEffectResponse.flavor_text_entries.forEach(entry => {
       if(entry.language.name === 'en') {
         name = name.replaceAll('-', ' ');
-        listItem.innerHTML = `<u>${name}</u>- ${entry.flavor_text}`;
+        if(entry.flavor_text.includes('\ufffd')) {
+          entry.flavor_text = entry.flavor_text.replaceAll('\ufffd', 'é')
+        }
+        listItem.innerHTML = `<b><u>${name}</u></b>- ${entry.flavor_text}`;
         return;
       }
     });
@@ -68,7 +72,7 @@ async function requestHeldItem(url, listItem, name) {
     heldItemResponse.effect_entries.forEach(entry => {
       if(entry.language.name === 'en') {
         name = name.replaceAll('-', ' ');
-        listItem.innerHTML = `<u>${name}</u>- ${entry.effect}`;
+        listItem.innerHTML = `<b><u>${name}</u></b>- ${entry.effect}`;
         return;
       }
     });
@@ -163,7 +167,7 @@ async function requestType(type) {
       type = 18;
       break;
   }
-  await fetch(`https://pokeapi.co/api/v2/type/${type}`, Headers)
+  await fetch(`${ApiAddress}/type/${type}`, Headers)
   .then(response => {
     return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
   })
