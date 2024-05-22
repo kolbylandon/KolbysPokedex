@@ -26,6 +26,7 @@ const BackShiny = document.getElementById('back-shiny');
 let DefaultArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
 let ShinyArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/'
 let pokemon = null;
+let spritesArray = null;
 
 function populatePage(pokemonResponse, speciesResponse, visibility) {
   let statTotal = getStatTotal(pokemonResponse.stats);
@@ -118,6 +119,29 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     hasGenderDifferences: speciesResponse.has_gender_differences,
   };
   checkForGenderDifferences(pokemonResponse);
+  spritesArray = [
+    pokemon.FrontDefaultSprite,
+    pokemon.BackDefaultSprite,
+    pokemon.FrontShinySprite,
+    pokemon.BackShinySprite,
+    pokemon.FrontDefaultOfficialArtwork,
+    pokemon.FrontShinyOfficialArtwork,
+    pokemon.frontFemaleSprite,
+    pokemon.backFemaleSprite,
+    pokemon.frontFemaleShinySprite,
+    pokemon.backFemaleShinySprite
+  ]
+  // console.table(spritesArray);
+
+  for(let sprite=0; sprite<spritesArray.length; sprite++) {
+    console.log(spritesArray.indexOf(sprite));
+  }
+  // spritesArray.foreach(sprite => {
+  //   if(sprite === null) {
+  //     console.error(sprite);
+  //     // sprite = pokeball.png;
+  //   }
+  // });
   populateLocalStorage(pokemon.id);
   return pokemon;
 } //getPokemonObject

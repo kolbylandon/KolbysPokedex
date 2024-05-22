@@ -59,8 +59,7 @@ IN PROGRESS
 -----------------------------------------------------------------------------------------
 056) Push Enter key to search for Pokémon.
 126) Click on the Types and pull up a list of all Pokémon with that type.
-132) Get rid of the bug that allows the lastPokémon and currentPokémon to be the same
-133) Change the mouse to a pokéball when hovering over the types divs.
+132) Fix the bug that allows the lastPokémon and currentPokémon to be the same.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -216,3 +215,5 @@ IMPLEMENTED
   had hard coded KOMMO-O's name.
 127) Add '(Hidden)' to the hidden abilities in the abilities list. //Added an if check in the helpers.js
   file to add '(Hidden)' after the name. For the time being, I am leaving it read as well.
+133) Change the mouse to a pokéball when hovering over the types divs. //Used pokeball-bullet.png as the 
+  image when hovering.
