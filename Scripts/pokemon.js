@@ -45,6 +45,9 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   getHeldItemList(pokemon.heldItems);
   getFormList(pokemon.forms);
   getElementVisibility(HiddenElementsArray, visibility);
+  if(entry.includes(pokemon.name)) {
+    pokemon.name.capitalizeFirstLetter();
+  }
 } //populatePage
 
 function displayAttributes() {

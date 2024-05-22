@@ -18,7 +18,6 @@ TO DO
 047) Click the Info header text to switch to old css.
 057) Create two functions for front and back sprites to create less text.
 058) Hover over the held items and create a tooltip to see what they item does.
-059) Get random 'en' flavor text for Pokédex entry.
 068) Recreate API using MongoDB and NodeJS.
 072) See if API has images for Held Items.
 073) Create a getFunctions.js file for all of the functions getting information.
@@ -35,7 +34,6 @@ TO DO
 092) Use the images from the held items as the bullets for the items list.
 093) Use Service Worker to get fetch the other forms' information.
 094) See if other forms have other Pokédex entries.
-096) Fix issues Pokémon numbers 899-905.
 097) Rewrite with TailwindCSS.
 098) Rewrite in a JS framework, most likely React or Svelte.
 100) Create a service worker to fetch other forms' data in the background.
@@ -51,6 +49,7 @@ TO DO
 119) Recreate UI for Flat UI look.
 120) Recreate UI with NES.CSS (https://nostalgic-css.github.io/NES.css/).
 121) Create a toggle list of all headers to be shown or hidden in 'info-card'.
+122) Fix localStorage so that it is populated at the beginning of the application.
 128) Format the dateTime variable in local storage.
 129) Fix undefined genera and Pokédex entries (1016) by leaving them blank.
 130) Fix blank abilities in the abilities list (1010).
@@ -59,8 +58,9 @@ TO DO
 IN PROGRESS
 -----------------------------------------------------------------------------------------
 056) Push Enter key to search for Pokémon.
-122) Fix localStorage so that it is populated at the beginning of the application.
 126) Click on the Types and pull up a list of all Pokémon with that type.
+132) Get rid of the bug that allows the lastPokémon and currentPokémon to be the same
+133) Change the mouse to a pokéball when hovering over the types divs.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -81,8 +81,8 @@ IMPLEMENTED
 009) Make generation into a property of pokemon. //The property for generation is
  in the pokemonSpeciesObject generated from the getPokemonSpeciesObject function.
 010) Get Pokéball to show in the window tab. //Pokéball is showing in the window tab.
-  The pokeball.png file is the one showing.
-013) Display Pokédex information in english. //Proper Pokédex entry is being shown using
+  The pokéball.png file is the one showing.
+013) Display Pokédex information in English. //Proper Pokédex entry is being shown using
   the getPokedexEntry function.
 014) Change to fetch instead of ajax. //API calls are now using fetch requests instead of
   ajax requests with the fetchPokemon functions.
@@ -142,6 +142,8 @@ IMPLEMENTED
   size of the Stats Chart.
 055) Replace IF statements with ternary statements. //The IF statements that could be turned to
   ternary operators have been.
+059) Get random 'en' flavor text for Pokédex entry. //The Pokédex entry is now random due to added
+  logic in helpers.js in the getPokedexEntry function.
 060) Add Height and Weight before the Base Stats. //Added the Height and Weight before the Base
   Stats and added them to the same line.
 061) Have a front/back switch to shiny sprites. //Not needed, I decided to show all four sprites
@@ -182,6 +184,8 @@ IMPLEMENTED
   bottom of the screen for mobile.
 095) Animate the gradient border. //Decided not to do this and have a shadow of the 
   secondary type if the Pokémon has two, else the primary type.
+096) Fix issues Pokémon numbers 899-905. //This is now fixed with the exception of a few sprites.
+  This was caused by PokeAPI not having the correct information.
 099) Capitalize all of the const variables and only import what is needed. //The const variables
   have been capitalized and only the necessary modules have been imported.
 101) Fix the Pokémon name in the title to not have text after the hyphens. //The Pokémon name in the

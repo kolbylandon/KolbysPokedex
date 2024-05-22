@@ -111,11 +111,18 @@ function getStatTotal(stats) {
 
 function getPokedexEntry(flavorTextEntries) { //! Look at randomizing the different english pokemon entries
   const RegEx = /[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000\u000c\n]/g;
+  let entriesArray = [];
+  let entry = ``;
   for(let index in flavorTextEntries) { //! Try map instead of for loop
     if(flavorTextEntries[index].language.name === 'en') {
-      return flavorTextEntries[index].flavor_text.replaceAll(RegEx, ' ');
+      entriesArray.push(flavorTextEntries[index].flavor_text);
     }
   }
+  entry = entriesArray[~~(Math.random() * entriesArray.length)].replaceAll(RegEx, ' ');
+  if(entry.includes('POKéMON')) {
+    entry = entry.replaceAll('POKéMON', 'Pokémon');
+  }
+  return entry;
 } //getPokedexEntry
 
 function getGenus(genera) {
