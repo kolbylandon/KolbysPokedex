@@ -207,7 +207,7 @@ IMPLEMENTED
   the top when you click on one of the bottom cards
 110) Create a Recall button that will retrieve the last viewed Pokémon. //There is a LocalStorage item
   that is called when the Recall button is pressed.
-114) Hide Recall button if the lastPokemon is null. //I have added a check in the makeButtonsDisappear
+114) Hide Recall button if the lastPokémon is null. //I have added a check in the makeButtonsDisappear
   function.
 123) Get rid of Toast when the user clicks on a button. //I have added the removal of the Toast to the 
   bottom of buttonClick in main.js.

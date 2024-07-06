@@ -139,7 +139,7 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
   switch(buttonClicked) {
     case 'Go':
     case 'Enter':
-      if(ClearButton.style.display !== 'none') {
+      if(ClearButton.style.display !== 'none') {  //! Look into combining these two if statements
         if(localStorage.getItem('currentPokémon') !== id)
           localStorage.setItem('lastPokémon', NumberHeader.innerText.substring(1));
       }
@@ -182,6 +182,7 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       getElementVisibility(HiddenElementsArray, 'hidden');
       localStorage.removeItem('currentPokémon');
       localStorage.removeItem('lastPokémon');
+      localStorage.removeItem('id');
       break;
     case 'TypeText':
       requestType(TypeText.innerText);
