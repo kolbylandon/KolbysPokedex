@@ -2,7 +2,7 @@
 import { 
   convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus, 
   getHeight, getHeldItemList, getLargestStat, getPokedexEntry, getStatTotal, getTypes, 
-  getWeight, makeButtonsDisappear, punctuationNameCheck, populateLocalStorage, 
+  getWeight, makeButtonsDisappear, punctuationNameCheck, populateLocalStorage, capitalizeFirstLetter,
 } from './helpers.js';
 import { 
   displayStatsChart, 
@@ -47,7 +47,7 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   getFormList(pokemon.forms);
   getElementVisibility(HiddenElementsArray, visibility);
   if(entry.includes(pokemon.name)) {
-    pokemon.name.capitalizeFirstLetter();
+    capitalizeFirstLetter(pokemon.name);
   }
 } //populatePage
 
@@ -133,9 +133,9 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
   ]
   // console.table(spritesArray);
 
-  for(let sprite=0; sprite<spritesArray.length; sprite++) {
-    console.log(spritesArray.indexOf(sprite));
-  }
+  // for(let sprite=0; sprite<spritesArray.length; sprite++) {
+  //   console.log(spritesArray.indexOf(sprite));
+  // }
   // spritesArray.foreach(sprite => {
   //   if(sprite === null) {
   //     console.error(sprite);

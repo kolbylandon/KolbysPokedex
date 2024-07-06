@@ -140,7 +140,8 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
     case 'Go':
     case 'Enter':
       if(ClearButton.style.display !== 'none') {
-        localStorage.setItem('lastPokémon', NumberHeader.innerText.substring(1));
+        if(localStorage.getItem('currentPokémon') !== id)
+          localStorage.setItem('lastPokémon', NumberHeader.innerText.substring(1));
       }
       id = Textbox.value;
       break;

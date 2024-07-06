@@ -60,6 +60,8 @@ IN PROGRESS
 056) Push Enter key to search for Pokémon.
 126) Click on the Types and pull up a list of all Pokémon with that type.
 132) Fix the bug that allows the lastPokémon and currentPokémon to be the same.
+134) The Go button will be invisible when there is no active Pokémon or empty search.
+125) Include Cries from pokemon API call.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------

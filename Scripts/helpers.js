@@ -256,6 +256,9 @@ function getElementVisibility(elements, visibility) {
 function makeButtonsDisappear(id, hasGenderDifferences) {
   id !== MinimumId ? PreviousButton.style.display = 'inline-block' : PreviousButton.style.display = 'none';
   id !== MaximumId ? NextButton.style.display = 'inline-block' : NextButton.style.display = 'none';
+  if(localStorage.getItem('lastPokémon') === null) {
+    return;
+  }
   localStorage.getItem('lastPokémon').length !== 0 ? RecallButton.style.display = 'inline-block' : RecallButton.style.display = 'none';
 } //makeButtonsDisappear
 
