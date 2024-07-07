@@ -6,6 +6,9 @@ import {
 import { 
   requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, 
 } from './requests.js';
+import {
+  pokemon
+} from './pokemon.js';
 
 const Synth = window.speechSynthesis;
 const Body = document.body;
@@ -47,7 +50,7 @@ function getAbilityList(abilities) {
 
 function getPokedexType(showOnlyOriginalPokemon) {
   if(showOnlyOriginalPokemon === 'true') {
-    return MaximumId = 151;
+    return MaximumId = OriginalMaximumId;
   } else {
     return MaximumId = 1025;
   }
@@ -306,6 +309,11 @@ function showToast(text) {
   Textbox.focus();
 } //showToast
 
+function playPokemonCry() {
+  let audio = new Audio(pokemon.cry);
+  audio.play();
+} //playPokemonCry
+
 function startReadingEntry(name, genus, entry) {
   Synth.speak(new SpeechSynthesisUtterance(name));
   Synth.speak(new SpeechSynthesisUtterance(genus));
@@ -351,7 +359,7 @@ function capitalizeFirstLetter(string) {
 } //capitalize
 
 export {
-  getStatTotal, getPokedexEntry, getElementVisibility,
+  getStatTotal, getPokedexEntry, getElementVisibility, playPokemonCry,
   convertHexToRgba, getHeight, getWeight, getTypes, punctuationNameCheck,
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   startReadingEntry, getAbilityList, getGenus, getRandomPokemon, inputCheck,

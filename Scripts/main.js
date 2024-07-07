@@ -1,6 +1,6 @@
 'use strict';
 import { 
-  createArray, generatePokemon, getElementVisibility, getRandomPokemon, 
+  createArray, generatePokemon, getElementVisibility, getRandomPokemon, playPokemonCry,
   startReadingEntry, Synth, inputCheck, validPokedexNumberCheck, showToast, 
   getDeviceType, headerLayout, Body, convertHexToRgba, OriginalMaximumId, MaximumId
 } from './helpers.js';
@@ -17,6 +17,8 @@ const PreviousButton = document.getElementById('previous-button');
 const PreviousButtonTop = document.getElementById('previous-button-top');
 const NextButton = document.getElementById('next-button');
 const NextButtonTop = document.getElementById('next-button-top');
+const CryButton = document.getElementById('cry-button');
+const CryButtonTop = document.getElementById('cry-button-top');
 const ReadEntryButton = document.getElementById('read-entry-button');
 const ReadEntryButtonTop = document.getElementById('read-entry-button-top');
 const RecallButton = document.getElementById('recall-button');
@@ -57,6 +59,9 @@ let id = null;
   RecallButton.addEventListener('click', () => {
     buttonClick('Recall', true, true);
   });
+  CryButton.addEventListener('click', () => {
+    buttonClick('Cry', true, false);
+  });
   ReadEntryButton.addEventListener('click', () => {
     buttonClick('ReadEntry', false, false);
   });
@@ -96,7 +101,8 @@ let id = null;
     }
   });
   Textbox.addEventListener('keydown', (event) => { //! Fix this
-    if(event.key === 'Enter') {
+    if(event.key == 'Enter') {
+      id = Textbox.value;
       buttonClick('Enter', true, true);
     }
   });
@@ -126,9 +132,11 @@ function checkLocalStorageItems() {
   if('originalPokédex' in localStorage && localStorage.getItem('originalPokédex') === 'true') {
     localStorage.setItem('originalPokédex', true);
     localStorage.setItem('maximumId', OriginalMaximumId);
+    return;
   } else {
     localStorage.setItem('originalPokédex', false);
     localStorage.setItem('maximumId', MaximumId);
+    return;
   }
 } //checkLocalStorageItems
 
@@ -170,6 +178,9 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
         showToast('No previous Pokémon to recall.');
       }
       break;
+    case 'Cry':
+      playPokemonCry();
+      break;
     case 'ReadEntry':
       Synth.speaking ? Synth.cancel() : startReadingEntry(NameHeader.textContent, GenusSubHeader.textContent, PokemonEntryText.textContent);
       break;
@@ -205,5 +216,5 @@ export {
   HiddenElementsArray, Textbox, Toast, GoButton, GoButtonTop, RandomPokemonButton, 
   RandomPokemonButtonTop, PreviousButton, PreviousButtonTop, NextButton, NextButtonTop, 
   ReadEntryButton, ReadEntryButtonTop, RecallButton, RecallButtonTop, ClearButton, 
-  ClearButtonTop, deviceType, 
+  ClearButtonTop, CryButton, CryButtonTop, deviceType,  
 }

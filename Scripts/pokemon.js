@@ -1,6 +1,6 @@
 'use strict';
 import { 
-  convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus, 
+  convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus,
   getHeight, getHeldItemList, getLargestStat, getPokedexEntry, getStatTotal, getTypes, 
   getWeight, makeButtonsDisappear, punctuationNameCheck, populateLocalStorage, capitalizeFirstLetter,
 } from './helpers.js';
@@ -8,7 +8,7 @@ import {
   displayStatsChart, 
 } from './statsChart.js';
 import { 
-  deviceType, HiddenElementsArray, 
+  deviceType, HiddenElementsArray, CryButton, CryButtonTop,
 } from './main.js';
 
 const NumberHeader = document.getElementById('number-header');
@@ -49,6 +49,7 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   if(entry.includes(pokemon.name)) {
     capitalizeFirstLetter(pokemon.name);
   }
+  CryButtonTop.innerText = `${capitalizeFirstLetter(pokemon.name)}'s Cry`;
 } //populatePage
 
 function displayAttributes() {
@@ -99,6 +100,7 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     isMythical: speciesResponse.is_mythical,
     types: pokemonResponse.types,
     forms: speciesResponse.varieties,
+    cry: pokemonResponse.cries.latest,
     statsArray: [
       pokemonResponse.stats[0].base_stat, 
       pokemonResponse.stats[1].base_stat, 
@@ -132,17 +134,18 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     pokemon.backFemaleShinySprite
   ]
   // console.table(spritesArray);
-
+  
   // for(let sprite=0; sprite<spritesArray.length; sprite++) {
-  //   console.log(spritesArray.indexOf(sprite));
-  // }
-  // spritesArray.foreach(sprite => {
-  //   if(sprite === null) {
-  //     console.error(sprite);
-  //     // sprite = pokeball.png;
-  //   }
-  // });
+    //   console.log(spritesArray.indexOf(sprite));
+    // }
+    // spritesArray.foreach(sprite => {
+      //   if(sprite === null) {
+        //     console.error(sprite);
+        //     // sprite = pokeball.png;
+        //   }
+        // });        
   populateLocalStorage(pokemon.id);
+  console.table(pokemon);
   return pokemon;
 } //getPokemonObject
 
