@@ -100,10 +100,10 @@ let id = null;
       validPokedexNumberCheck();
     }
   });
-  Textbox.addEventListener('keydown', (event) => { //! Fix this
-    if(event.key == 'Enter') {
-      id = Textbox.value;
-      buttonClick('Enter', true, true);
+  Textbox.addEventListener('keydown', (event) => {
+    if(event.key === 'Enter') {
+      event.preventDefault();
+      GoButton.click();
     }
   });
   window.onresize = () => {

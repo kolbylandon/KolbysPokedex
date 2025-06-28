@@ -57,9 +57,8 @@ TO DO
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
-056) Push Enter key to search for Pokémon.
 126) Click on the Types and pull up a list of all Pokémon with that type.
-132) Fix the bug that allows the lastPokémon and currentPokémon to be the same. --Random Pokémon Button, followed by Go Button
+132) Fix the bug that allows the lastPokémon and currentPokémon to be the same. --Random Pokémon Button, followed by Go Button -Check currentPokémon vs currentPokemon
 134) Go button will be invisible when no active Pokémon or empty search.
 
 IMPLEMENTED
@@ -142,6 +141,8 @@ IMPLEMENTED
   size of the Stats Chart.
 055) Replace IF statements with ternary statements. //The IF statements that could be turned to
   ternary operators have been.
+056) Push Enter key to search for Pokémon. //Added an event listener to the input
+  textbox to call the generatePokemon function when the Enter key is pressed.
 059) Get random 'en' flavor text for Pokédex entry. //The Pokédex entry is now random due to added
   logic in helpers.js in the getPokedexEntry function.
 060) Add Height and Weight before the Base Stats. //Added the Height and Weight before the Base

@@ -23,22 +23,22 @@ const FrontDefault = document.getElementById('front-default');
 const FrontShiny = document.getElementById('front-shiny');
 const BackDefault = document.getElementById('back-default');
 const BackShiny = document.getElementById('back-shiny');
-let DefaultArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
-let ShinyArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/'
+const DefaultArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
+const ShinyArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/';
 let pokemon = null;
 let spritesArray = null;
 
 function populatePage(pokemonResponse, speciesResponse, visibility) {
-  let statTotal = getStatTotal(pokemonResponse.stats);
-  let entry = getPokedexEntry(speciesResponse.flavor_text_entries);
-  let height = getHeight(pokemonResponse.height);
-  let weight = getWeight(pokemonResponse.weight);
-  let genus = getGenus(speciesResponse.genera);
+  const statTotal = getStatTotal(pokemonResponse.stats);
+  const entry = getPokedexEntry(speciesResponse.flavor_text_entries);
+  const height = getHeight(pokemonResponse.height);
+  const weight = getWeight(pokemonResponse.weight);
+  const genus = getGenus(speciesResponse.genera);
   getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus);
-  let types = getTypes(pokemon.types);
-  let backgroundColor =  convertHexToRgba(types[0], 0.35)
-  let borderColor = convertHexToRgba(types[1], 0.55)
-  let max = getLargestStat(pokemon.statsArray);
+  const types = getTypes(pokemon.types);
+  const backgroundColor = convertHexToRgba(types[0], 0.35);
+  const borderColor = convertHexToRgba(types[1], 0.55);
+  const max = getLargestStat(pokemon.statsArray);
   displayStatsChart(backgroundColor, borderColor, pokemon.statsArray, max + 25, pokemon.name);
   displayAttributes();
   makeButtonsDisappear(pokemon.id, pokemon.hasGenderDifferences);
@@ -46,11 +46,11 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   getHeldItemList(pokemon.heldItems);
   getFormList(pokemon.forms);
   getElementVisibility(HiddenElementsArray, visibility);
-  if(entry.includes(pokemon.name)) {
+  if (entry.includes(pokemon.name)) {
     capitalizeFirstLetter(pokemon.name);
   }
   CryButtonTop.innerText = `${capitalizeFirstLetter(pokemon.name)}'s Cry`;
-} //populatePage
+}
 
 function displayAttributes() {
   NumberHeader.innerText = `#${pokemon.id} `;
@@ -61,11 +61,11 @@ function displayAttributes() {
   PokedexEntryText.innerText = pokemon.pokedexEntry;
   HeightText.innerText = pokemon.height;
   WeightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
-  if(deviceType === 'mobile') {
+  if (deviceType === 'mobile') {
     WeightText.innerHTML += '<br>';
   }
   StatsText.innerText = `${pokemon.baseStatTotal}`;
-  if(deviceType === 'mobile' || deviceType === 'tablet') {
+  if (deviceType === 'mobile' || deviceType === 'tablet') {
     StatsText.innerHTML += '<br>';
   }
   FrontDefault.setAttribute('src', pokemon.FrontDefaultSprite);
@@ -84,7 +84,7 @@ function displayAttributes() {
   BackShiny.setAttribute('alt', 'Back Shiny Sprite Not Available');
   BackShiny.style.width = BackShiny.parentElement.style.width;
   BackShiny.style.height = BackShiny.parentElement.style.height;
-} //displayAttributes
+}
 
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
   pokemon = {
@@ -101,14 +101,7 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     types: pokemonResponse.types,
     forms: speciesResponse.varieties,
     cry: pokemonResponse.cries.latest,
-    statsArray: [
-      pokemonResponse.stats[0].base_stat, 
-      pokemonResponse.stats[1].base_stat, 
-      pokemonResponse.stats[2].base_stat, 
-      pokemonResponse.stats[3].base_stat, 
-      pokemonResponse.stats[4].base_stat, 
-      pokemonResponse.stats[5].base_stat,
-    ],
+    statsArray: pokemonResponse.stats.map(stat => stat.base_stat),
     baseStatTotal: statTotal,
     generation: speciesResponse.generation.name.substring(11).toUpperCase(),
     pokedexEntry: entry,
@@ -119,8 +112,12 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     FrontDefaultOfficialArtwork: `${DefaultArtwork}${speciesResponse.id}.png`,
     FrontShinyOfficialArtwork: `${ShinyArtwork}${speciesResponse.id}.png`,
     hasGenderDifferences: speciesResponse.has_gender_differences,
+    frontFemaleSprite: null,
+    backFemaleSprite: null,
+    frontFemaleShinySprite: null,
+    backFemaleShinySprite: null,
   };
-  checkForGenderDifferences(pokemonResponse);
+  setGenderDifferenceSprites(pokemon, pokemonResponse);
   spritesArray = [
     pokemon.FrontDefaultSprite,
     pokemon.BackDefaultSprite,
@@ -132,38 +129,20 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     pokemon.backFemaleSprite,
     pokemon.frontFemaleShinySprite,
     pokemon.backFemaleShinySprite
-  ]
-  // console.table(spritesArray);
-  
-  // for(let sprite=0; sprite<spritesArray.length; sprite++) {
-    //   console.log(spritesArray.indexOf(sprite));
-    // }
-    // spritesArray.foreach(sprite => {
-      //   if(sprite === null) {
-        //     console.error(sprite);
-        //     // sprite = pokeball.png;
-        //   }
-        // });        
+  ];
   populateLocalStorage(pokemon.id);
   console.table(pokemon);
   return pokemon;
-} //getPokemonObject
+}
 
-function checkForGenderDifferences(pokemonResponse) {
-  if(pokemon.hasGenderDifferences) {
-    pokemon.frontFemaleSprite = pokemonResponse.sprites.front_female;
-    pokemon.backFemaleSprite = pokemonResponse.sprites.back_female;
-    pokemon.frontFemaleShinySprite = pokemonResponse.sprites.front_shiny_female;
-    pokemon.backFemaleShinySprite = pokemonResponse.sprites.back_shiny_female;
-    return;
-  } else {
-    pokemon.frontFemaleSprite = null;
-    pokemon.backFemaleSprite = null;
-    pokemon.frontFemaleShinySprite = null;
-    pokemon.backFemaleShinySprite = null;
-    return;
+function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
+  if (pokemonObj.hasGenderDifferences) {
+    pokemonObj.frontFemaleSprite = pokemonResponse.sprites.front_female;
+    pokemonObj.backFemaleSprite = pokemonResponse.sprites.back_female;
+    pokemonObj.frontFemaleShinySprite = pokemonResponse.sprites.front_shiny_female;
+    pokemonObj.backFemaleShinySprite = pokemonResponse.sprites.back_shiny_female;
   }
-} //checkForGenderDifferences
+}
 
 export {
   populatePage, pokemon, 

@@ -1,95 +1,62 @@
 'use strict';
-import { 
-  populatePage, 
-} from './pokemon.js';
-import { 
-  capitalizeFirstLetter, punctuationNameCheck, showToast, 
-} from './helpers.js';
+import { populatePage } from './pokemon.js';
+import { capitalizeFirstLetter, punctuationNameCheck, showToast } from './helpers.js';
 
 const ApiAddress = 'https://pokeapi.co/api/v2';
-const Headers = {
-  'accept': 'text/html,application/xhtml+xml',
-  'accept-encoding': 'gzip, deflate, compress, br',
-  'connection': 'keep-alive',
-  'content-encoding': 'br',
-  'host': 'pokeapi.co',
-  'method': 'GET',
-};
+
+async function fetchJson(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw response;
+    return await response.json();
+  } catch (exception) {
+    handleError(exception);
+    throw exception;
+  }
+}
+
+function handleError(exception) {
+  const ErrorMessage = `Line Number: ${exception.lineNumber || ''}\n\nMessage: ${exception.message || exception.statusText}\n\nStack: ${exception.stack || ''}`;
+  showToast(ErrorMessage);
+  console.table(exception);
+} //fetchJson
 
 async function requestPokemon(id, visibility) {
-  let pokemonResponse  = null;
-  await fetch(`${ApiAddress}/pokemon/${id}`, Headers)
-  .then(response => {
-    return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
-  })
-  .then(data => {
-    pokemonResponse = data;
-    return fetch(pokemonResponse.species.url, Headers);
-  })
-  .then(response => {
-    return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
-  })
-  .then(speciesResponse => {
-    return populatePage(pokemonResponse, speciesResponse, visibility);
-  })
-  .catch(exception => {
-    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    showToast(ErrorMessage);
-    console.table(exception);
-  });
+  try {
+    const pokemonResponse = await fetchJson(`${ApiAddress}/pokemon/${id}`);
+    const speciesResponse = await fetchJson(pokemonResponse.species.url);
+    populatePage(pokemonResponse, speciesResponse, visibility);
+  } catch(exception) {
+    // Error handled in fetchJson
+  }
 } //requestPokemon
 
 async function requestAbilityEffect(url, listItem, name) {
-  await fetch(url, Headers)
-  .then(response => {
-    return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
-  })
-  .then(abilityEffectResponse => {
-    abilityEffectResponse.flavor_text_entries.forEach(entry => {
-      if(entry.language.name === 'en') {
-        name = name.replaceAll('-', ' ');
-        if(entry.flavor_text.includes('\ufffd')) {
-          entry.flavor_text = entry.flavor_text.replaceAll('\ufffd', 'é')
-        }
-        listItem.innerHTML = `<b><u>${name}</u></b>- ${entry.flavor_text}`;
-        return;
-      }
-    });
-  })
-  .catch(exception => {
-    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    showToast(ErrorMessage);
-    console.table(exception);
-  });
+  try {
+    const abilityEffectResponse = await fetchJson(url);
+    const entry = abilityEffectResponse.flavor_text_entries.find(e => e.language.name === 'en');
+    if(entry) {
+      name = name.replaceAll('-', ' ');
+      let flavorText = entry.flavor_text.replaceAll('\ufffd', 'é');
+      listItem.innerHTML = `<b><u>${name}</u></b>- ${flavorText}`;
+    }
+  } catch (exception) {}
 } //requestAbilityEffect
 
 async function requestHeldItem(url, listItem, name) {
-  await fetch(url, Headers)
-  .then(response => {
-    return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
-  })
-  .then(heldItemResponse => {
-    heldItemResponse.effect_entries.forEach(entry => {
-      if(entry.language.name === 'en') {
-        name = name.replaceAll('-', ' ');
-        listItem.innerHTML = `<b><u>${name}</u></b>- ${entry.effect}`;
-        return;
-      }
-    });
-  })
-  .catch(exception => {
-    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    showToast(ErrorMessage);
-    console.table(exception);
-  });
+  try {
+    const heldItemResponse = await fetchJson(url);
+    const entry = heldItemResponse.flavor_text_entries.find(e => e.language.name === 'en');
+    if(entry) {
+      name = name.replaceAll('-', ' ');
+      listItem.innerHTML = `<b><u>${name}</u></b>- ${entry.text}`;
+    }
+  } catch (exception) {}
 } //requestHeldItem
 
 async function requestForm(url, listItem) {
-  await fetch(url, Headers)
-  .then(response => {
-    return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
-  })
-  .then(formsResponse => {
+  try {
+    const formsResponse = await fetchJson(url);
     formsResponse.forms.forEach(form => {
       let name = punctuationNameCheck(form.name);
       if(!name.includes('kommo-o')) {
@@ -100,90 +67,28 @@ async function requestForm(url, listItem) {
         name = 'kommo-o Totem';
       }
       listItem.innerText = capitalizeFirstLetter(name);
-      return;
     });
-  })
-  .catch(exception => {
-    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    showToast(ErrorMessage);
-    console.table(exception);
-  });
+  } catch (exception) {}
 } //requestForm
 
+const typeMap = {
+  normal: 1, fighting: 2, flying: 3, poison: 4, ground: 5, rock: 6, bug: 7, ghost: 8, steel: 9,
+  fire: 10, water: 11, grass: 12, electric: 13, psychic: 14, ice: 15, dragon: 16, dark: 17, fairy: 18
+}; //typeMap
+
 async function requestType(type) {
-  switch(type) {
-    case 'normal':
-      type = 1;
-      break;
-    case 'fighting':
-      type = 2;
-      break;
-    case 'flying':
-      type = 3;
-      break;
-    case 'poison':
-      type = 4;
-      break;
-    case 'ground':
-      type = 5;
-      break;
-    case 'rock':
-      type = 6;
-      break;
-    case 'bug':
-      type = 7;
-      break;
-    case 'ghost':
-      type = 8;
-      break;
-    case 'steel':
-      type = 9;
-      break;
-    case 'fire':
-      type = 10;
-      break;
-    case 'water':
-      type = 11;
-      break;
-    case 'grass':
-      type = 12;
-      break;
-    case 'electric':
-      type = 13;
-      break;
-    case 'psychic':
-      type = 14;
-      break;
-    case 'ice':
-      type = 15;
-      break;
-    case 'dragon':
-      type = 16;
-      break;
-    case 'dark':
-      type = 17;
-      break;
-    case 'fairy':
-      type = 18;
-      break;
-  }
-  await fetch(`${ApiAddress}/type/${type}`, Headers)
-  .then(response => {
-    return response.ok ? Promise.resolve(response.json()) : Promise.reject(response);
-  })
-  .then(typeResponse => {
+  try {
+    if(typeof type === 'string' && typeMap[type.toLowerCase()]) {
+      type = typeMap[type.toLowerCase()];
+    }
+    const typeResponse = await fetchJson(`${ApiAddress}/type/${type}`);
     typeResponse.pokemon.forEach(pokemon => {
-      let name = punctuationNameCheck(pokemon.pokemon.name);
-      name = name.replaceAll('-', ' ');
+      let name = punctuationNameCheck(pokemon.pokemon.name).replaceAll('-', ' ');
       console.table(name);
     });
-  })
-  .catch(exception => {
-    const ErrorMessage = `Line Number: ${exception.lineNumber}\n\nMessage: ${exception.message}\n\nStack: ${exception.stack}`;
-    showToast(ErrorMessage);
+  } catch(exception) {
     console.clear();
-    console.table(exception);
-  });
+  }
 } //requestType
 
 export {

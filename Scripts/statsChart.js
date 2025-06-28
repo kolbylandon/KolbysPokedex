@@ -11,8 +11,8 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
     statsChart.destroy();
   }
   name = punctuationNameCheck(name);
-  let chart = RadarChart;
-  let data = {
+  const chart = RadarChart;
+  const data = {
     labels: [ 
       'HP', 
       'Attack', 
@@ -34,7 +34,8 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
       borderColor,
     }],
   };
-  let options = {
+
+  const options = {
     responsive: false,
     elements: {
       point: {
