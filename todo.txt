@@ -2,7 +2,6 @@ TO DO
 -----------------------------------------------------------------------------------------
 006) Show move sets in a grid including other information about the attack.
 011) Explore https://pokeapi.co/api/v2/ for new items to add to the info screen.
-012) Refactor to be more efficient.
 015) Allow generatePreviousPokedexEntry when user has searched by Pokémon name.
 016) Allow generateNextPokedexEntry when user has searched by Pokémon name.
 017) If the Pokémon is legendary or mythical, have particles.js in the background.
@@ -81,6 +80,8 @@ IMPLEMENTED
  in the pokemonSpeciesObject generated from the getPokemonSpeciesObject function.
 010) Get Pokéball to show in the window tab. //Pokéball is showing in the window tab.
   The pokéball.png file is the one showing.
+012) Refactor to be more efficient. //The code has been refactored to be more efficient
+  and readable using the Copilot AI.
 013) Display Pokédex information in English. //Proper Pokédex entry is being shown using
   the getPokedexEntry function.
 014) Change to fetch instead of ajax. //API calls are now using fetch requests instead of

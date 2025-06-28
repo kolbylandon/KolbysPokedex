@@ -4,10 +4,12 @@ import {
   Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, NextButton,
   RecallButton, ReadEntryButton, ClearButton,
 } from './main.js';
-import {
-  requestAbilityEffect, requestForm, requestHeldItem, requestPokemon,
+import { 
+  requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, 
 } from './requests.js';
-import { pokemon } from './pokemon.js';
+import {
+  pokemon
+} from './pokemon.js';
 
 const Synth = window.speechSynthesis;
 const Body = document.body;
@@ -38,29 +40,29 @@ function getAbilityList(abilities) {
     ListItem.id = `flavor-text-${++counter}`;
     ListItem.classList.add('flavor-text');
     let name = capitalizeAfterHyphen(capitalizeFirstLetter(ability.ability.name));
-    if (ability.is_hidden) {
+    if(ability.is_hidden) {
       name += ' (Hidden)';
     }
     requestAbilityEffect(ability.ability.url, ListItem, name);
     ListItem.style.color = ability.is_hidden === false ? TextColor : HiddenAbilityTextColor;
     AbilitiesUnorderedList.appendChild(ListItem);
   });
-} // getAbilityList
+} //getAbilityList
 
 function getPokedexType(showOnlyOriginalPokemon) {
-  if (showOnlyOriginalPokemon === 'true') {
+  if(showOnlyOriginalPokemon === 'true') {
     return MaximumId = OriginalMaximumId;
   } else {
     return MaximumId = 1025;
   }
-} // getPokedexType
+} //getPokedexType
 
 function getHeldItemList(heldItems) {
-  if (heldItems.length === 0) {
+  if(heldItems.length === 0) {
     HeldItemsHeader.style.display = 'none';
     HeldItemsUnorderedList.style.display = 'none';
     return;
-  } else if (heldItems.length === 1) {
+  } else if(heldItems.length === 1) {
     HeldItemsHeader.innerText = 'Held Item:';
   } else {
     HeldItemsHeader.innerText = 'Held Items:';
@@ -77,10 +79,10 @@ function getHeldItemList(heldItems) {
     ListItem.style.color = TextColor;
     HeldItemsUnorderedList.appendChild(ListItem);
   });
-} // getHeldItemList
+} //getHeldItemList
 
 function getFormList(forms) {
-  if (forms.length === 1) {
+  if(forms.length === 1) {
     FormsHeader.style.display = 'none';
     FormsUnorderedList.style.display = 'none';
     return;
@@ -101,7 +103,7 @@ function getFormList(forms) {
       generatePokemon(form.pokemon.url.substring(34).replaceAll('/', ''), 'visible', true);
     });
   });
-} // getFormList
+} //getFormList
 
 function getStatTotal(stats) {
   let statTotal = 0;
@@ -109,51 +111,51 @@ function getStatTotal(stats) {
     statTotal += stat.base_stat;
   });
   return statTotal;
-} // getStatTotal
+} //getStatTotal
 
 function getPokedexEntry(flavorTextEntries) {
   const RegEx = /[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000\u000c\n]/g;
   let entriesArray = [];
-  let entry = '';
-  for (let index in flavorTextEntries) {
-    if (flavorTextEntries[index].language.name === 'en') {
+  let entry = ``;
+  for(let index in flavorTextEntries) {
+    if(flavorTextEntries[index].language.name === 'en') {
       entriesArray.push(flavorTextEntries[index].flavor_text);
     }
   }
   entry = entriesArray[~~(Math.random() * entriesArray.length)].replaceAll(RegEx, ' ');
-  if (entry.includes('POKéMON')) {
+  if(entry.includes('POKéMON')) {
     entry = entry.replaceAll('POKéMON', 'Pokémon');
   }
   return entry;
-} // getPokedexEntry
+} //getPokedexEntry
 
 function getGenus(genera) {
-  for (let index in genera) {
-    if (genera[index].language.name === 'en') {
+  for(let index in genera) {
+    if(genera[index].language.name === 'en') {
       return genera[index].genus;
     }
   }
-} // getGenus
+} //getGenus
 
 function getHeight(height) {
   let feet = ~~(Math.round(height * 3.93701) / 12);
   let inches = Math.round(height * 3.93701) % 12;
   return feet > 0 ? `${feet}'${inches}"` : `${inches}"`;
-} // getHeight
+} //getHeight
 
 function getWeight(weight) {
   return Math.round((weight / 4.536), 2).toFixed(1);
-} // getWeight
+} //getWeight
 
 function punctuationNameCheck(name) {
   name = capitalizeAfterHyphen(name);
-  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : // Mr. Mime (121) / Mr. Rime (866)
-    name.includes('-Jr') ? name.replace('-Jr', ' Jr.') :      // Mime Jr. (439)
-    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') :  // Pikachu Ph.D. (25)
-    name.includes('hd') ? name.replace('hd', `h'd`) :         // Farfetch'd (83) / Sirfetch'd (865)
-    name.includes('o-O') ? name.replace('o-O', 'o-o') :       // Kommo-o (784)
+  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') : //Mr. Mime (121) / Mr. Rime (866)
+    name.includes('-Jr') ? name.replace('-Jr', ' Jr.') :      //Mime Jr. (439)
+    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') :  //Pikachu Ph.D. (25)
+    name.includes('hd') ? name.replace('hd', `h'd`) :         //Farfetch'd (83) / Sirfetch'd (865)
+    name.includes('o-O') ? name.replace('o-O', 'o-o') :       //Kommo-o (784)
     name;
-} // punctuationNameCheck
+} //punctuationNameCheck
 
 function getTypes(types) {
   const FirstType = types[0].type.name;
@@ -163,7 +165,7 @@ function getTypes(types) {
   TypeText.style.backgroundColor = convertHexToRgba(firstColor, 0.6);
   let secondColor = null;
   let secondBackgroundColor = null;
-  if (types.length === 1) {
+  if(types.length === 1) {
     TypeHeader.innerText = 'Type:';
     TypeText2.hidden = true;
     secondColor = firstColor;
@@ -179,32 +181,32 @@ function getTypes(types) {
   }
   Body.style.background = `radial-gradient(circle, ${firstBackgroundColor} 0%, ${secondBackgroundColor} 100%)`;
   return [firstColor, secondColor];
-} // getTypes
+} //getTypes
 
 function getRandomPokemon() {
   return ~~(Math.random() * MaximumId) + 1;
-} // getRandomPokemon
+} //getRandomPokemon
 
 function capitalizeAfterHyphen(hyphenatedString) {
   const RegEx = /\-[a-z]/g;
   return hyphenatedString.replaceAll(RegEx, match => {
     return match.toUpperCase();
   });
-} // capitalizeAfterHyphen
+} //capitalizeAfterHyphen
 
 function inputCheck(input) {
   const RegEx = /\D/g;
-  if (RegEx.test(input)) {
+  if(RegEx.test(input)) {
     Textbox.value = input.slice(0, -1);
   }
-} // inputCheck
+} //inputCheck
 
 function convertHexToRgba(color, alpha) {
   let r = (`0x${color.substring(1).split('').join('')}` >> 16) & 255;
   let g = (`0x${color.substring(1).split('').join('')}` >> 8) & 255;
   let b = (`0x${color.substring(1).split('').join('')}`) & 255;
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-} // convertHexToRgba
+} //convertHexToRgba
 
 function getTypeColor(type) {
   const Types = {
@@ -228,89 +230,89 @@ function getTypeColor(type) {
     'dark': '#2B1E16',
   };
   return Types[type];
-} // getTypeColor
+} //getTypeColor
 
 function getLargestStat(statsArray) {
   return Math.round(statsArray.reduce((stat, max) => {
     return stat > max ? stat : max;
   }, 0) / 25) * 25;
-} // getLargestStat
+} //getLargestStat
 
 function createArray(elements) {
   let elementArray = [];
-  for (let index in elements) {
+  for(let index in elements) {
     elementArray.push(elements[index]);
   }
   return elementArray;
-} // createArray
+} //createArray
 
 function getElementVisibility(elements, visibility) {
   Synth.cancel();
-  if (Array.isArray(elements)) {
+  if(Array.isArray(elements)) {
     elements.forEach(element => {
-      if (element.style !== undefined) {
+      if(element.style !== undefined) {
         element.style.visibility = visibility;
       }
     });
   }
-} // getElementVisibility
+} //getElementVisibility
 
 function makeButtonsDisappear(id, hasGenderDifferences) {
   id !== MinimumId ? PreviousButton.style.display = 'inline-block' : PreviousButton.style.display = 'none';
   id !== MaximumId ? NextButton.style.display = 'inline-block' : NextButton.style.display = 'none';
-  if (localStorage.getItem('lastPokémon') === null) {
+  if(localStorage.getItem('lastPokémon') === null) {
     return;
   }
   localStorage.getItem('lastPokémon').length !== 0 ? RecallButton.style.display = 'inline-block' : RecallButton.style.display = 'none';
-} // makeButtonsDisappear
+} //makeButtonsDisappear
 
 function populateLocalStorage(id) {
   localStorage.setItem('currentPokémon', id);
   localStorage.setItem('dateTime', getDateTime());
   getGeoLocation();
-} // populateLocalStorage
+} //populateLocalStorage
 
 function getDateTime() {
   const Now = new Date();
   return `${Now.getFullYear()}/${Now.getMonth() - 1}/${Now.getDate()} ${Now.getHours()}:${Now.getMinutes()}:${Now.getSeconds()}`;
-} // getDateTime
+} //getDateTime
 
 function getGeoLocation() {
   navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
-} // getGeoLocation
+} //getGeoLocation
 
 function onGeoSuccess(position) {
   const { latitude, longitude } = position.coords;
   localStorage.setItem('coordinates', `${latitude}, ${longitude}`);
-} // onGeoSuccess
+} //onGeoSuccess
 
 function onGeoError() {
   localStorage.setItem('coordinates', 'Failed to get your location!');
-} // onGeoError
+} //onGeoError
 
 function generatePokemon(id, visibility, skipIdValidation) {
-  if (skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) {
+  if(skipIdValidation === false && (id >= MinimumId || id <= MaximumId)) {
     requestPokemon(id, visibility);
     Textbox.style.color = TextColor;
     return;
-  } else if (skipIdValidation === true) {
+  } else if(skipIdValidation === true) {
     requestPokemon(id, visibility);
     Textbox.style.color = TextColor;
     return;
   }
   showToast('Please enter a valid Pokédex number');
-} // generatePokemon
+} //generatePokemon
 
 function showToast(text) {
   ToastText.innerText = text;
   Toast.classList.add('toast-active');
   Textbox.focus();
-} // showToast
+} //showToast
 
 function playPokemonCry() {
   let audio = new Audio(pokemon.cry);
   audio.play();
-} // playPokemonCry
+} //playPokemonCry
 
 function startReadingEntry(name, genus, entry) {
   Synth.speak(new SpeechSynthesisUtterance(name));
@@ -318,22 +320,22 @@ function startReadingEntry(name, genus, entry) {
   Synth.pause();
   Synth.resume();
   Synth.speak(new SpeechSynthesisUtterance(entry));
-} // startReadingEntry
+} //startReadingEntry
 
 function getDeviceType() {
   const Agent = navigator.userAgent;
   const RegExTablet = /(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i;
   const RegExMobile = /Mobile|iP(hone|od)|Android|Blackberry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i;
-  if (RegExTablet.test(Agent)) {
+  if(RegExTablet.test(Agent)) {
     return 'tablet';
-  } else if (RegExMobile.test(Agent)) {
+  } else if(RegExMobile.test(Agent)) {
     return 'mobile';
   }
   return 'desktop';
-} // getDeviceType
+} //getDeviceType
 
 function headerLayout(deviceType) {
-  if (deviceType === 'mobile') {
+  if(deviceType === 'mobile') {
     GoButton.innerHTML = `<span id='go-button-top' class='button-top'><i class='fa-solid fa-magnifying-glass'></i></span>`;
     RandomPokemonButton.innerHTML = `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i></span>`;
     PreviousButton.innerHTML = `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-angle-left'></i></span>`;
@@ -341,22 +343,22 @@ function headerLayout(deviceType) {
     ReadEntryButton.innerHTML = `<span id='read-entry-button-top' class='button-top'><i class='fa-solid fa-book-open-reader'></i></span>`;
     ClearButton.innerHTML = `<span id='clear-button-top' class='button-top'><i class='fa-solid fa-x'></i></span>`;
     return;
-  } else if (deviceType === 'tablet') {
+  } else if(deviceType === 'tablet') {
     RandomPokemonButton.innerHTML = `<span id='random-pokemon-button-top' class='button-top'>Random</span>`;
     PreviousButton.innerHTML = `<span id='previous-button-top' class='button-top'>Prev</span>`;
     return;
   }
-} // headerLayout
+} //headerLayout
 
 function validPokedexNumberCheck() {
   return (Textbox.value < MinimumId || Textbox.value > MaximumId)
     ? Textbox.style.color = HiddenAbilityTextColor
     : Textbox.style.color = TextColor;
-} // validPokedexNumberCheck
+} //validPokedexNumberCheck
 
 function capitalizeFirstLetter(string) {
   return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
-} // capitalizeFirstLetter
+} //capitalizeFirstLetter
 
 export {
   getStatTotal, getPokedexEntry, getElementVisibility, playPokemonCry,

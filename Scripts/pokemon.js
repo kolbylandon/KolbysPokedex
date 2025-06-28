@@ -46,11 +46,11 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   getHeldItemList(pokemon.heldItems);
   getFormList(pokemon.forms);
   getElementVisibility(HiddenElementsArray, visibility);
-  if (entry.includes(pokemon.name)) {
+  if(entry.includes(pokemon.name)) {
     capitalizeFirstLetter(pokemon.name);
   }
   CryButtonTop.innerText = `${capitalizeFirstLetter(pokemon.name)}'s Cry`;
-}
+} //populatePage
 
 function displayAttributes() {
   NumberHeader.innerText = `#${pokemon.id} `;
@@ -61,11 +61,11 @@ function displayAttributes() {
   PokedexEntryText.innerText = pokemon.pokedexEntry;
   HeightText.innerText = pokemon.height;
   WeightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
-  if (deviceType === 'mobile') {
+  if(deviceType === 'mobile') {
     WeightText.innerHTML += '<br>';
   }
   StatsText.innerText = `${pokemon.baseStatTotal}`;
-  if (deviceType === 'mobile' || deviceType === 'tablet') {
+  if(deviceType === 'mobile' || deviceType === 'tablet') {
     StatsText.innerHTML += '<br>';
   }
   FrontDefault.setAttribute('src', pokemon.FrontDefaultSprite);
@@ -84,7 +84,7 @@ function displayAttributes() {
   BackShiny.setAttribute('alt', 'Back Shiny Sprite Not Available');
   BackShiny.style.width = BackShiny.parentElement.style.width;
   BackShiny.style.height = BackShiny.parentElement.style.height;
-}
+} //displayAttributes
 
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
   pokemon = {
@@ -133,7 +133,7 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
   populateLocalStorage(pokemon.id);
   console.table(pokemon);
   return pokemon;
-}
+} //getPokemonObject
 
 function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
   if (pokemonObj.hasGenderDifferences) {
@@ -142,7 +142,7 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
     pokemonObj.frontFemaleShinySprite = pokemonResponse.sprites.front_shiny_female;
     pokemonObj.backFemaleShinySprite = pokemonResponse.sprites.back_shiny_female;
   }
-}
+} //setGenderDifferenceSprites
 
 export {
   populatePage, pokemon, 

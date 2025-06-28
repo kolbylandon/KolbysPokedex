@@ -5,13 +5,13 @@
   margin: 0;
   font-family: 'Montserrat', sans-serif;
 }
-* body {
+body {
   font-size: 1.5rem;
   overflow-x: hidden;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-* body::-webkit-scrollbar {
+body::-webkit-scrollbar {
   display: none;
 }
 /* END MAIN */
@@ -22,7 +22,7 @@
   -webkit-backdrop-filter: blur(0.4rem);
   background-color: rgba(255, 110, 97, 0.75);
   border-bottom: 0.65vh solid rgba(0, 0, 0, 0.95);
-  box-shadow: 0.1rem 0.1rem 0.2rem 0rem rgba(120, 120, 120, 0.5);
+  box-shadow: 0.1rem 0.1rem 0.2rem rgba(120, 120, 120, 0.5);
   padding: 0.75rem;
   position: fixed;
   width: 100%;
@@ -33,17 +33,14 @@
 #header form #header-text {
   color: rgba(247, 247, 247, 0.95);
   display: inline-block;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-weight: bolder;
   padding: 0.5vh 0.35vw;
 }
 #header form .header-element {
-  border-radius: 00.75rem;
-  box-shadow: 0.1rem 0.1rem 0.2rem 0rem rgba(120, 120, 120, 0.5);
+  border-radius: 0.75rem;
+  box-shadow: 0.1rem 0.1rem 0.2rem rgba(120, 120, 120, 0.5);
   font-size: 1.5rem;
-}
-#header form #header-text {
-  font-size: 2rem;
-  font-weight: bolder;
 }
 #header form #pokemon-textbox {
   border: 0.2rem solid rgba(0, 0, 0, 0.75);
@@ -56,25 +53,76 @@
 #header form button {
   font-weight: bold;
   border: none;
-  background: rgba(0, 0, 0, 0.75);
+  background: linear-gradient(135deg, rgba(255,110,97,0.95) 0%, rgba(255,180,123,0.85) 100%);
   padding: 0.025rem;
+  margin: 0 0.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(255,110,97,0.15), 0.1rem 0.1rem 0.2rem rgba(120,120,120,0.15);
+  transition: transform 0.12s cubic-bezier(.4,2,.6,1), box-shadow 0.12s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
+
 #header form button .button-top {
   display: block;
   box-sizing: border-box;
   border: 0.05rem solid rgba(0, 0, 0, 0.75);
   border-radius: 0.5rem;
   padding: 0.25rem 0.5rem;
-  background: rgba(232, 232, 232, 1);
+  background: #e8e8e8;
   color: rgba(0, 0, 0, 0.75);
   transform: translateY(-0.2rem);
-  transition: transform 0.1s ease;
+  transition: transform 0.1s ease, background 0.2s, color 0.2s;
+  font-size: 1.1rem;
+  min-width: 80px;
+  text-align: center;
 }
-#header form button:hover .button-top {
-  transform: translateY(-0.33rem);
+
+#header form button:hover,
+#header form button:focus-visible {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 16px rgba(255,110,97,0.25), 0.1rem 0.1rem 0.2rem rgba(120,120,120,0.18);
+  outline: none;
 }
+
+#header form button:hover .button-top,
+#header form button:focus-visible .button-top {
+  background: linear-gradient(90deg, #ffe7e0 0%, #fff6e5 100%);
+  color: #ff6e61;
+  transform: translateY(-0.1rem) scale(1.03);
+}
+
 #header form button:active .button-top {
-  transform: translateY(0rem);
+  background: #ffe7e0;
+  color: #c94d3f;
+  transform: translateY(0.05rem) scale(0.98);
+}
+
+#header form button:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 2px 8px rgba(255,110,97,0.10);
+}
+
+/* Optional: subtle ripple effect on click */
+#header form button::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 0; height: 0;
+  background: rgba(255,110,97,0.18);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.4s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#header form button:active::after {
+  width: 180%;
+  height: 180%;
+  opacity: 1;
+  transition: 0s;
 }
 /* END HEADER */
 
@@ -88,7 +136,7 @@
   padding-top: 6.125rem;
 }
 #root #toast-text {
-  color: rgba(0, 0, 0, 1);
+  color: #000;
 }
 #root .toast {
   display: flex;
@@ -100,7 +148,7 @@
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
   border: 0.25rem solid rgba(255, 110, 97, 0.95);
-  opacity: 0%;
+  opacity: 0;
   transition: all 0.25s ease-out;
   z-index: 100;
 }
@@ -109,15 +157,15 @@
   color: rgba(0, 0, 0, 0.65);
   border-radius: 0.5rem;
   padding: 0.5rem;
-  cursor: pointer;
+  cursor: url(../Images/pokeball-bullet.png), auto;
 }
 #root .toast-active {
   right: 5%;
-  opacity: 100%;
+  opacity: 1;
 }
 #root .toast-close-button {
   background-color: rgba(247, 247, 247, 0.95);
-  color: rgba(0, 0, 0, 0);
+  color: transparent;
   border: none;
   cursor: pointer;
 }
@@ -143,12 +191,12 @@
 }
 #root #info-card {
   grid-area: 1/1/2/3;
-  margin: 0rem 2.625rem;
+  margin: 0 2.625rem;
   padding-bottom: 0.5625rem;
 }
 #root #info-card .list-no-bullets {
   list-style-type: none;
-  padding: 0rem;
+  padding: 0;
 }
 #root #info-card .list-no-bullets #number-and-name-list-item {
   font-size: 2.625rem;
@@ -169,10 +217,10 @@
 }
 #root .card {
   backdrop-filter: blur(0.25rem);
-  background: rgba( 255, 255, 255, 0.25 );
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 0.75rem;
-  box-shadow: 0 0.5rem 2rem 0 rgba( 31, 38, 135, 0.37 );
-  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  box-shadow: 0 0.5rem 2rem rgba(31, 38, 135, 0.37), 0.1rem 0.1rem 0.2rem rgba(120, 120, 120, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   -webkit-backdrop-filter: blur(0.25rem);
 }
 #root .top-card {
@@ -182,19 +230,16 @@
   margin-bottom: 1.75rem;
   padding: 0.75rem;
 }
-#root .card,
 #root .type-text {
-  box-shadow: 0.1rem 0.1rem 0.2rem 0rem rgba(120, 120, 120, 0.5);
-}
-#root .type-text {
-  border-color: rgb(0, 0, 0);
+  border-color: #000;
   border-radius: 0.75rem;
   color: rgba(247, 247, 247, 0.65);
   padding: 0.5625rem;
   cursor: url(../Images/pokeball-bullet.png), auto;
+  box-shadow: 0.1rem 0.1rem 0.2rem rgba(120, 120, 120, 0.5);
 }
 #root .headers {
-  color: rgb(0, 0, 0);
+  color: #000;
   font-weight: bold;
 }
 #root .text {
@@ -202,3 +247,126 @@
   padding: 0.5625rem;
 }
 /* END ROOT */
+
+/* --- Improved Mobile Responsive Styles --- */
+@media (max-width: 700px) {
+  body {
+    font-size: 1rem;
+    padding-bottom: 2.5rem;
+  }
+  #header form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.2rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0.15rem 0.7rem 0.15rem;
+    position: static;
+    border-bottom-width: 0.35vh;
+    background-color: rgba(255, 110, 97, 0.95);
+    box-shadow: 0 2px 8px rgba(255,110,97,0.10);
+  }
+  #header form #header-text {
+    font-size: 1.1rem;
+    padding: 0.18vh 0.12vw;
+    margin-bottom: 0.2rem;
+  }
+  #header form .header-element,
+  #header form button .button-top {
+    font-size: 0.95rem;
+    min-width: 54px;
+    padding: 0.16rem 0.22rem;
+  }
+  #header form #pokemon-textbox {
+    width: 60vw;
+    min-width: 100px;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    margin-right: 0.2rem;
+    padding: 0.18rem 0.4rem;
+  }
+  #header form button {
+    margin: 0.12rem 0.08rem;
+    padding: 0;
+    min-width: 54px;
+  }
+  #header form button .button-top {
+    padding: 0.18rem 0.3rem;
+    min-width: 54px;
+    font-size: 0.95rem;
+  }
+  #root {
+    display: block;
+    padding-top: 6.2rem;
+    grid-column-gap: 0;
+    grid-row-gap: 0.75rem;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  #root #info-card,
+  #root #sprite-card,
+  #root #stats-card {
+    margin: 0.5rem 0.1rem;
+    float: none;
+    width: 99vw;
+    max-width: 100%;
+    box-sizing: border-box;
+    border-radius: 0.6rem;
+    padding: 0.5rem 0.2rem;
+  }
+  #root #info-card .list-no-bullets #number-and-name-list-item {
+    font-size: 1.2rem;
+  }
+  #root #info-card .list-no-bullets li {
+    padding: 0.13rem;
+    font-size: 0.98rem;
+  }
+  #root .card {
+    padding: 0.5rem 0.15rem;
+    box-shadow: 0 0.2rem 0.8rem rgba(31, 38, 135, 0.18);
+  }
+  #root #sprite-card .image {
+    width: 90vw;
+    max-width: 160px;
+    margin: 0.18rem auto;
+    display: block;
+  }
+  #root #stats-card #stats-chart {
+    width: 95vw !important;
+    height: 160px !important;
+  }
+  #root .type-text {
+    padding: 0.22rem;
+    font-size: 0.92rem;
+    margin: 0.08rem 0.02rem;
+  }
+  #root .text {
+    padding: 0.22rem;
+    font-size: 0.92rem;
+  }
+  #root .toast {
+    top: 4.2rem;
+    right: 2vw;
+    left: 2vw;
+    width: 96vw;
+    max-width: 98vw;
+    font-size: 0.98rem;
+    padding: 0.32rem 0.5rem;
+    z-index: 200;
+  }
+  #root #info-card {
+    margin: 0.2rem 0.1rem 0.5rem 0.1rem;
+    padding-bottom: 0.3rem;
+  }
+  #root #sprite-card {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  #root #stats-card {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  #root #info-card .list-bulleted {
+    padding-left: 1.1rem;
+  }
+}
