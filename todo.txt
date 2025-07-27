@@ -22,7 +22,6 @@ TO DO
 073) Create a getFunctions.js file for all of the functions getting information.
 075) Create html elements for other screen sizes from the media queries.
 076) Create a custom stylized scrollbar.
-078) Look into how to implement service workers.
 081) Have a matrix background when a member of the Porygon line is selected.
 083) Have the id as a parameter the URL and pass use that to fetch the requests.
 086) Add a tooltip for the short description of the ability on hover.
@@ -56,6 +55,7 @@ TO DO
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
+078) Look into how to implement service workers.
 126) Click on the Types and pull up a list of all Pokémon with that type.
 132) Fix the bug that allows the lastPokémon and currentPokémon to be the same. --Random Pokémon Button, followed by Go Button -Check currentPokémon vs currentPokemon
 134) Go button will be invisible when no active Pokémon or empty search.
