@@ -1,63 +1,140 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 
-/* MAIN */
+/* CSS CUSTOM PROPERTIES FOR EFFICIENCY */
+:root {
+  /* Color Variables */
+  --primary-color: rgb(255, 110, 97);
+  --primary-75: rgba(255, 110, 97, 0.75);
+  --primary-95: rgba(255, 110, 97, 0.95);
+  --secondary-color: rgba(255, 180, 123, 0.85);
+  --white-95: rgba(247, 247, 247, 0.95);
+  --white-75: rgba(247, 247, 247, 0.75);
+  --black-75: rgba(0, 0, 0, 0.75);
+  --black-95: rgba(0, 0, 0, 0.95);
+  --text-color: rgba(82, 82, 82, 0.95);
+  --shadow-color: rgba(120, 120, 120, 0.5);
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  
+  /* Spacing Variables */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-xl: 1.5rem;
+  --spacing-2xl: 2rem;
+  --spacing-3xl: 3rem;
+  
+  /* Typography Variables */
+  --font-xs: 0.875rem;
+  --font-sm: 1rem;
+  --font-md: 1.125rem;
+  --font-lg: 1.25rem;
+  --font-xl: 1.5rem;
+  --font-2xl: 2rem;
+  --font-3xl: 2.625rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  
+  /* Shadows */
+  --shadow-sm: 0.1rem 0.1rem 0.2rem var(--shadow-color);
+  --shadow-md: 0 0.5rem 2rem rgba(31, 38, 135, 0.37);
+  --shadow-glass: var(--shadow-md), var(--shadow-sm);
+}
+
+/* RESET & BASE STYLES */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 * {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
 }
+
 body {
-  font-size: 1.5rem;
+  font-size: var(--font-xl);
   overflow-x: hidden;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  line-height: 1.6;
 }
+
 body::-webkit-scrollbar {
   display: none;
 }
-/* END MAIN */
 
-/* HEADER */
+/* HEADER STYLES - OPTIMIZED */
 #header form {
   backdrop-filter: blur(0.4rem);
   -webkit-backdrop-filter: blur(0.4rem);
-  background-color: rgba(255, 110, 97, 0.75);
-  border-bottom: 0.65vh solid rgba(0, 0, 0, 0.95);
-  box-shadow: 0.1rem 0.1rem 0.2rem rgba(120, 120, 120, 0.5);
-  padding: 0.75rem;
+  background-color: var(--primary-75);
+  border-bottom: 0.65vh solid var(--black-95);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-md);
   position: fixed;
   width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
 }
+
 #header form #header-text-button {
   background-color: transparent; 
 }
+
 #header form #header-text {
-  color: rgba(247, 247, 247, 0.95);
+  color: var(--white-95);
   display: inline-block;
-  font-size: 2rem;
-  font-weight: bolder;
+  font-size: var(--font-2xl);
+  font-weight: 700;
   padding: 0.5vh 0.35vw;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
+
 #header form .header-element {
-  border-radius: 0.75rem;
-  box-shadow: 0.1rem 0.1rem 0.2rem rgba(120, 120, 120, 0.5);
-  font-size: 1.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--font-xl);
 }
+
 #header form #pokemon-textbox {
-  border: 0.2rem solid rgba(0, 0, 0, 0.75);
-  background-color: rgba(247, 247, 247, 0.75);
+  border: 0.2rem solid var(--black-75);
+  background-color: var(--white-75);
   text-align: center;
-  width: 8%;
-  font-weight: bold;
-  padding: 0.15rem 0.55rem;
+  width: clamp(120px, 15vw, 200px);
+  font-weight: 600;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: var(--font-md);
+  transition: all 0.2s ease;
 }
+
+#header form #pokemon-textbox:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 110, 97, 0.2);
+  background-color: white;
+}
+
 #header form button {
-  font-weight: bold;
+  font-weight: 600;
   border: none;
-  background: linear-gradient(135deg, rgba(255,110,97,0.95) 0%, rgba(255,180,123,0.85) 100%);
+  background: linear-gradient(135deg, var(--primary-95) 0%, var(--secondary-color) 100%);
   padding: 0.025rem;
-  margin: 0 0.25rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(255,110,97,0.15), 0.1rem 0.1rem 0.2rem rgba(120,120,120,0.15);
+  margin: 0 var(--spacing-xs);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(255,110,97,0.15), var(--shadow-sm);
   transition: transform 0.12s cubic-bezier(.4,2,.6,1), box-shadow 0.12s;
   cursor: pointer;
   position: relative;
@@ -67,14 +144,14 @@ body::-webkit-scrollbar {
 #header form button .button-top {
   display: block;
   box-sizing: border-box;
-  border: 0.05rem solid rgba(0, 0, 0, 0.75);
-  border-radius: 0.5rem;
-  padding: 0.25rem 0.5rem;
-  background: #e8e8e8;
-  color: rgba(0, 0, 0, 0.75);
+  border: 0.05rem solid var(--black-75);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: #ffffff;
+  color: var(--black-75);
   transform: translateY(-0.2rem);
   transition: transform 0.1s ease, background 0.2s, color 0.2s;
-  font-size: 1.1rem;
+  font-size: var(--font-md);
   min-width: 80px;
   text-align: center;
 }
@@ -82,7 +159,7 @@ body::-webkit-scrollbar {
 #header form button:hover,
 #header form button:focus-visible {
   transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 4px 16px rgba(255,110,97,0.25), 0.1rem 0.1rem 0.2rem rgba(120,120,120,0.18);
+  box-shadow: 0 4px 16px rgba(255,110,97,0.25), var(--shadow-sm);
   outline: none;
 }
 
@@ -104,7 +181,6 @@ body::-webkit-scrollbar {
   box-shadow: 0 2px 8px rgba(255,110,97,0.10);
 }
 
-/* Optional: subtle ripple effect on click */
 #header form button::after {
   content: "";
   position: absolute;
@@ -124,250 +200,535 @@ body::-webkit-scrollbar {
   opacity: 1;
   transition: 0s;
 }
-/* END HEADER */
 
-/* ROOT */
+/* MAIN CONTENT STYLES - OPTIMIZED */
 #root {
   display: grid;
   background-color: transparent;
   grid-template-columns: 1fr 0.9fr;
-  grid-column-gap: 3.5rem;
-  grid-row-gap: 1.75rem;
-  padding-top: 6.125rem;
+  grid-column-gap: var(--spacing-3xl);
+  grid-row-gap: var(--spacing-xl);
+  padding: 6.125rem var(--spacing-md) var(--spacing-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
+
 #root #toast-text {
   color: #000;
 }
+
 #root .toast {
   display: flex;
   align-items: center;
   position: fixed;
   top: 6rem;
   right: -50%;
-  background-color: rgba(247, 247, 247, 0.95);
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: 0.25rem solid rgba(255, 110, 97, 0.95);
+  background-color: var(--white-95);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 0.25rem solid var(--primary-95);
   opacity: 0;
   transition: all 0.25s ease-out;
   z-index: 100;
+  box-shadow: var(--shadow-glass);
 }
+
 #root .show-toast {
-  background-color: rgba(247, 247, 247, 0.95);
-  color: rgba(0, 0, 0, 0.65);
-  border-radius: 0.5rem;
-  padding: 0.5rem;
+  background-color: var(--white-95);
+  color: var(--text-color);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm);
   cursor: url(../Images/pokeball-bullet.png), auto;
 }
+
 #root .toast-active {
   right: 5%;
   opacity: 1;
 }
+
 #root .toast-close-button {
-  background-color: rgba(247, 247, 247, 0.95);
+  background-color: var(--white-95);
   color: transparent;
   border: none;
   cursor: pointer;
 }
+
+/* CARD COMPONENTS */
+#root .card {
+  backdrop-filter: blur(0.25rem);
+  background: var(--glass-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-glass);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(0.25rem);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#root .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.8rem 3rem rgba(31, 38, 135, 0.5), var(--shadow-sm);
+}
+
+#root .top-card {
+  margin-bottom: var(--spacing-md);
+}
+
+#root .bottom-card {
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-md);
+}
+
+/* ARTWORK CARD */
 #root #artwork-card {
   float: left;
   grid-area: 2/1/3/2;
   margin-left: 2.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
 }
+
 #root #artwork-card .image {
   display: block;
-  margin: 0.375rem;
+  margin: var(--spacing-sm);
   width: 100%;
   height: auto;
+  border-radius: var(--radius-sm);
+  transition: transform 0.2s ease;
+  max-width: 100%;
+  object-fit: contain;
 }
+
+#root #artwork-card .image:hover {
+  transform: scale(1.02);
+}
+
+/* STATS CARD */
 #root #stats-card {
   float: right;
   grid-area: 2/2/3/3;
   margin-right: 2.625rem;
 }
+
 #root #stats-card #stats-chart {
   width: 100%;
   height: 100%;
+  border-radius: var(--radius-sm);
 }
+
+/* INFO CARD */
 #root #info-card {
   grid-area: 1/1/2/3;
   margin: 0 2.625rem;
-  padding-bottom: 0.5625rem;
+  padding-bottom: var(--spacing-sm);
 }
+
 #root #info-card .list-no-bullets {
   list-style-type: none;
   padding: 0;
 }
+
 #root #info-card .list-no-bullets #number-and-name-list-item {
-  font-size: 2.625rem;
+  font-size: var(--font-3xl);
   text-align: center;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
+
 #root #info-card .list-no-bullets #genus-sub-header-list-item {
-  font-weight: bolder;
+  font-weight: 600;
   text-align: center;
+  font-size: var(--font-lg);
+  color: var(--text-color);
 }
+
 #root #info-card .list-no-bullets li {
-  padding: 0.375rem;
+  padding: var(--spacing-sm);
 }
+
 #root #info-card .list-bulleted {
   list-style-image: url(../Images/pokeball-bullet.png);
+  padding-left: var(--spacing-xl);
 }
+
 #root #info-card .list-bulleted .form-text {
   cursor: url(../Images/pokeball-bullet.png), auto;
 }
-#root .card {
-  backdrop-filter: blur(0.25rem);
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 0.75rem;
-  box-shadow: 0 0.5rem 2rem rgba(31, 38, 135, 0.37), 0.1rem 0.1rem 0.2rem rgba(120, 120, 120, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  -webkit-backdrop-filter: blur(0.25rem);
-}
-#root .top-card {
-  margin-bottom: 0.75rem;
-}
-#root .bottom-card {
-  margin-bottom: 1.75rem;
-  padding: 0.75rem;
-}
+
+/* TYPE TEXT STYLING */
 #root .type-text {
   border-color: #000;
-  border-radius: 0.75rem;
-  color: rgba(247, 247, 247, 0.65);
-  padding: 0.5625rem;
+  border-radius: var(--radius-md);
+  color: var(--white-95);
+  padding: var(--spacing-sm);
   cursor: url(../Images/pokeball-bullet.png), auto;
-  box-shadow: 0.1rem 0.1rem 0.2rem rgba(120, 120, 120, 0.5);
+  box-shadow: var(--shadow-sm);
+  display: inline-block;
+  margin: var(--spacing-xs);
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+#root .type-text:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Hide second type when not needed */
+#root .type-text[hidden] {
+  display: none !important;
+}
+
+#root #type-text-2[hidden] {
+  display: none !important;
+}
+
+/* TEXT STYLES */
 #root .headers {
   color: #000;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: var(--font-xl);
 }
-#root .text {
-  color: rgba(82, 82, 82, 0.95);
-  padding: 0.5625rem;
-}
-/* END ROOT */
 
-/* --- Improved Mobile Responsive Styles --- */
-@media (max-width: 700px) {
+#root .text {
+  color: var(--text-color);
+  padding: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+/* COMPREHENSIVE RESPONSIVE DESIGN SYSTEM */
+
+/* Small Mobile Devices (320px - 480px) */
+@media screen and (max-width: 480px) {
+  :root {
+    --font-xs: 0.75rem;
+    --font-sm: 0.875rem;
+    --font-md: 1rem;
+    --font-lg: 1.125rem;
+    --font-xl: 1.25rem;
+    --font-2xl: 1.5rem;
+    --font-3xl: 1.75rem;
+    --spacing-xs: 0.125rem;
+    --spacing-sm: 0.25rem;
+    --spacing-md: 0.5rem;
+    --spacing-lg: 0.75rem;
+    --spacing-xl: 1rem;
+    --spacing-2xl: 1.25rem;
+    --spacing-3xl: 1.5rem;
+  }
+
   body {
-    font-size: 1rem;
-    padding-bottom: 2.5rem;
+    font-size: var(--font-sm);
+    padding-bottom: var(--spacing-2xl);
   }
+
   #header form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem 0.2rem;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5rem 0.15rem 0.7rem 0.15rem;
     position: static;
-    border-bottom-width: 0.35vh;
-    background-color: rgba(255, 110, 97, 0.95);
-    box-shadow: 0 2px 8px rgba(255,110,97,0.10);
+    padding: var(--spacing-sm);
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    background-color: var(--primary-95);
+    border-bottom-width: 0.25rem;
   }
+
   #header form #header-text {
-    font-size: 1.1rem;
-    padding: 0.18vh 0.12vw;
-    margin-bottom: 0.2rem;
+    font-size: var(--font-xl);
+    margin-bottom: var(--spacing-sm);
   }
-  #header form .header-element,
-  #header form button .button-top {
-    font-size: 0.95rem;
-    min-width: 54px;
-    padding: 0.16rem 0.22rem;
-  }
+
   #header form #pokemon-textbox {
-    width: 60vw;
-    min-width: 100px;
-    font-size: 1rem;
-    margin-bottom: 0.3rem;
-    margin-right: 0.2rem;
-    padding: 0.18rem 0.4rem;
+    width: 90vw;
+    max-width: 280px;
+    font-size: var(--font-sm);
+    padding: var(--spacing-sm);
   }
+
   #header form button {
-    margin: 0.12rem 0.08rem;
-    padding: 0;
-    min-width: 54px;
+    margin: var(--spacing-xs);
+    min-width: 70px;
   }
+
   #header form button .button-top {
-    padding: 0.18rem 0.3rem;
-    min-width: 54px;
-    font-size: 0.95rem;
+    padding: var(--spacing-sm);
+    font-size: var(--font-sm);
+    min-width: 70px;
   }
+
   #root {
     display: block;
-    padding-top: 6.2rem;
-    grid-column-gap: 0;
-    grid-row-gap: 0.75rem;
-    width: 100vw;
-    box-sizing: border-box;
+    padding: var(--spacing-lg) var(--spacing-sm);
+    max-width: 100vw;
   }
+
   #root #info-card,
   #root #artwork-card,
   #root #stats-card {
-    margin: 0.5rem 0.1rem;
+    margin: var(--spacing-sm) 0;
     float: none;
-    width: 99vw;
-    max-width: 100%;
-    box-sizing: border-box;
-    border-radius: 0.6rem;
-    padding: 0.5rem 0.2rem;
+    width: 100%;
   }
+
   #root #info-card .list-no-bullets #number-and-name-list-item {
-    font-size: 1.2rem;
+    font-size: var(--font-2xl);
   }
-  #root #info-card .list-no-bullets li {
-    padding: 0.13rem;
-    font-size: 0.98rem;
-  }
-  #root .card {
-    padding: 0.5rem 0.15rem;
-    box-shadow: 0 0.2rem 0.8rem rgba(31, 38, 135, 0.18);
-  }
+
   #root #artwork-card .image {
-    width: 90vw;
-    max-width: 160px;
-    margin: 0.18rem auto;
+    max-width: 200px;
+    margin: var(--spacing-sm) auto;
     display: block;
   }
+
   #root #stats-card #stats-chart {
-    width: 95vw !important;
-    height: 160px !important;
+    width: 100% !important;
+    height: 200px !important;
   }
-  #root .type-text {
-    padding: 0.22rem;
-    font-size: 0.92rem;
-    margin: 0.08rem 0.02rem;
-  }
-  #root .text {
-    padding: 0.22rem;
-    font-size: 0.92rem;
-  }
+
   #root .toast {
-    top: 4.2rem;
-    right: 2vw;
-    left: 2vw;
-    width: 96vw;
-    max-width: 98vw;
-    font-size: 0.98rem;
-    padding: 0.32rem 0.5rem;
-    z-index: 200;
+    top: auto;
+    bottom: var(--spacing-lg);
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    width: auto;
+    font-size: var(--font-sm);
   }
-  #root #info-card {
-    margin: 0.2rem 0.1rem 0.5rem 0.1rem;
-    padding-bottom: 0.3rem;
+
+  #root .type-text {
+    padding: var(--spacing-xs);
+    font-size: var(--font-xs);
+    margin: var(--spacing-xs);
   }
-  #root #artwork-card {
-    margin-left: 0;
-    margin-right: 0;
+
+  #root .text {
+    padding: var(--spacing-xs);
+    font-size: var(--font-xs);
   }
+}
+
+/* Large Mobile Devices (481px - 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  :root {
+    --font-xs: 0.8rem;
+    --font-sm: 0.9rem;
+    --font-md: 1.05rem;
+    --font-lg: 1.2rem;
+    --font-xl: 1.35rem;
+    --font-2xl: 1.65rem;
+    --font-3xl: 2rem;
+  }
+
+  body {
+    font-size: var(--font-sm);
+  }
+
+  #header form {
+    padding: var(--spacing-md);
+    flex-wrap: wrap;
+    justify-content: center;
+    position: static;
+    background-color: var(--primary-95);
+  }
+
+  #header form #pokemon-textbox {
+    width: 60vw;
+    max-width: 300px;
+  }
+
+  #root {
+    display: block;
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  #root #info-card,
+  #root #artwork-card,
   #root #stats-card {
-    margin-right: 0;
-    margin-left: 0;
+    margin: var(--spacing-md) var(--spacing-sm);
+    float: none;
+    width: calc(100% - var(--spacing-lg));
   }
-  #root #info-card .list-bulleted {
-    padding-left: 1.1rem;
+
+  #root #artwork-card .image {
+    max-width: 250px;
+    margin: var(--spacing-md) auto;
+    display: block;
+  }
+
+  #root #stats-card #stats-chart {
+    width: 100% !important;
+    height: 250px !important;
+  }
+}
+
+/* Tablets (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --font-xl: 1.375rem;
+    --font-2xl: 1.75rem;
+    --font-3xl: 2.25rem;
+  }
+
+  #header form {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  #header form #pokemon-textbox {
+    width: 200px;
+  }
+
+  #root {
+    grid-template-columns: 1fr;
+    grid-column-gap: 0;
+    padding: 5.5rem var(--spacing-lg) var(--spacing-xl);
+    max-width: 800px;
+  }
+
+  #root #info-card {
+    grid-area: 1/1/2/2;
+    margin: 0 0 var(--spacing-lg);
+  }
+
+  #root #artwork-card {
+    grid-area: 2/1/3/2;
+    margin: 0 0 var(--spacing-lg);
+    float: none;
+  }
+
+  #root #stats-card {
+    grid-area: 3/1/4/2;
+    margin: 0;
+    float: none;
+  }
+
+  #root #artwork-card .image {
+    max-width: 300px;
+    margin: var(--spacing-md) auto;
+    display: block;
+  }
+
+  #root #stats-card #stats-chart {
+    width: 100% !important;
+    height: 300px !important;
+  }
+}
+
+/* Small Laptops (1025px - 1366px) */
+@media screen and (min-width: 1025px) and (max-width: 1366px) {
+  #root {
+    max-width: 1200px;
+    grid-column-gap: var(--spacing-2xl);
+    padding: 6rem var(--spacing-xl) var(--spacing-xl);
+  }
+
+  #root #info-card,
+  #root #artwork-card,
+  #root #stats-card {
+    margin-left: var(--spacing-lg);
+    margin-right: var(--spacing-lg);
+  }
+}
+
+/* Large Desktops (1367px - 1920px) */
+@media screen and (min-width: 1367px) and (max-width: 1920px) {
+  :root {
+    --font-sm: 1.125rem;
+    --font-md: 1.25rem;
+    --font-lg: 1.375rem;
+    --font-xl: 1.625rem;
+    --font-2xl: 2.125rem;
+    --font-3xl: 2.75rem;
+  }
+
+  #root {
+    max-width: 1400px;
+    grid-column-gap: var(--spacing-3xl);
+  }
+}
+
+/* Ultra-wide Screens (1921px+) */
+@media screen and (min-width: 1921px) {
+  :root {
+    --font-sm: 1.25rem;
+    --font-md: 1.375rem;
+    --font-lg: 1.5rem;
+    --font-xl: 1.75rem;
+    --font-2xl: 2.25rem;
+    --font-3xl: 3rem;
+  }
+
+  #root {
+    max-width: 1600px;
+    grid-column-gap: 4rem;
+  }
+}
+
+/* High DPI / Retina Displays */
+@media screen and (-webkit-min-device-pixel-ratio: 2),
+       screen and (min-resolution: 192dpi) {
+  #root .card {
+    box-shadow: 0 0.25rem 1rem rgba(31, 38, 135, 0.37), var(--shadow-sm);
+  }
+  
+  #header form button {
+    box-shadow: 0 1px 4px rgba(255,110,97,0.15), var(--shadow-sm);
+  }
+}
+
+/* Landscape Orientation for Mobile */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+  #header form {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  #header form #header-text {
+    font-size: var(--font-lg);
+  }
+
+  #root {
+    padding-top: 4rem;
+  }
+
+  #root #info-card .list-no-bullets #number-and-name-list-item {
+    font-size: var(--font-xl);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  #header form {
+    position: static;
+    background: white;
+    border: 1px solid #000;
+    box-shadow: none;
+  }
+
+  #root {
+    display: block;
+    padding: var(--spacing-lg);
+  }
+
+  #root .card {
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  #root #stats-card #stats-chart {
+    width: 100% !important;
+    height: 400px !important;
   }
 }
 
