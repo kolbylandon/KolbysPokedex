@@ -45,7 +45,7 @@
   --shadow-glass: var(--shadow-md), var(--shadow-sm);
 }
 
-/* RESET & BASE STYLES */
+/* RESET & BASE STYLES - OPTIMIZED */
 *,
 *::before,
 *::after {
@@ -63,10 +63,34 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
   line-height: 1.6;
+  /* Enable hardware acceleration for better performance */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* Optimize rendering */
+  will-change: scroll-position;
 }
 
 body::-webkit-scrollbar {
   display: none;
+}
+
+/* Performance optimizations */
+.lazy {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.lazy.loaded {
+  opacity: 1;
+}
+
+/* GPU acceleration for animations */
+.card,
+.header-element,
+.button-top {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* HEADER STYLES - OPTIMIZED */

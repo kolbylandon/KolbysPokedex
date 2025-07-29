@@ -4,11 +4,34 @@ import { capitalizeFirstLetter, punctuationNameCheck, showToast } from './helper
 
 const ApiAddress = 'https://pokeapi.co/api/v2';
 
+// Request cache for better performance
+const REQUEST_CACHE = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Batch request queue to reduce API calls
+const REQUEST_QUEUE = new Map();
+let REQUEST_TIMEOUT = null;
+
 async function fetchJson(url) {
   try {
+    // Check cache first
+    const cached = REQUEST_CACHE.get(url);
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+      return cached.data;
+    }
+
     const response = await fetch(url);
     if (!response.ok) throw response;
-    return await response.json();
+    
+    const data = await response.json();
+    
+    // Cache the response
+    REQUEST_CACHE.set(url, {
+      data,
+      timestamp: Date.now()
+    });
+    
+    return data;
   } catch (exception) {
     handleError(exception);
     throw exception;
@@ -23,8 +46,12 @@ function handleError(exception) {
 
 async function requestPokemon(id, visibility) {
   try {
-    const pokemonResponse = await fetchJson(`${ApiAddress}/pokemon/${id}`);
-    const speciesResponse = await fetchJson(pokemonResponse.species.url);
+    // Use Promise.all for parallel requests to improve performance
+    const [pokemonResponse, speciesResponse] = await Promise.all([
+      fetchJson(`${ApiAddress}/pokemon/${id}`),
+      fetchJson(`${ApiAddress}/pokemon-species/${id}`)
+    ]);
+    
     populatePage(pokemonResponse, speciesResponse, visibility);
   } catch(exception) {
     // Error handled in fetchJson

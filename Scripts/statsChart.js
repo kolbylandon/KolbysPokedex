@@ -7,36 +7,30 @@ const RadarChart = document.getElementById('stats-chart');
 let statsChart = null;
 
 function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
-  if(statsChart != null) {
+  // Efficiently destroy existing chart
+  if (statsChart) {
     statsChart.destroy();
+    statsChart = null;
   }
+  
   name = punctuationNameCheck(name);
   const chart = RadarChart;
-  const data = {
-    labels: [ 
-      'HP', 
-      'Attack', 
-      'Defense', 
-      'Sp.Atk', 
-      'Sp.Def', 
-      'Speed', 
-    ],
+  
+  // Pre-configure chart data for better performance
+  const chartData = {
+    labels: ['HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed'],
     datasets: [{
-      data: [ 
-        stats[0], 
-        stats[1], 
-        stats[2], 
-        stats[3], 
-        stats[4], 
-        stats[5], 
-      ],
+      data: stats,
       backgroundColor,
       borderColor,
     }],
   };
 
-  const options = {
+  const chartOptions = {
     responsive: false,
+    animation: {
+      duration: 300 // Reduce animation time for better performance
+    },
     elements: {
       point: {
         radius: 4,
@@ -74,11 +68,14 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
       },
     },
   };
+  
+  // Create chart with optimized settings
   statsChart = new Chart(chart, {
     type: 'radar',
-    data: data,
-    options: options,
+    data: chartData,
+    options: chartOptions,
   });
+  
   chart.style.width = chart.parentElement.style.width;
   chart.style.height = chart.parentElement.style.height;
 } //displayStatsChart

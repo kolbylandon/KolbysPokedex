@@ -7,9 +7,23 @@ import {
 import { 
   displayStatsChart, 
 } from './statsChart.js';
-import { 
-  deviceType, HiddenElementsArray, CryButton, CryButtonTop,
-} from './main.js';
+
+// Get references from DOM directly instead of importing from main.js to avoid circular dependencies
+const HiddenElementsArray = Array.from(document.getElementsByClassName('hidden-element'));
+const CryButton = document.getElementById('cry-button');
+const CryButtonTop = document.getElementById('cry-button-top');
+
+// Function to get device type when needed
+function getDeviceType() {
+  if (window.pokemonApp && window.pokemonApp.deviceType) {
+    return window.pokemonApp.deviceType;
+  }
+  // Fallback device detection
+  const width = window.innerWidth;
+  if (width <= 768) return 'mobile';
+  if (width <= 1024) return 'tablet';
+  return 'desktop';
+}
 
 const NumberHeader = document.getElementById('number-header');
 const NameHeader = document.getElementById('name-header');
@@ -50,6 +64,8 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
 } //populatePage
 
 function displayAttributes() {
+  const deviceType = getDeviceType(); // Get device type when needed
+  
   NumberHeader.innerText = `#${pokemon.id} `;
   pokemon.name = punctuationNameCheck(pokemon.name);
   NameHeader.innerText = pokemon.name.toUpperCase();

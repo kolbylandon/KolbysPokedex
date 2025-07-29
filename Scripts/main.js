@@ -39,11 +39,13 @@ const TypeText2 = document.getElementById('type-text-2');
 let deviceType = null;
 let id = null;
 
-(() => { //! Combine some of the event listeners into one function
+(() => { 
   getElementVisibility(HiddenElementsArray, 'hidden');
   getSystemInformation();
   checkLocalStorageItems();
   loadLastViewedPokemon();
+  
+  // Direct event listeners for better compatibility
   GoButton.addEventListener('click', () => {
     buttonClick('Go', true, true);
   });
@@ -86,36 +88,58 @@ let id = null;
   ArtworkTable.addEventListener('click', () => {
     window.scroll(0, 0);
   });
-  Textbox.addEventListener('input', () => {
-    inputCheck(Textbox.value);
-    validPokedexNumberCheck();
+  
+  // Input event listeners
+  Textbox.addEventListener('input', handleTextboxInput);
+  Textbox.addEventListener('focus', handleTextboxFocus);
+  Textbox.addEventListener('blur', handleTextboxBlur);
+  Textbox.addEventListener('keydown', handleTextboxKeydown);
+  
+  // Resize event with throttling
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      getSystemInformation();
+    }, 250); // Throttle to 250ms
   });
-  Textbox.addEventListener('focus', () => {
-    Textbox.value = '';
-    validPokedexNumberCheck();
-  });
-  Textbox.addEventListener('blur', () => {
-    if(Textbox.value === '') {
-      Textbox.value = id;      
-      validPokedexNumberCheck();
-    }
-  });
-  Textbox.addEventListener('keydown', (event) => {
-    if(event.key === 'Enter') {
-      event.preventDefault();
-      GoButton.click();
-    }
-  });
-  window.onresize = () => {
-    getSystemInformation();
-  }
+  
   Textbox.focus();
 })();
 
+// Input event handlers
+function handleTextboxInput() {
+  inputCheck(Textbox.value);
+  validPokedexNumberCheck();
+}
+
+function handleTextboxFocus() {
+  Textbox.value = '';
+  validPokedexNumberCheck();
+}
+
+function handleTextboxBlur() {
+  if (Textbox.value === '') {
+    Textbox.value = id;      
+    validPokedexNumberCheck();
+  }
+}
+
+function handleTextboxKeydown(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    GoButton.click();
+  }
+}
+
 function getSystemInformation() {
-  let deviceType = getDeviceType();
+  deviceType = getDeviceType();
   localStorage.setItem('deviceType', deviceType);
   headerLayout(deviceType);
+  
+  // Make device type available globally
+  if (!window.pokemonApp) window.pokemonApp = {};
+  window.pokemonApp.deviceType = deviceType;
 } //getSystemInformation
 
 function loadLastViewedPokemon() {
@@ -212,9 +236,10 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
   Toast.classList.remove('toast-active');
 } //buttonClick
 
-export {
+// Make elements globally available instead of using exports to avoid circular dependencies
+window.pokemonApp = {
   HiddenElementsArray, Textbox, Toast, GoButton, GoButtonTop, RandomPokemonButton, 
   RandomPokemonButtonTop, PreviousButton, PreviousButtonTop, NextButton, NextButtonTop, 
   ReadEntryButton, ReadEntryButtonTop, RecallButton, RecallButtonTop, ClearButton, 
-  ClearButtonTop, CryButton, CryButtonTop, deviceType,  
-}
+  ClearButtonTop, CryButton, CryButtonTop, deviceType
+};

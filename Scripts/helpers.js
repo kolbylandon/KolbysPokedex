@@ -1,9 +1,5 @@
 'use strict';
 
-import {
-  Textbox, Toast, GoButton, RandomPokemonButton, PreviousButton, NextButton,
-  RecallButton, ReadEntryButton, ClearButton,
-} from './main.js';
 import { 
   requestAbilityEffect, requestForm, requestHeldItem, requestPokemon, 
 } from './requests.js';
@@ -11,19 +7,58 @@ import {
   pokemon
 } from './pokemon.js';
 
-const Synth = window.speechSynthesis;
-const Body = document.body;
-const TypeText = document.getElementById('type-text');
-const TypeText2 = document.getElementById('type-text-2');
-const TypeHeader = document.getElementById('type-header');
-const StatsChart = document.getElementById('stats-chart');
-const AbilitiesUnorderedList = document.getElementById('abilities-unordered-list');
-const AbilitiesHeader = document.getElementById('abilities-header');
-const HeldItemsUnorderedList = document.getElementById('held-items-unordered-list');
-const FormsUnorderedList = document.getElementById('forms-unordered-list');
-const HeldItemsHeader = document.getElementById('held-items-header');
-const FormsHeader = document.getElementById('forms-header');
-const ToastText = document.getElementById('toast-text');
+// Cache DOM elements for better performance
+const DOM_CACHE = {
+  synth: window.speechSynthesis,
+  body: document.body,
+  typeText: document.getElementById('type-text'),
+  typeText2: document.getElementById('type-text-2'),
+  typeHeader: document.getElementById('type-header'),
+  statsChart: document.getElementById('stats-chart'),
+  abilitiesUnorderedList: document.getElementById('abilities-unordered-list'),
+  abilitiesHeader: document.getElementById('abilities-header'),
+  heldItemsUnorderedList: document.getElementById('held-items-unordered-list'),
+  formsUnorderedList: document.getElementById('forms-unordered-list'),
+  heldItemsHeader: document.getElementById('held-items-header'),
+  formsHeader: document.getElementById('forms-header'),
+  toastText: document.getElementById('toast-text'),
+  // Add button references directly here instead of importing
+  textbox: document.getElementById('pokemon-textbox'),
+  toast: document.getElementById('toast'),
+  goButton: document.getElementById('go-button'),
+  randomPokemonButton: document.getElementById('random-pokemon-button'),
+  previousButton: document.getElementById('previous-button'),
+  nextButton: document.getElementById('next-button'),
+  recallButton: document.getElementById('recall-button'),
+  readEntryButton: document.getElementById('read-entry-button'),
+  clearButton: document.getElementById('clear-button')
+};
+
+// Maintain backwards compatibility
+const Synth = DOM_CACHE.synth;
+const Body = DOM_CACHE.body;
+const TypeText = DOM_CACHE.typeText;
+const TypeText2 = DOM_CACHE.typeText2;
+const TypeHeader = DOM_CACHE.typeHeader;
+const StatsChart = DOM_CACHE.statsChart;
+const AbilitiesUnorderedList = DOM_CACHE.abilitiesUnorderedList;
+const AbilitiesHeader = DOM_CACHE.abilitiesHeader;
+const HeldItemsUnorderedList = DOM_CACHE.heldItemsUnorderedList;
+const FormsUnorderedList = DOM_CACHE.formsUnorderedList;
+const HeldItemsHeader = DOM_CACHE.heldItemsHeader;
+const FormsHeader = DOM_CACHE.formsHeader;
+const ToastText = DOM_CACHE.toastText;
+
+// Button references
+const Textbox = DOM_CACHE.textbox;
+const Toast = DOM_CACHE.toast;
+const GoButton = DOM_CACHE.goButton;
+const RandomPokemonButton = DOM_CACHE.randomPokemonButton;
+const PreviousButton = DOM_CACHE.previousButton;
+const NextButton = DOM_CACHE.nextButton;
+const RecallButton = DOM_CACHE.recallButton;
+const ReadEntryButton = DOM_CACHE.readEntryButton;
+const ClearButton = DOM_CACHE.clearButton;
 const TextColor = 'rgba(98, 98, 98, 0.95)';
 const HiddenAbilityTextColor = 'rgba(255, 111, 97, 0.95)';
 const TransparentColor = 'rgba(0, 0, 0, 0)';
@@ -34,19 +69,24 @@ const MaximumId = 1025;
 function getAbilityList(abilities) {
   AbilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';
   AbilitiesUnorderedList.innerHTML = `<ul id='abilities-unordered-list' class='list-bulleted'></ul>`;
-  let counter = 0;
-  abilities.forEach(ability => {
+  
+  // Use DocumentFragment for better performance
+  const fragment = document.createDocumentFragment();
+  
+  abilities.forEach((ability, index) => {
     const ListItem = document.createElement('li');
-    ListItem.id = `flavor-text-${++counter}`;
+    ListItem.id = `flavor-text-${index + 1}`;
     ListItem.classList.add('flavor-text');
     let name = capitalizeAfterHyphen(capitalizeFirstLetter(ability.ability.name));
-    if(ability.is_hidden) {
+    if (ability.is_hidden) {
       name += ' (Hidden)';
     }
     requestAbilityEffect(ability.ability.url, ListItem, name);
     ListItem.style.color = ability.is_hidden === false ? TextColor : HiddenAbilityTextColor;
-    AbilitiesUnorderedList.appendChild(ListItem);
+    fragment.appendChild(ListItem);
   });
+  
+  AbilitiesUnorderedList.appendChild(fragment);
 } //getAbilityList
 
 function getPokedexType(showOnlyOriginalPokemon) {
@@ -58,51 +98,63 @@ function getPokedexType(showOnlyOriginalPokemon) {
 } //getPokedexType
 
 function getHeldItemList(heldItems) {
-  if(heldItems.length === 0) {
+  if (heldItems.length === 0) {
     HeldItemsHeader.style.display = 'none';
     HeldItemsUnorderedList.style.display = 'none';
     return;
-  } else if(heldItems.length === 1) {
-    HeldItemsHeader.innerText = 'Held Item:';
-  } else {
-    HeldItemsHeader.innerText = 'Held Items:';
   }
+  
+  HeldItemsHeader.innerText = heldItems.length === 1 ? 'Held Item:' : 'Held Items:';
   HeldItemsUnorderedList.innerHTML = `<ul id='held-items-unordered-list' class='list-bulleted'></ul>`;
   HeldItemsHeader.style.display = 'block';
   HeldItemsUnorderedList.style.display = 'block';
-  let counter = 0;
-  heldItems.forEach(heldItem => {
+  
+  // Use DocumentFragment for better performance
+  const fragment = document.createDocumentFragment();
+  
+  heldItems.forEach((heldItem, index) => {
     const ListItem = document.createElement('li');
-    ListItem.id = `held-item-text-${++counter}`;
+    ListItem.id = `held-item-text-${index + 1}`;
     ListItem.classList.add('held-item-text');
     requestHeldItem(heldItem.item.url, ListItem, capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name)));
     ListItem.style.color = TextColor;
-    HeldItemsUnorderedList.appendChild(ListItem);
+    fragment.appendChild(ListItem);
   });
+  
+  HeldItemsUnorderedList.appendChild(fragment);
 } //getHeldItemList
 
 function getFormList(forms) {
-  if(forms.length === 1) {
+  if (forms.length === 1) {
     FormsHeader.style.display = 'none';
     FormsUnorderedList.style.display = 'none';
     return;
-  } else {
-    FormsHeader.style.display = 'block';
-    FormsUnorderedList.style.display = 'block';
   }
+  
+  FormsHeader.style.display = 'block';
+  FormsUnorderedList.style.display = 'block';
   FormsUnorderedList.innerHTML = `<ul id='forms-unordered-list' class='list-bulleted'></ul>`;
-  let counter = 0;
-  forms.forEach(form => {
+  
+  // Use DocumentFragment for better performance
+  const fragment = document.createDocumentFragment();
+  
+  forms.forEach((form, index) => {
     const ListItem = document.createElement('li');
-    ListItem.id = `forms-text-${++counter}`;
+    ListItem.id = `forms-text-${index + 1}`;
     ListItem.classList.add('form-text');
     requestForm(form.pokemon.url, ListItem);
     ListItem.style.color = TextColor;
-    FormsUnorderedList.appendChild(ListItem);
+    
+    // Add click event with optimized URL parsing
     ListItem.addEventListener('click', () => {
-      generatePokemon(form.pokemon.url.substring(34).replaceAll('/', ''), 'visible', true);
+      const pokemonId = form.pokemon.url.split('/').slice(-2, -1)[0];
+      generatePokemon(pokemonId, 'visible', true);
     });
+    
+    fragment.appendChild(ListItem);
   });
+  
+  FormsUnorderedList.appendChild(fragment);
 } //getFormList
 
 function getStatTotal(stats) {
@@ -239,20 +291,20 @@ function getLargestStat(statsArray) {
 } //getLargestStat
 
 function createArray(elements) {
-  let elementArray = [];
-  for(let index in elements) {
-    elementArray.push(elements[index]);
-  }
-  return elementArray;
+  // Use Array.from for better performance than for-in loop
+  return Array.from(elements);
 } //createArray
 
 function getElementVisibility(elements, visibility) {
   Synth.cancel();
-  if(Array.isArray(elements)) {
-    elements.forEach(element => {
-      if(element.style !== undefined) {
-        element.style.visibility = visibility;
-      }
+  if (Array.isArray(elements)) {
+    // Use requestAnimationFrame for better performance when manipulating many elements
+    requestAnimationFrame(() => {
+      elements.forEach(element => {
+        if (element && element.style !== undefined) {
+          element.style.visibility = visibility;
+        }
+      });
     });
   }
 } //getElementVisibility
@@ -334,18 +386,36 @@ function getDeviceType() {
   return 'desktop';
 } //getDeviceType
 
+// Button configuration templates for better performance
+const BUTTON_TEMPLATES = {
+  mobile: {
+    go: `<span id='go-button-top' class='button-top'><i class='fa-solid fa-magnifying-glass'></i></span>`,
+    random: `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i></span>`,
+    previous: `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-angle-left'></i></span>`,
+    next: `<span id='next-button-top' class='button-top'><i class='fa-solid fa-angle-right'></i></span>`,
+    readEntry: `<span id='read-entry-button-top' class='button-top'><i class='fa-solid fa-book-open-reader'></i></span>`,
+    clear: `<span id='clear-button-top' class='button-top'><i class='fa-solid fa-x'></i></span>`
+  },
+  tablet: {
+    random: `<span id='random-pokemon-button-top' class='button-top'>Random</span>`,
+    previous: `<span id='previous-button-top' class='button-top'>Prev</span>`
+  }
+};
+
 function headerLayout(deviceType) {
-  if(deviceType === 'mobile') {
-    GoButton.innerHTML = `<span id='go-button-top' class='button-top'><i class='fa-solid fa-magnifying-glass'></i></span>`;
-    RandomPokemonButton.innerHTML = `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i></span>`;
-    PreviousButton.innerHTML = `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-angle-left'></i></span>`;
-    NextButton.innerHTML = `<span id='next-button-top' class='button-top'><i class='fa-solid fa-angle-right'></i></span>`;
-    ReadEntryButton.innerHTML = `<span id='read-entry-button-top' class='button-top'><i class='fa-solid fa-book-open-reader'></i></span>`;
-    ClearButton.innerHTML = `<span id='clear-button-top' class='button-top'><i class='fa-solid fa-x'></i></span>`;
+  if (deviceType === 'mobile') {
+    const templates = BUTTON_TEMPLATES.mobile;
+    GoButton.innerHTML = templates.go;
+    RandomPokemonButton.innerHTML = templates.random;
+    PreviousButton.innerHTML = templates.previous;
+    NextButton.innerHTML = templates.next;
+    ReadEntryButton.innerHTML = templates.readEntry;
+    ClearButton.innerHTML = templates.clear;
     return;
-  } else if(deviceType === 'tablet') {
-    RandomPokemonButton.innerHTML = `<span id='random-pokemon-button-top' class='button-top'>Random</span>`;
-    PreviousButton.innerHTML = `<span id='previous-button-top' class='button-top'>Prev</span>`;
+  } else if (deviceType === 'tablet') {
+    const templates = BUTTON_TEMPLATES.tablet;
+    RandomPokemonButton.innerHTML = templates.random;
+    PreviousButton.innerHTML = templates.previous;
     return;
   }
 } //headerLayout

@@ -168,17 +168,18 @@ async function handleFetch(request) {
   }
 }
 
-// Cache First: Check cache first, fallback to network
+// Optimized cache first strategy with performance improvements
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
   
   if (cachedResponse) {
-    // Check if cached response is still valid (not older than 24 hours for static assets)
-    const cachedDate = new Date(cachedResponse.headers.get('date'));
+    // Validate cache freshness for static assets
+    const cachedDate = new Date(cachedResponse.headers.get('date') || 0);
     const now = new Date();
     const hoursSinceCached = (now - cachedDate) / (1000 * 60 * 60);
     
+    // Return cached response if less than 24 hours old
     if (hoursSinceCached < 24) {
       return cachedResponse;
     }
@@ -187,10 +188,15 @@ async function cacheFirst(request, cacheName) {
   try {
     const networkResponse = await fetch(request);
     if (networkResponse.status === 200) {
-      cache.put(request, networkResponse.clone());
+      // Clone once and cache asynchronously for better performance
+      const responseClone = networkResponse.clone();
+      cache.put(request, responseClone).catch(err => 
+        console.warn('[ServiceWorker] Cache put failed:', err)
+      );
     }
     return networkResponse;
   } catch (error) {
+    // Return stale cache if network fails
     if (cachedResponse) {
       return cachedResponse;
     }
