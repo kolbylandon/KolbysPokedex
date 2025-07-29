@@ -222,5 +222,7 @@ IMPLEMENTED
   image when hovering.
 135) Include Cries from pokemon API call. //I have added the a button that allows the user to play the 
   Pokémon's cry with the playPokemonCry function in the helpers file.
+136) Change official artwork instead of the sprites. //Now displays 1 default and 1 shiny official artwork 
+  instead of the 4 sprite images.
 
 

@@ -16,15 +16,13 @@
   <title>Kolby's Pokédex</title>
   <link href="../Images/pokeball.png" rel="shortcut icon" type="image/png">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
-  <link href="../StyleSheets/glass.css" rel="stylesheet">
+  <link href="../StyleSheets/style.css" rel="stylesheet">
 </head>
 <body>
   <header id="header">
     <nav aria-label="Main navigation">
       <form id="header-form" autocomplete="off">
-        <button id="header-text-button" type="button" aria-label="Show info">
-          <h1 id="header-text">info</h1>
-        </button>
+        <h1 id="header-text">info</h1>
         <input id="pokemon-textbox" class="header-element" type="text" maxlength="4" placeholder="Search" aria-label="Search Pokémon">
           <button id="go-button" class="header-element" type="button" aria-label="Go">
             <span id="go-button-top" class="button-top">Go</span>
@@ -100,23 +98,15 @@
           </li>
         </ul>
       </div>
-      <div id="sprite-card" class="card bottom-card hidden-element">
-        <table id="sprite-table" style="width: 100%">
+      <div id="artwork-card" class="card bottom-card hidden-element">
+        <table id="artwork-table" style="width: 100%">
           <tbody>
-            <tr id="sprite-table-front-row">
-              <td id="sprite-table-td-front-default" class="sprite-table-td">
-                <img id="front-default" class="image front" alt="Front Default Sprite">
+            <tr id="artwork-table-row">
+              <td id="artwork-table-td-default" class="artwork-table-td">
+                <img id="default-artwork" class="image artwork" alt="Default Official Artwork">
               </td>
-              <td id="sprite-table-td-front-shiny" class="sprite-table-td">
-                <img id="front-shiny" class="image front" alt="Front Shiny Sprite">
-              </td>
-            </tr>
-            <tr id="sprite-table-back-row">
-              <td id="sprite-table-td-back-default" class="sprite-table-td">
-                <img id="back-default" class="image back" alt="Back Default Sprite">
-              </td>
-              <td id="sprite-table-td-back-shiny" class="sprite-table-td">
-                <img id="back-shiny" class="image back" alt="Back Shiny Sprite">
+              <td id="artwork-table-td-shiny" class="artwork-table-td">
+                <img id="shiny-artwork" class="image artwork" alt="Shiny Official Artwork">
               </td>
             </tr>
           </tbody>
@@ -138,18 +128,13 @@
       <p id="footer-text">Pokémon and Pokémon character names are trademarks of Nintendo.</p>
     </footer>
     <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js"></script>
+    <script async defer src="../Scripts/sw-manager.js"></script>
+    <script async defer src="../Scripts/sw-debug.js"></script>
     <script async defer type="module" src="../Scripts/main.js"></script>
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }, err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
+      // Service Worker registration is now handled by sw-manager.js
+      // This provides better update handling and offline functionality
+      console.log('Service Worker management delegated to sw-manager.js');
     </script>
   </body>
 </html>

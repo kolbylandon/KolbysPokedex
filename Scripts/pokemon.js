@@ -19,14 +19,11 @@ const PokedexEntryText = document.getElementById('pokedex-entry-text');
 const HeightText = document.getElementById('height-text');
 const WeightText = document.getElementById('weight-text');
 const StatsText = document.getElementById('stats-text');
-const FrontDefault = document.getElementById('front-default');
-const FrontShiny = document.getElementById('front-shiny');
-const BackDefault = document.getElementById('back-default');
-const BackShiny = document.getElementById('back-shiny');
-const DefaultArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
-const ShinyArtwork = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/';
+const DefaultArtworkElement = document.getElementById('default-artwork');
+const ShinyArtworkElement = document.getElementById('shiny-artwork');
+const DefaultArtworkUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
+const ShinyArtworkUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/';
 let pokemon = null;
-let spritesArray = null;
 
 function populatePage(pokemonResponse, speciesResponse, visibility) {
   const statTotal = getStatTotal(pokemonResponse.stats);
@@ -68,22 +65,34 @@ function displayAttributes() {
   if(deviceType === 'mobile' || deviceType === 'tablet') {
     StatsText.innerHTML += '<br>';
   }
-  FrontDefault.setAttribute('src', pokemon.FrontDefaultSprite);
-  FrontDefault.setAttribute('alt', 'Front Sprite Not Available');
-  FrontDefault.style.width = FrontDefault.parentElement.style.width;
-  FrontDefault.style.height = FrontDefault.parentElement.style.height;
-  FrontShiny.setAttribute('src', pokemon.FrontShinySprite);
-  FrontShiny.setAttribute('alt', 'Front Shiny Sprite Not Available');
-  FrontShiny.style.width = FrontShiny.parentElement.style.width;
-  FrontShiny.style.height = FrontShiny.parentElement.style.height;
-  BackDefault.setAttribute('src', pokemon.BackDefaultSprite);
-  BackDefault.setAttribute('alt', 'Back Sprite Not Available');
-  BackDefault.style.width = BackDefault.parentElement.style.width;
-  BackDefault.style.height = BackDefault.parentElement.style.height;
-  BackShiny.setAttribute('src', pokemon.BackShinySprite);
-  BackShiny.setAttribute('alt', 'Back Shiny Sprite Not Available');
-  BackShiny.style.width = BackShiny.parentElement.style.width;
-  BackShiny.style.height = BackShiny.parentElement.style.height;
+  
+  // Set default artwork
+  DefaultArtworkElement.setAttribute('src', pokemon.FrontDefaultOfficialArtwork);
+  DefaultArtworkElement.setAttribute('alt', 'Official Artwork Not Available');
+  DefaultArtworkElement.style.width = DefaultArtworkElement.parentElement.style.width;
+  DefaultArtworkElement.style.height = DefaultArtworkElement.parentElement.style.height;
+  
+  // Set shiny artwork
+  ShinyArtworkElement.setAttribute('src', pokemon.FrontShinyOfficialArtwork);
+  ShinyArtworkElement.setAttribute('alt', 'Shiny Official Artwork Not Available');
+  ShinyArtworkElement.style.width = ShinyArtworkElement.parentElement.style.width;
+  ShinyArtworkElement.style.height = ShinyArtworkElement.parentElement.style.height;
+  // FrontDefault.setAttribute('src', pokemon.FrontDefaultSprite);
+  // FrontDefault.setAttribute('alt', 'Front Sprite Not Available');
+  // FrontDefault.style.width = FrontDefault.parentElement.style.width;
+  // FrontDefault.style.height = FrontDefault.parentElement.style.height;
+  // FrontShiny.setAttribute('src', pokemon.FrontShinySprite);
+  // FrontShiny.setAttribute('alt', 'Front Shiny Sprite Not Available');
+  // FrontShiny.style.width = FrontShiny.parentElement.style.width;
+  // FrontShiny.style.height = FrontShiny.parentElement.style.height;
+  // BackDefault.setAttribute('src', pokemon.BackDefaultSprite);
+  // BackDefault.setAttribute('alt', 'Back Sprite Not Available');
+  // BackDefault.style.width = BackDefault.parentElement.style.width;
+  // BackDefault.style.height = BackDefault.parentElement.style.height;
+  // BackShiny.setAttribute('src', pokemon.BackShinySprite);
+  // BackShiny.setAttribute('alt', 'Back Shiny Sprite Not Available');
+  // BackShiny.style.width = BackShiny.parentElement.style.width;
+  // BackShiny.style.height = BackShiny.parentElement.style.height;
 } //displayAttributes
 
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
@@ -105,31 +114,31 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     baseStatTotal: statTotal,
     generation: speciesResponse.generation.name.substring(11).toUpperCase(),
     pokedexEntry: entry,
-    FrontDefaultSprite: pokemonResponse.sprites.front_default,
-    BackDefaultSprite: pokemonResponse.sprites.back_default,
-    FrontShinySprite: pokemonResponse.sprites.front_shiny,
-    BackShinySprite: pokemonResponse.sprites.back_shiny,
-    FrontDefaultOfficialArtwork: `${DefaultArtwork}${speciesResponse.id}.png`,
-    FrontShinyOfficialArtwork: `${ShinyArtwork}${speciesResponse.id}.png`,
+    // FrontDefaultSprite: pokemonResponse.sprites.front_default,
+    // BackDefaultSprite: pokemonResponse.sprites.back_default,
+    // FrontShinySprite: pokemonResponse.sprites.front_shiny,
+    // BackShinySprite: pokemonResponse.sprites.back_shiny,
+    FrontDefaultOfficialArtwork: `${DefaultArtworkUrl}${speciesResponse.id}.png`,
+    FrontShinyOfficialArtwork: `${ShinyArtworkUrl}${speciesResponse.id}.png`,
     hasGenderDifferences: speciesResponse.has_gender_differences,
-    frontFemaleSprite: null,
-    backFemaleSprite: null,
-    frontFemaleShinySprite: null,
-    backFemaleShinySprite: null,
+    // frontFemaleSprite: null,
+    // backFemaleSprite: null,
+    // frontFemaleShinySprite: null,
+    // backFemaleShinySprite: null,
   };
-  setGenderDifferenceSprites(pokemon, pokemonResponse);
-  spritesArray = [
-    pokemon.FrontDefaultSprite,
-    pokemon.BackDefaultSprite,
-    pokemon.FrontShinySprite,
-    pokemon.BackShinySprite,
-    pokemon.FrontDefaultOfficialArtwork,
-    pokemon.FrontShinyOfficialArtwork,
-    pokemon.frontFemaleSprite,
-    pokemon.backFemaleSprite,
-    pokemon.frontFemaleShinySprite,
-    pokemon.backFemaleShinySprite
-  ];
+  // setGenderDifferenceSprites(pokemon, pokemonResponse);
+  // spritesArray = [
+  //   pokemon.FrontDefaultSprite,
+  //   pokemon.BackDefaultSprite,
+  //   pokemon.FrontShinySprite,
+  //   pokemon.BackShinySprite,
+  //   pokemon.FrontDefaultOfficialArtwork,
+  //   pokemon.FrontShinyOfficialArtwork,
+  //   pokemon.frontFemaleSprite,
+  //   pokemon.backFemaleSprite,
+  //   pokemon.frontFemaleShinySprite,
+  //   pokemon.backFemaleShinySprite
+  // ];
   populateLocalStorage(pokemon.id);
   console.table(pokemon);
   return pokemon;

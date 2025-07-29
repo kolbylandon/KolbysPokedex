@@ -32,7 +32,7 @@ const NameHeader = document.getElementById('name-header');
 const PokemonEntryText = document.getElementById('pokedex-entry-text');
 const GenusSubHeader = document.getElementById('genus-sub-header');
 const StatsChart = document.getElementById('stats-chart');
-const SpriteTable = document.getElementById('sprite-table');
+const ArtworkTable = document.getElementById('artwork-table');
 const HiddenElementsArray = createArray(document.getElementsByClassName('hidden-element'));
 const TypeText = document.getElementById('type-text');
 const TypeText2 = document.getElementById('type-text-2');
@@ -83,7 +83,7 @@ let id = null;
   StatsChart.addEventListener('click', () => {
     window.scroll(0, 0);
   });
-  SpriteTable.addEventListener('click', () => {
+  ArtworkTable.addEventListener('click', () => {
     window.scroll(0, 0);
   });
   Textbox.addEventListener('input', () => {
