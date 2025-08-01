@@ -60,7 +60,20 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   if(entry.includes(pokemon.name)) {
     capitalizeFirstLetter(pokemon.name);
   }
-  CryButtonTop.innerText = `${capitalizeFirstLetter(pokemon.name)}'s Cry`;
+  // Update cry button with Font Awesome icons based on availability
+  if (pokemon.cry) {
+    CryButtonTop.innerHTML = `<i class="fa-solid fa-volume-high"></i>`;
+    CryButton.title = `Play ${capitalizeFirstLetter(pokemon.name)}'s cry`;
+    CryButton.setAttribute('aria-label', `Play ${capitalizeFirstLetter(pokemon.name)}'s cry`);
+    CryButton.disabled = false;
+    CryButton.classList.remove('cry-unavailable');
+  } else {
+    CryButtonTop.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`;
+    CryButton.title = `${capitalizeFirstLetter(pokemon.name)}'s cry not available`;
+    CryButton.setAttribute('aria-label', `${capitalizeFirstLetter(pokemon.name)}'s cry not available`);
+    CryButton.disabled = true;
+    CryButton.classList.add('cry-unavailable');
+  }
 } //populatePage
 
 function displayAttributes() {
@@ -112,6 +125,12 @@ function displayAttributes() {
 } //displayAttributes
 
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
+  // Handle cry with fallback
+  let cryUrl = null;
+  if (pokemonResponse.cries) {
+    cryUrl = pokemonResponse.cries.latest || pokemonResponse.cries.legacy || null;
+  }
+  
   pokemon = {
     id: speciesResponse.id,
     name: pokemonResponse.species.name,
@@ -125,7 +144,7 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     isMythical: speciesResponse.is_mythical,
     types: pokemonResponse.types,
     forms: speciesResponse.varieties,
-    cry: pokemonResponse.cries.latest,
+    cry: cryUrl,
     statsArray: pokemonResponse.stats.map(stat => stat.base_stat),
     baseStatTotal: statTotal,
     generation: speciesResponse.generation.name.substring(11).toUpperCase(),

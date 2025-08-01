@@ -6,7 +6,7 @@
   <meta name="author" content="Kolby Landon">
   <meta name="description" content="Online Pokédex created by Kolby">
   <meta name="keywords" content="Online, Pokédex">
-  <meta name="theme-color" content="rgba(255, 110, 97, 1)">
+  <meta name="theme-color" content="rgba(255, 255, 255, 0.1)">
   <meta property="og:description" content="Online Pokédex created by Kolby">
   <meta property="og:image" content="../Images/pokeball.png"><!-- Fixed property name -->
   <meta property="og:title" content="Pokédex">
@@ -22,32 +22,40 @@
   <header id="header">
     <nav aria-label="Main navigation">
       <form id="header-form" autocomplete="off">
-        <h1 id="header-text">info</h1>
-        <input id="pokemon-textbox" class="header-element" type="text" maxlength="4" placeholder="Search" aria-label="Search Pokémon">
-          <button id="go-button" class="header-element" type="button" aria-label="Go">
-            <span id="go-button-top" class="button-top">Go</span>
+        <div class="header-brand">
+          <h1 id="header-text">Pokédex</h1>
+        </div>
+        
+        <div class="header-center">
+          <input id="pokemon-textbox" class="header-element" type="text" maxlength="4" placeholder="Search Pokémon..." aria-label="Search Pokémon">
+          <button id="go-button" class="header-element secondary-btn" type="button" aria-label="Go">
+            <span id="go-button-top" class="button-top"><i class="fa-solid fa-search"></i> Search</span>
           </button>
-          <button id="random-pokemon-button" class="header-element" type="button" aria-label="Random Pokémon">
-            <span id="random-pokemon-button-top" class="button-top">Random Pokémon</span>
+          <button id="random-pokemon-button" class="header-element secondary-btn" type="button" aria-label="Random Pokémon">
+            <span id="random-pokemon-button-top" class="button-top"><i class="fa-solid fa-shuffle"></i> Random</span>
           </button>
-          <button id="previous-button" class="header-element hidden-element" type="button" aria-label="Previous">
-            <span id="previous-button-top" class="button-top">Previous</span>
+        </div>
+        
+        <div class="header-actions">
+          <button id="previous-button" class="header-element action-btn hidden-element" type="button" aria-label="Previous">
+            <span id="previous-button-top" class="button-top"><i class="fa-solid fa-chevron-left"></i></span>
           </button>
-          <button id="next-button" class="header-element hidden-element" type="button" aria-label="Next">
-            <span id="next-button-top" class="button-top">Next</span>
+          <button id="next-button" class="header-element action-btn hidden-element" type="button" aria-label="Next">
+            <span id="next-button-top" class="button-top"><i class="fa-solid fa-chevron-right"></i></span>
           </button>
-          <button id="recall-button" class="header-element hidden-element" type="button" aria-label="Recall">
-            <span id="recall-button-top" class="button-top">Recall</span>
+          <button id="recall-button" class="header-element action-btn hidden-element" type="button" aria-label="Recall">
+            <span id="recall-button-top" class="button-top"><i class="fa-solid fa-history"></i></span>
           </button>
-          <button id="cry-button" class="header-element hidden-element" type="button" aria-label="Cry">
-            <span id="cry-button-top" class="button-top">Cry</span>
+          <button id="cry-button" class="header-element action-btn hidden-element" type="button" aria-label="Cry">
+            <span id="cry-button-top" class="button-top"><i class="fa-solid fa-volume-high"></i></span>
           </button>
-          <button id="read-entry-button" class="header-element hidden-element" type="button" aria-label="Read Pokédex Entry">
-            <span id="read-entry-button-top" class="button-top">Read Pokédex Entry</span>
+          <button id="read-entry-button" class="header-element action-btn hidden-element" type="button" aria-label="Read Pokédex Entry">
+            <span id="read-entry-button-top" class="button-top"><i class="fa-solid fa-book-open"></i></span>
           </button>
-          <button id="clear-button" class="header-element hidden-element" type="button" aria-label="Clear">
-            <span id="clear-button-top" class="button-top">&#10005;</span>
+          <button id="clear-button" class="header-element action-btn hidden-element" type="button" aria-label="Clear">
+            <span id="clear-button-top" class="button-top"><i class="fa-solid fa-xmark"></i></span>
           </button>
+        </div>
         </form>
       </nav>
   </header>
@@ -56,7 +64,7 @@
         <p id="toast-text" class="text"></p>
         <button id="toast-close-button" class="toast-close-button" aria-label="Close toast">&#10005;</button>
       </div>
-      <div id="info-card" class="card top-card hidden-element">
+      <div id="info-card" class="card top-card hidden-element fade-in-up">
         <ul id="info-unordered-list" class="list-no-bullets">
           <li id="number-and-name-list-item" class="info-item">
             <span id="number-header" class="headers"></span>
@@ -98,7 +106,7 @@
           </li>
         </ul>
       </div>
-      <div id="artwork-card" class="card bottom-card hidden-element">
+      <div id="artwork-card" class="card bottom-card hidden-element fade-in-up">
         <table id="artwork-table" style="width: 100%">
           <tbody>
             <tr id="artwork-table-row">
@@ -112,17 +120,9 @@
           </tbody>
         </table>
       </div>
-      <div id="stats-card" class="card bottom-card hidden-element">
+      <div id="stats-card" class="card bottom-card hidden-element fade-in-up">
         <canvas id="stats-chart" aria-label="Pokémon Base Stats Chart"></canvas>
       </div>
-      <!--
-      <div id="types-card" class="card hidden-card hidden-element">
-          <li id="types-list-item" class="info-item">
-              <span id="types-header" class="headers">Type:</span>
-              <ul id="types-unordered-list" class="list-bulleted"></ul>
-          </li>
-      </div>
-      -->
     </main>
     <footer id="footer">
       <p id="footer-text">Pokémon and Pokémon character names are trademarks of Nintendo.</p>
@@ -130,7 +130,7 @@
     <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js"></script>
     <script async defer type="module" src="../Scripts/performance.js"></script>
     <script async defer src="../Scripts/sw-manager.js"></script>
-    <script async defer src="../Scripts/sw-debug.js"></script>
+    <!-- <script async defer src="../Scripts/sw-debug.js"></script> -->
     <script async defer type="module" src="../Scripts/main.js"></script>
     <script>
       // Service Worker registration is now handled by sw-manager.js

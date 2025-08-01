@@ -362,8 +362,156 @@ function showToast(text) {
 } //showToast
 
 function playPokemonCry() {
-  let audio = new Audio(pokemon.cry);
-  audio.play();
+  if (!pokemon || !pokemon.cry) {
+    console.warn('No cry audio available for this Pokémon');
+    showToast('Cry audio not available for this Pokémon');
+    return;
+  }
+
+  // Get cry button to show loading state
+  const cryButton = document.getElementById('cry-button');
+  const cryButtonTop = document.getElementById('cry-button-top');
+  const originalHTML = cryButtonTop.innerHTML;
+  
+  // Show loading state with spinning icon
+  cryButtonTop.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+  cryButton.disabled = true;
+  cryButton.classList.add('loading');
+
+  try {
+    const audio = new Audio();
+    
+    // Function to reset button state
+    function resetButtonState() {
+      cryButtonTop.innerHTML = originalHTML;
+      cryButton.disabled = pokemon.cry ? false : true;
+      cryButton.classList.remove('loading');
+    }
+    
+    // Add error handling
+    audio.addEventListener('error', (e) => {
+      console.error('Error loading Pokémon cry:', e);
+      resetButtonState();
+      // Try alternative cry URL if available
+      tryAlternativeCry();
+    });
+    
+    audio.addEventListener('loadstart', () => {
+      console.log('Loading Pokémon cry...');
+    });
+    
+    audio.addEventListener('canplay', () => {
+      console.log('Pokémon cry ready to play');
+      resetButtonState();
+    });
+    
+    audio.addEventListener('ended', () => {
+      // Reset button state when audio finishes
+      resetButtonState();
+    });
+    
+    // Set audio properties
+    audio.volume = 0.7; // Set to 70% volume
+    audio.preload = 'auto';
+    audio.crossOrigin = 'anonymous'; // Enable CORS
+    
+    // Set the source
+    audio.src = pokemon.cry;
+    
+    // Attempt to play
+    const playPromise = audio.play();
+    
+    // Handle play promise (required for modern browsers)
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          console.log(`Playing ${pokemon.name}'s cry`);
+          showToast(`Playing ${capitalizeFirstLetter(pokemon.name)}'s cry! 🔊`);
+          cryButtonTop.innerHTML = `<i class="fa-solid fa-play"></i>`;
+          cryButton.classList.remove('loading');
+        })
+        .catch((error) => {
+          console.error('Error playing Pokémon cry:', error);
+          resetButtonState();
+          
+          if (error.name === 'NotAllowedError') {
+            showToast('Please interact with the page first, then try again');
+          } else if (error.name === 'NotSupportedError') {
+            showToast('Audio format not supported by your browser');
+          } else {
+            showToast('Failed to play Pokémon cry');
+          }
+        });
+    }
+  } catch (error) {
+    console.error('Error creating audio for Pokémon cry:', error);
+    // Reset button state
+    cryButtonTop.innerHTML = originalHTML;
+    cryButton.disabled = pokemon.cry ? false : true;
+    cryButton.classList.remove('loading');
+    showToast('Error loading Pokémon cry');
+  }
+}
+
+// Helper function to try alternative cry sources
+function tryAlternativeCry() {
+  if (!pokemon || !pokemon.id) return;
+  
+  const cryButton = document.getElementById('cry-button');
+  const cryButtonTop = document.getElementById('cry-button-top');
+  
+  // Alternative cry URLs (fallback sources)
+  const alternativeUrls = [
+    `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokemon.id}.ogg`,
+    `https://pokemoncries.com/cries/${pokemon.id}.mp3`,
+    `https://play.pokemonshowdown.com/audio/cries/${pokemon.name.toLowerCase()}.mp3`
+  ];
+  
+  console.log('Trying alternative cry sources...');
+  showToast('Trying alternative audio sources...');
+  
+  let currentIndex = 0;
+  
+  function tryNext() {
+    if (currentIndex >= alternativeUrls.length) {
+      showToast('No working cry audio found for this Pokémon');
+      cryButtonTop.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`;
+      cryButton.disabled = true;
+      cryButton.classList.add('cry-unavailable');
+      return;
+    }
+    
+    const audio = new Audio();
+    audio.crossOrigin = 'anonymous';
+    audio.volume = 0.7;
+    
+    audio.addEventListener('error', () => {
+      currentIndex++;
+      tryNext();
+    });
+    
+    audio.addEventListener('canplay', () => {
+      audio.play()
+        .then(() => {
+          showToast(`Playing ${capitalizeFirstLetter(pokemon.name)}'s cry! 🔊`);
+          cryButtonTop.innerHTML = `<i class="fa-solid fa-play"></i>`;
+          cryButton.disabled = false;
+          cryButton.classList.remove('cry-unavailable');
+          
+          audio.addEventListener('ended', () => {
+            cryButtonTop.innerHTML = `<i class="fa-solid fa-volume-high"></i>`;
+          });
+        })
+        .catch(() => {
+          currentIndex++;
+          tryNext();
+        });
+    });
+    
+    audio.src = alternativeUrls[currentIndex];
+  }
+  
+  tryNext();
 } //playPokemonCry
 
 function startReadingEntry(name, genus, entry) {
@@ -389,34 +537,57 @@ function getDeviceType() {
 // Button configuration templates for better performance
 const BUTTON_TEMPLATES = {
   mobile: {
-    go: `<span id='go-button-top' class='button-top'><i class='fa-solid fa-magnifying-glass'></i></span>`,
+    go: `<span id='go-button-top' class='button-top'><i class='fa-solid fa-search'></i></span>`,
     random: `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i></span>`,
-    previous: `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-angle-left'></i></span>`,
-    next: `<span id='next-button-top' class='button-top'><i class='fa-solid fa-angle-right'></i></span>`,
-    readEntry: `<span id='read-entry-button-top' class='button-top'><i class='fa-solid fa-book-open-reader'></i></span>`,
-    clear: `<span id='clear-button-top' class='button-top'><i class='fa-solid fa-x'></i></span>`
+    previous: `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-chevron-left'></i></span>`,
+    next: `<span id='next-button-top' class='button-top'><i class='fa-solid fa-chevron-right'></i></span>`,
+    readEntry: `<span id='read-entry-button-top' class='button-top'><i class='fa-solid fa-book-open'></i></span>`,
+    clear: `<span id='clear-button-top' class='button-top'><i class='fa-solid fa-xmark'></i></span>`
   },
   tablet: {
-    random: `<span id='random-pokemon-button-top' class='button-top'>Random</span>`,
-    previous: `<span id='previous-button-top' class='button-top'>Prev</span>`
+    go: `<span id='go-button-top' class='button-top'><i class='fa-solid fa-search'></i> Search</span>`,
+    random: `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i> Random</span>`,
+    previous: `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-chevron-left'></i></span>`,
+    next: `<span id='next-button-top' class='button-top'><i class='fa-solid fa-chevron-right'></i></span>`,
+    readEntry: `<span id='read-entry-button-top' class='button-top'><i class='fa-solid fa-book-open'></i></span>`,
+    clear: `<span id='clear-button-top' class='button-top'><i class='fa-solid fa-xmark'></i></span>`
+  },
+  desktop: {
+    go: `<span id='go-button-top' class='button-top'><i class='fa-solid fa-search'></i> Search</span>`,
+    random: `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i> Random</span>`,
+    previous: `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-chevron-left'></i></span>`,
+    next: `<span id='next-button-top' class='button-top'><i class='fa-solid fa-chevron-right'></i></span>`,
+    readEntry: `<span id='read-entry-button-top' class='button-top'><i class='fa-solid fa-book-open'></i></span>`,
+    clear: `<span id='clear-button-top' class='button-top'><i class='fa-solid fa-xmark'></i></span>`
   }
 };
 
 function headerLayout(deviceType) {
+  const templates = BUTTON_TEMPLATES[deviceType] || BUTTON_TEMPLATES.desktop;
+  
+  // Apply templates based on device type
   if (deviceType === 'mobile') {
-    const templates = BUTTON_TEMPLATES.mobile;
     GoButton.innerHTML = templates.go;
     RandomPokemonButton.innerHTML = templates.random;
     PreviousButton.innerHTML = templates.previous;
     NextButton.innerHTML = templates.next;
     ReadEntryButton.innerHTML = templates.readEntry;
     ClearButton.innerHTML = templates.clear;
-    return;
   } else if (deviceType === 'tablet') {
-    const templates = BUTTON_TEMPLATES.tablet;
+    GoButton.innerHTML = templates.go;
     RandomPokemonButton.innerHTML = templates.random;
     PreviousButton.innerHTML = templates.previous;
-    return;
+    NextButton.innerHTML = templates.next;
+    ReadEntryButton.innerHTML = templates.readEntry;
+    ClearButton.innerHTML = templates.clear;
+  } else {
+    // Desktop
+    GoButton.innerHTML = templates.go;
+    RandomPokemonButton.innerHTML = templates.random;
+    PreviousButton.innerHTML = templates.previous;
+    NextButton.innerHTML = templates.next;
+    ReadEntryButton.innerHTML = templates.readEntry;
+    ClearButton.innerHTML = templates.clear;
   }
 } //headerLayout
 
@@ -431,7 +602,7 @@ function capitalizeFirstLetter(string) {
 } //capitalizeFirstLetter
 
 export {
-  getStatTotal, getPokedexEntry, getElementVisibility, playPokemonCry,
+  getStatTotal, getPokedexEntry, getElementVisibility, playPokemonCry, tryAlternativeCry,
   convertHexToRgba, getHeight, getWeight, getTypes, punctuationNameCheck,
   getLargestStat, createArray, generatePokemon, makeButtonsDisappear,
   startReadingEntry, getAbilityList, getGenus, getRandomPokemon, inputCheck,
