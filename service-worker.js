@@ -1,7 +1,45 @@
+/**
+ * KOLBY'S POKÉDEX - SERVICE WORKER
+ * ===============================
+ * 
+ * This service worker provides comprehensive offline functionality and caching
+ * strategies for the Pokédex application. It implements multiple cache strategies
+ * to optimize performance and ensure the app works seamlessly offline.
+ * 
+ * Caching Strategy:
+ * - Cache First: For static assets (CSS, JS, images) that rarely change
+ * - Network First: For HTML pages to get fresh content when online
+ * - Stale While Revalidate: For API responses to balance freshness and speed
+ * 
+ * Cache Types:
+ * - Static Cache: Application shell (HTML, CSS, JS, fonts, icons)
+ * - Dynamic Cache: User-generated content and navigation-based resources
+ * - API Cache: PokeAPI responses with intelligent invalidation
+ * 
+ * Features:
+ * - Automatic cache management with versioning
+ * - Intelligent cache strategy selection based on resource type
+ * - Graceful fallbacks for offline scenarios
+ * - Background sync for pending requests when connectivity returns
+ * - Cache size management to prevent storage bloat
+ * 
+ * @author Kolby Landon
+ * @version 3.0
+ * @since 2023
+ */
+
+// ====================================
+// CACHE CONFIGURATION AND VERSIONING
+// ====================================
+
 const CACHE_NAME = 'pokedex-cache-v3';
 const STATIC_CACHE = 'pokedex-static-v3';
 const DYNAMIC_CACHE = 'pokedex-dynamic-v3';
 const API_CACHE = 'pokedex-api-v3';
+
+// ====================================
+// CACHE STRATEGIES CONFIGURATION
+// ====================================
 
 // Cache strategies for different types of resources
 const CACHE_STRATEGIES = {
@@ -9,6 +47,10 @@ const CACHE_STRATEGIES = {
   NETWORK_FIRST: 'network-first',
   STALE_WHILE_REVALIDATE: 'stale-while-revalidate'
 };
+
+// ====================================
+// STATIC ASSETS CONFIGURATION
+// ====================================
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [
@@ -34,13 +76,20 @@ const API_PATTERNS = [
   /^https:\/\/pokeapi\.co\/api\/v2\//
 ];
 
-// Maximum cache sizes
+// Maximum cache sizes to prevent storage bloat
 const MAX_CACHE_SIZE = {
   [DYNAMIC_CACHE]: 50,
   [API_CACHE]: 150
 };
 
-// Install event: cache static assets
+// ====================================
+// SERVICE WORKER EVENT HANDLERS
+// ====================================
+
+/**
+ * Install event: cache static assets
+ * Handles initial caching of static application resources
+ */
 self.addEventListener('install', event => {
   console.log('[ServiceWorker] Installing...');
   
@@ -70,7 +119,10 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activate event: clean up old caches and claim clients
+/**
+ * Activate event: clean up old caches and claim clients
+ * Handles cache cleanup and client claiming for immediate control
+ */
 self.addEventListener('activate', event => {
   console.log('[ServiceWorker] Activating...');
   
@@ -99,7 +151,10 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event: implement different caching strategies
+/**
+ * Fetch event: implement different caching strategies
+ * Main request interceptor that applies appropriate caching strategies
+ */
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
@@ -117,6 +172,15 @@ self.addEventListener('fetch', event => {
   event.respondWith(handleFetch(request));
 });
 
+// ====================================
+// CACHING STRATEGY IMPLEMENTATIONS
+// ====================================
+
+/**
+ * Main fetch handler that routes requests to appropriate caching strategies
+ * @param {Request} request - The fetch request to handle
+ * @returns {Promise<Response>} - The response from cache or network
+ */
 async function handleFetch(request) {
   const url = new URL(request.url);
   
@@ -168,7 +232,13 @@ async function handleFetch(request) {
   }
 }
 
-// Optimized cache first strategy with performance improvements
+/**
+ * Cache First strategy: Try cache first, fallback to network
+ * Optimized for static assets that rarely change
+ * @param {Request} request - The request to handle
+ * @param {string} cacheName - Name of the cache to use
+ * @returns {Promise<Response>} - Cached or network response
+ */
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
@@ -204,7 +274,13 @@ async function cacheFirst(request, cacheName) {
   }
 }
 
-// Network First: Try network first, fallback to cache
+/**
+ * Network First strategy: Try network first, fallback to cache
+ * Optimized for dynamic content that should be fresh when possible
+ * @param {Request} request - The request to handle
+ * @param {string} cacheName - Name of the cache to use
+ * @returns {Promise<Response>} - Network or cached response
+ */
 async function networkFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   
@@ -226,7 +302,13 @@ async function networkFirst(request, cacheName) {
   }
 }
 
-// Stale While Revalidate: Return cache immediately, update in background
+/**
+ * Stale While Revalidate strategy: Return cache immediately, update in background
+ * Optimized for API responses to balance freshness and speed
+ * @param {Request} request - The request to handle
+ * @param {string} cacheName - Name of the cache to use
+ * @returns {Promise<Response>} - Cached response with background update
+ */
 async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
@@ -251,7 +333,15 @@ async function staleWhileRevalidate(request, cacheName) {
   return await fetchPromise;
 }
 
-// Helper functions
+// ====================================
+// UTILITY FUNCTIONS
+// ====================================
+
+/**
+ * Check if a request is for a static asset
+ * @param {Request} request - The request to check
+ * @returns {boolean} - True if the request is for a static asset
+ */
 function isStaticAsset(request) {
   const url = new URL(request.url);
   
@@ -265,10 +355,19 @@ function isStaticAsset(request) {
   return staticExtensions.some(ext => url.pathname.endsWith(ext));
 }
 
+/**
+ * Check if a request is for an API endpoint
+ * @param {Request} request - The request to check
+ * @returns {boolean} - True if the request is for an API
+ */
 function isApiRequest(request) {
   return API_PATTERNS.some(pattern => pattern.test(request.url));
 }
 
+/**
+ * Limit cache size to prevent storage bloat
+ * @param {string} cacheName - Name of the cache to limit
+ */
 async function limitCacheSize(cacheName) {
   const maxSize = MAX_CACHE_SIZE[cacheName];
   if (!maxSize) return;
@@ -288,7 +387,14 @@ async function limitCacheSize(cacheName) {
   }
 }
 
-// Message handling for cache updates and commands
+// ====================================
+// MESSAGE HANDLING
+// ====================================
+
+/**
+ * Message handling for cache updates and commands
+ * Provides communication interface between main thread and service worker
+ */
 self.addEventListener('message', event => {
   const { data } = event;
   
@@ -343,13 +449,24 @@ self.addEventListener('message', event => {
   }
 });
 
-// Background sync for offline actions
+// ====================================
+// BACKGROUND SYNC
+// ====================================
+
+/**
+ * Background sync for offline actions
+ * Handles data synchronization when connectivity is restored
+ */
 self.addEventListener('sync', event => {
   if (event.tag === 'background-sync') {
     event.waitUntil(doBackgroundSync());
   }
 });
 
+/**
+ * Perform background synchronization tasks
+ * Preloads popular Pokemon data when back online
+ */
 async function doBackgroundSync() {
   try {
     // Preload popular Pokemon data when back online
@@ -379,7 +496,13 @@ async function doBackgroundSync() {
   }
 }
 
-// Error handling
+// ====================================
+// ERROR HANDLING
+// ====================================
+
+/**
+ * Global error handling for service worker
+ */
 self.addEventListener('error', event => {
   console.error('[ServiceWorker] Error:', event.error);
 });

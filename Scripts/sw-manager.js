@@ -1,15 +1,61 @@
 /**
- * Service Worker Manager
- * Handles service worker registration, updates, and communication
+ * KOLBY'S POKÉDX - SERVICE WORKER MANAGER
+ * ======================================
+ * 
+ * This module manages service worker registration, lifecycle events, and provides
+ * a unified interface for Progressive Web App functionality. It handles automatic
+ * updates, offline detection, and communication between the main thread and service worker.
+ * 
+ * Features:
+ * - Automatic service worker registration and lifecycle management
+ * - Update detection and user notification for new app versions
+ * - Offline/online status monitoring with UI feedback
+ * - Graceful fallbacks for browsers without service worker support
+ * - Debug utilities for development and troubleshooting
+ * 
+ * Update Strategy:
+ * - Automatic detection of service worker updates
+ * - User-friendly prompts for app refresh when updates are available
+ * - Skip waiting functionality for immediate update activation
+ * - Proper cleanup of old caches during updates
+ * 
+ * Error Handling:
+ * - Comprehensive error handling for service worker failures
+ * - Graceful degradation when service workers are not supported
+ * - Debug logging for development and troubleshooting
+ * 
+ * @author Kolby Landon
+ * @version 2.0
+ * @since 2023
  */
 
-// Service Worker Manager Functions
+// ====================================
+// SERVICE WORKER STATE MANAGEMENT
+// ====================================
+
+/**
+ * Service Worker Manager Functions
+ * Global variables for tracking service worker state and functionality
+ */
+/** @type {ServiceWorkerRegistration|null} Service worker registration instance */
 let swRegistration = null;
+
+/** @type {boolean} Flag indicating if an app update is available */
 let isUpdateAvailable = false;
+
+/** @type {boolean} Current offline status of the application */
 let isOffline = !navigator.onLine;
 
 /**
- * Initialize the service worker manager
+ * Initialize the service worker manager and set up all related functionality
+ * Handles service worker registration, update detection, and offline monitoring
+ * Provides comprehensive error handling and graceful degradation
+ * @returns {Promise<boolean>} True if initialization successful, false otherwise
+ * @example
+ * const success = await initializeServiceWorker();
+ * if (success) {
+ *   console.log('PWA features are active');
+ * }
  */
 async function initializeServiceWorker() {
   if (!('serviceWorker' in navigator)) {
