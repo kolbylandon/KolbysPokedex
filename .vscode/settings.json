@@ -20,7 +20,8 @@
     "Rgba",
     "Rotom",
     "Sirfetch'd",
-    "textbox"
+    "textbox",
+    "STATSCHART",
   ],
   "projectManager.git.baseFolders": [
     "https://github.com/kolbylandon?tab=repositories"

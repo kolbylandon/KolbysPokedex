@@ -32,10 +32,10 @@
 // CACHE CONFIGURATION AND VERSIONING
 // ====================================
 
-const CACHE_NAME = 'pokedex-cache-v3';
-const STATIC_CACHE = 'pokedex-static-v3';
-const DYNAMIC_CACHE = 'pokedex-dynamic-v3';
-const API_CACHE = 'pokedex-api-v3';
+const CACHE_NAME = 'pokedex-cache-v18';
+const STATIC_CACHE = 'pokedex-static-v18';
+const DYNAMIC_CACHE = 'pokedex-dynamic-v18';
+const API_CACHE = 'pokedex-api-v18';
 
 // ====================================
 // CACHE STRATEGIES CONFIGURATION

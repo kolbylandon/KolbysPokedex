@@ -31,9 +31,11 @@
 // ====================================
 // MODULE IMPORTS
 // ====================================
-import { 
-  capitalizeFirstLetter, punctuationNameCheck, TextColor, TransparentColor, 
-} from './helpers.js';
+import { capitalizeFirstLetter, punctuationNameCheck } from './utils/data-utils.js?v=20250801i';
+import { TRANSPARENT_COLOR as TransparentColor } from './utils/color-utils.js?v=20250801';
+
+// Constants
+const TextColor = 'rgba(98, 98, 98, 0.95)';
 
 // ====================================
 // CHART ELEMENT REFERENCES

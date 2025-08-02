@@ -208,6 +208,28 @@ body::-webkit-scrollbar {
   opacity: 1;
 }
 
+/* Element visibility control */
+.hidden-element {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.visible-element {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* Override for elements that should be visible by default */
+.hidden-element.visible-element {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
 /* GPU acceleration for animations */
 .card,
 .header-element,

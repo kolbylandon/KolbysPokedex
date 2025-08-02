@@ -3,29 +3,34 @@
  * =============================================
  * This is the main JavaScript file for Kolby's Pokédex application.
  * It handles all user interactions, event listeners, and coordinates
- * between different modules to create a cohesive Pokédex experience.
+ * between different modules to create a cohesive Pokédx experience.
  * 
  * Key Features:
  * - User input handling and validation
  * - Navigation between Pokémon entries
- * - Speech synthesis for Pokédex entries
+ * - Speech synthesis for Pokédx entries
  * - Responsive design adjustments
  * - Local storage management
  * - Progressive Web App functionality
  * 
  * @author Kolby Landon
- * @version 2.0
+ * @version 2.1 (Fixed header corruption and updated imports)
  * @since 2023
+ * @updated 2025-08-01T06:20:00Z
  */
 
 'use strict';
 
 // Import utility functions and constants from helper modules
+import { showToast, getElementVisibility, Body, createArray } from './utils/dom-utils.js?v=20250801i';
+import { playPokemonCry, startReadingEntry, Synth } from './utils/audio-utils.js?v=20250801i';
+import { convertHexToRgba } from './utils/color-utils.js?v=20250801i';
 import { 
-  createArray, generatePokemon, getElementVisibility, getRandomPokemon, playPokemonCry,
-  startReadingEntry, Synth, inputCheck, validPokedexNumberCheck, showToast, 
-  getDeviceType, headerLayout, Body, convertHexToRgba, OriginalMaximumId, MaximumId
-} from './helpers.js';
+  generatePokemon, getRandomPokemon, getDeviceType, 
+  applyResponsiveLayout as headerLayout, validateNumericInput as inputCheck,
+  validatePokedexNumber as validPokedexNumberCheck,
+  ORIGINAL_MAXIMUM_ID as OriginalMaximumId, MAXIMUM_ID as MaximumId
+} from './utils/navigation-utils.js?v=20250801i';
 
 // Import API request functions
 import { 
@@ -142,50 +147,61 @@ let id = null;
   
   /** Next button - navigates to the next Pokémon in the Pokédex */
   NextButton.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Next button clicked');
     buttonClick('Next', true, true);
   });
   
   /** Recall button - loads the last viewed Pokémon from local storage */
   RecallButton.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Recall button clicked');
     buttonClick('Recall', true, true);
   });
   
   /** Cry button - plays the Pokémon's cry audio */
   CryButton.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Cry button clicked');
     buttonClick('Cry', true, false);
   });
   
-  /** Read Entry button - uses text-to-speech for Pokédex entries */
+  /** Read Entry button - uses text-to-speech for Pokédx entries */
   ReadEntryButton.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Read Entry button clicked');
     buttonClick('ReadEntry', false, false);
   });
   
   /** Clear button - resets the display and hides all cards */
   ClearButton.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Clear button clicked');
     buttonClick('Clear', true, false);
   });
   
   /** Type badges - clickable elements that could show type information */
   TypeText.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Type badge 1 clicked');
     buttonClick('TypeText', true, false);
   });
   TypeText2.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Type badge 2 clicked');
     buttonClick('TypeText2', true, false);
   });
   
   /** Toast notification controls */
   ToastCloseButton.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Toast close button clicked');
     buttonClick('ToastClose', true, false);
   });
   Toast.addEventListener('click', () => {
+    console.log('🔘 [Button Click] Toast notification clicked');
     buttonClick('Toast', true, false);
   });
   
   /** Chart and artwork click handlers - scroll to top for better UX */
   StatsChart.addEventListener('click', () => {
+    console.log('🔘 [Click] Stats chart clicked, scrolling to top');
     window.scroll(0, 0);
   });
   ArtworkTable.addEventListener('click', () => {
+    console.log('🔘 [Click] Artwork table clicked, scrolling to top');
     window.scroll(0, 0);
   });
   
@@ -328,8 +344,13 @@ function checkLocalStorageItems() {
  * @param {boolean} callGeneratePokemon - Whether to call generatePokemon after processing
  */
 function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
+  console.log(`🔄 [Button Handler] Processing: ${buttonClicked}, cancelSynth: ${cancelSynth}, callGenerate: ${callGeneratePokemon}`);
+  
+  let id;
+  
   // Stop any ongoing text-to-speech if requested
   if(cancelSynth) {
+    console.log('🔇 [Button Handler] Canceling speech synthesis');
     Synth.cancel();
   }
   
@@ -397,6 +418,7 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       localStorage.setItem('lastPokémon', Textbox.value);
       id = null;
       ToastCloseButton.click(); // Hide any active toasts
+      console.log('Clearing elements, HiddenElementsArray length:', HiddenElementsArray.length);
       getElementVisibility(HiddenElementsArray, 'hidden'); // Hide all cards
       localStorage.removeItem('currentPokémon'); // Clear stored state
       localStorage.removeItem('lastPokémon');

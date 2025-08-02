@@ -20,7 +20,8 @@
 
 'use strict';
 import { populatePage } from './pokemon.js';
-import { capitalizeFirstLetter, punctuationNameCheck, showToast } from './helpers.js';
+import { capitalizeFirstLetter, punctuationNameCheck } from './utils/data-utils.js?v=20250801i';
+import { showToast } from './utils/dom-utils.js?v=20250801c';
 
 // ====================================
 // API CONFIGURATION

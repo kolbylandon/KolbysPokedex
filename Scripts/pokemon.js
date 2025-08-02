@@ -29,11 +29,15 @@
 // ====================================
 // MODULE IMPORTS
 // ====================================
+import { getElementVisibility } from './utils/dom-utils.js?v=20250801i';
 import { 
-  convertHexToRgba, getAbilityList, getElementVisibility, getFormList, getGenus,
-  getHeight, getHeldItemList, getLargestStat, getPokedexEntry, getStatTotal, getTypes, 
-  getWeight, makeButtonsDisappear, punctuationNameCheck, populateLocalStorage, capitalizeFirstLetter,
-} from './helpers.js';
+  getAbilityList, getFormList, getGenus, getHeight, getHeldItemList, 
+  getLargestStat, getPokedexEntry, getStatTotal, getTypes, getWeight,
+  punctuationNameCheck, capitalizeFirstLetter
+} from './utils/data-utils.js?v=20250801i';
+import { convertHexToRgba } from './utils/color-utils.js?v=20250801i';
+import { populateLocalStorage } from './utils/storage-utils.js?v=20250801i';
+import { updateNavigationButtons as makeButtonsDisappear, getDeviceType } from './utils/navigation-utils.js?v=20250801i';
 import { 
   displayStatsChart, 
 } from './statsChart.js';
@@ -53,24 +57,6 @@ const CryButtonTop = document.getElementById('cry-button-top');
 // ====================================
 // DEVICE DETECTION UTILITY
 // ====================================
-
-/**
- * Determines the current device type for responsive design adjustments
- * Uses global app state if available, otherwise falls back to window width detection
- * @returns {string} Device type: "mobile", "tablet", or "desktop"
- */
-function getDeviceType() {
-  // Check if device type is already determined by main app
-  if (window.pokemonApp && window.pokemonApp.deviceType) {
-    return window.pokemonApp.deviceType;
-  }
-  
-  // Fallback device detection based on viewport width
-  const width = window.innerWidth;
-  if (width <= 768) return 'mobile';   // Mobile devices
-  if (width <= 1024) return 'tablet';  // Tablet devices
-  return 'desktop';                    // Desktop and larger displays
-}
 
 // ====================================
 // POKEMON DISPLAY ELEMENT REFERENCES
