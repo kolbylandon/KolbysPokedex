@@ -879,7 +879,7 @@ body::-webkit-scrollbar {
 }
 
 #pokedex-entry-text {
-  font-size: var(--font-xs) !important;
+  font-size: var(--font-sm);
 }
 
 /* ENHANCED TYPE BADGES */
