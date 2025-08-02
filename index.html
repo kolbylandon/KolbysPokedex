@@ -1,0 +1,231 @@
+<!--
+  KOLBY'S POKÉDEX - MAIN HTML STRUCTURE
+  =====================================
+  
+  This is the main HTML document for Kolby's Pokédex application, a comprehensive
+  web-based Pokédex that provides detailed information about Pokémon using the
+  PokeAPI. The application features responsive design, progressive web app
+  capabilities, and modern web technologies.
+  
+  Key Features:
+  - Responsive design for mobile, tablet, and desktop devices
+  - Progressive Web App (PWA) with offline support
+  - Search functionality for Pokémon by ID or name
+  - Random Pokémon generator
+  - Audio playback of Pokémon cries
+  - Text-to-speech for Pokédex entries
+  - Interactive statistics visualization with Chart.js
+  - Accessibility features with ARIA labels and semantic HTML
+  - Service Worker integration for caching and offline functionality
+  
+  Technologies Used:
+  - HTML5 with semantic elements and accessibility features
+  - CSS3 with custom properties, flexbox, and grid layouts
+  - JavaScript ES6+ modules with async/await patterns
+  - Chart.js for data visualization
+  - Font Awesome for icons
+  - Web Speech API for text-to-speech
+  - Service Workers for PWA functionality
+  - Local Storage for user preferences and data persistence
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ====================================
+       META INFORMATION AND SEO
+       ==================================== -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="author" content="Kolby Landon">
+  <meta name="description" content="Online Pokédex created by Kolby">
+  <meta name="keywords" content="Online, Pokédex">
+  <meta name="theme-color" content="rgba(255, 255, 255, 0.1)">
+  
+  <!-- Open Graph meta tags for social media sharing -->
+  <meta property="og:description" content="Online Pokédex created by Kolby">
+  <meta property="og:image" content="../Images/pokeball.png"><!-- Fixed property name -->
+  <meta property="og:title" content="Pokédex">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.kolbyspokedex.io">
+  
+  <!-- Progressive Web App manifest -->
+  <link rel="manifest" href="/manifest.json">
+  
+  <!-- ====================================
+       TITLE AND FAVICON
+       ==================================== -->
+  <title>Kolby's Pokédex</title>
+  <link href="../Images/pokeball.png" rel="shortcut icon" type="image/png">
+  
+  <!-- ====================================
+       EXTERNAL STYLESHEETS
+       ==================================== -->
+  <!-- Font Awesome icons for UI elements -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+  
+  <!-- Performance optimizations: preconnect and preload critical assets -->
+  <link rel="preconnect" href="https://pokeapi.co">
+  <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" href="../StyleSheets/style.css" as="style">
+  <link rel="preload" href="../Scripts/main.js" as="script">
+  <link rel="preload" href="../Scripts/pokemon.js" as="script">
+  <!-- Main application stylesheet -->
+  <link href="../StyleSheets/style.css" rel="stylesheet">
+</head>
+<body>
+  <!-- ====================================
+       MAIN HEADER WITH NAVIGATION
+       ==================================== -->
+  <header id="header">
+    <nav aria-label="Main navigation">
+      <form id="header-form" autocomplete="off">
+        <div class="header-brand">
+          <h1 id="header-text">Pokédex</h1>
+        </div>
+        
+        <div class="header-center">
+          <input id="pokemon-textbox" class="header-element" type="text" maxlength="4" placeholder="Search Pokémon..." aria-label="Search Pokémon">
+          <button id="go-button" class="header-element secondary-btn" type="button" aria-label="Go">
+            <span id="go-button-top" class="button-top"><i class="fa-solid fa-search"></i> Search</span>
+          </button>
+          <button id="random-pokemon-button" class="header-element secondary-btn" type="button" aria-label="Random Pokémon">
+            <span id="random-pokemon-button-top" class="button-top"><i class="fa-solid fa-shuffle"></i> Random</span>
+          </button>
+        </div>
+        
+        <div class="header-actions">
+          <button id="previous-button" class="header-element action-btn hidden-element" type="button" aria-label="Previous">
+            <span id="previous-button-top" class="button-top"><i class="fa-solid fa-chevron-left"></i></span>
+          </button>
+          <button id="next-button" class="header-element action-btn hidden-element" type="button" aria-label="Next">
+            <span id="next-button-top" class="button-top"><i class="fa-solid fa-chevron-right"></i></span>
+          </button>
+          <button id="recall-button" class="header-element action-btn hidden-element" type="button" aria-label="Recall">
+            <span id="recall-button-top" class="button-top"><i class="fa-solid fa-history"></i></span>
+          </button>
+          <button id="cry-button" class="header-element action-btn hidden-element" type="button" aria-label="Cry">
+            <span id="cry-button-top" class="button-top"><i class="fa-solid fa-volume-high"></i></span>
+          </button>
+          <button id="read-entry-button" class="header-element action-btn hidden-element" type="button" aria-label="Read Pokédex Entry">
+            <span id="read-entry-button-top" class="button-top"><i class="fa-solid fa-book-open"></i></span>
+          </button>
+          <button id="clear-button" class="header-element action-btn hidden-element" type="button" aria-label="Clear">
+            <span id="clear-button-top" class="button-top"><i class="fa-solid fa-xmark"></i></span>
+          </button>
+        </div>
+        </form>
+      </nav>
+  </header>
+    
+  <!-- ====================================
+       MAIN CONTENT AREA
+       ==================================== -->
+  <main id="root">
+    <!-- Toast notification system for user feedback -->
+    <div id="toast" class="toast" role="alert" aria-live="polite">
+      <p id="toast-text" class="text"></p>
+      <button id="toast-close-button" class="toast-close-button" aria-label="Close toast">&#10005;</button>
+    </div>
+      <!-- Primary information card displaying Pokémon details -->
+      <div id="info-card" class="card top-card hidden-element fade-in-up">
+        <ul id="info-unordered-list" class="list-no-bullets">
+          <li id="number-and-name-list-item" class="info-item">
+            <span id="number-header" class="headers"></span>
+            <span id="name-header" class="headers"></span>
+          </li>
+          <li id="genus-sub-header-list-item" class="info-item">
+            <span id="genus-sub-header" class="sub-headers"></span>
+          </li>
+          <li id="generation-list-item" class="info-item">
+            <span id="generation-header" class="headers">Generation:</span>
+            <span id="generation-text" class="text"></span>
+          </li>
+          <li id="pokedex-entry-list-item" class="info-item">
+            <span id="pokedex-entry-header" class="headers">Pokédex Entry:</span>
+            <span id="pokedex-entry-text" class="text"></span>
+          </li>
+          <li id="height-weight-stats-list-item" class="info-item">
+            <span id="height-header" class="headers">Height:</span>
+            <span id="height-text" class="text"></span>
+            <span id="weight-header" class="headers">Weight:</span>
+            <span id="weight-text" class="text"></span>
+            <span id="stats-header" class="headers">Base Stats:</span>
+            <span id="stats-text" class="text"></span>
+            <span id="type-header" class="headers">Types:</span>
+            <span id="type-text" class="type-text"></span>
+            <span id="type-text-2" class="type-text"></span>
+          </li>
+          <li id="abilities-list-item" class="info-item">
+            <span id="abilities-header" class="headers">Abilities:</span>
+            <ul id="abilities-unordered-list" class="list-bulleted"></ul>
+          </li>
+          <li id="held-items-list-item" class="info-item">
+            <span id="held-items-header" class="headers">Held Items:</span>
+            <ul id="held-items-unordered-list" class="list-bulleted"></ul>
+          </li>
+          <li id="forms-list-item" class="info-item">
+            <span id="forms-header" class="headers">Forms:</span>
+            <ul id="forms-unordered-list" class="list-bulleted"></ul>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Artwork display card showing default and shiny sprites -->
+      <div id="artwork-card" class="card bottom-card hidden-element fade-in-up">
+        <!-- Table layout for side-by-side sprite comparison -->
+        <table id="artwork-table" style="width: 100%">
+          <tbody>
+            <tr id="artwork-table-row">
+              <!-- Default/normal artwork display -->
+              <td id="artwork-table-td-default" class="artwork-table-td">
+                <img id="default-artwork" class="image artwork" alt="Default Official Artwork" loading="lazy">
+              </td>
+              <!-- Shiny variant artwork display -->
+              <td id="artwork-table-td-shiny" class="artwork-table-td">
+                <img id="shiny-artwork" class="image artwork" alt="Shiny Official Artwork" loading="lazy">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Interactive statistics chart display -->
+      <div id="stats-card" class="card bottom-card hidden-element fade-in-up">
+        <!-- Chart.js radar chart canvas for base stats visualization -->
+        <canvas id="stats-chart" aria-label="Pokémon Base Stats Chart"></canvas>
+      </div>
+    </main>
+    
+    <!-- ====================================
+         FOOTER
+         ==================================== -->
+    <footer id="footer">
+      <p id="footer-text">Pokémon and Pokémon character names are trademarks of Nintendo.</p>
+    </footer>
+    
+    <!-- ====================================
+         EXTERNAL SCRIPTS AND MODULES
+         ==================================== -->
+    
+    <!-- Performance monitoring module -->
+    <script async defer type="module" src="../Scripts/performance.js"></script>
+    
+    <!-- Service Worker manager for PWA functionality -->
+    <script async defer src="../Scripts/sw-manager.js"></script>
+    
+    <!-- Main application entry point -->
+    <script async defer type="module" src="../Scripts/main.js"></script>
+    
+    <!-- Inline script for Service Worker initialization -->
+    <script>
+      // Service Worker registration is now handled by sw-manager.js
+      // This provides better update handling and offline functionality
+      console.log('Service Worker management delegated to sw-manager.js');
+    </script>
+  </body>
+</html>
