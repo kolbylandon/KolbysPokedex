@@ -91,10 +91,13 @@ export function swapCurrentAndLastPokemon() {
   const currentPokemon = getStorageItem(STORAGE_KEYS.CURRENT_POKEMON);
   const lastPokemon = getStorageItem(STORAGE_KEYS.LAST_POKEMON);
   
+  // Check if both values exist and are valid (not null, empty, "null" string, or "0")
   if (currentPokemon && lastPokemon && 
       currentPokemon !== lastPokemon && 
       lastPokemon !== '' && 
-      lastPokemon !== '0') {
+      lastPokemon !== '0' &&
+      lastPokemon !== 'null' &&
+      currentPokemon !== 'null') {
     
     // Set flag to prevent populateLocalStorage from interfering
     isInRecallOperation = true;

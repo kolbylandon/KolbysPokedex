@@ -1,5 +1,11 @@
 /**
- * KOLBY'S POKÉDX - SERVICE WORKER
+ * KOLBY'S POKÉDX - SERVICE WOconconst CACHE_NAME = 'pokedx-cache-v24';
+const STATIC_CACHE = 'pokedx-static-v24';
+const DYNAMIC_CACHE = 'pokedx-dynamic-v24';
+const API_CACHE = 'pokedx-api-v24';ACHE_NAME = 'pokedex-cache-v22';
+const STATIC_CACHE = 'pokedex-static-v22';
+const DYNAMIC_CACHE = 'pokedx-dynamic-v22';
+const API_CACHE = 'pokedex-api-v22';
  * =================================
  * 
  * This service worker provides comprehensive offline functionality and caching

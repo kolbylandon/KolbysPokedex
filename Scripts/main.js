@@ -5,8 +5,19 @@
  * It handles all user interactions, event listeners, and coordinates
  * between different modules to create a cohesive Pokédex experience.
  * 
- * Key Features:
- * - User input handling and validation
+ * Key Ffunction checkLocalStorageItems() {
+  // Remove duplicate Pokémon entries using new storage keys
+  const currentPokemon = getStorageItem(STORAGE_KEYS.CURRENT_POKEMON);
+  const lastPokemon = getStorageItem(STORAGE_KEYS.LAST_POKEMON);
+  if(currentPokemon === lastPokemon) {
+    setStorageItem(STORAGE_KEYS.LAST_POKEMON, '');
+  }
+  
+  // Handle original vs modern Pokédx mode
+  if('originalPokédx' in localStorage && localStorage.getItem('originalPokédx') === 'true') {
+    localStorage.setItem('originalPokédx', true);
+    localStorage.setItem('maximumId', OriginalMaximumId); // Generation 1 limit
+    return; - User input handling and validation
  * - Navigation between Pokémon entries
  * - Speech synthesis for Pokédex entries
  * - Responsive design adjustments
@@ -306,7 +317,7 @@ function getSystemInformation() {
  * Automatically displays it if available, providing continuity between sessions
  */
 function loadLastViewedPokemon() {
-  const storedId = getStorageItem('id'); // Legacy key support
+  const storedId = getStorageItem(STORAGE_KEYS.CURRENT_POKEMON);
   if(storedId) {
     id = storedId;
     generatePokemon(id, 'visible', false); // Load last viewed Pokémon
@@ -413,9 +424,10 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       if(recalledPokemonId) {
         id = recalledPokemonId;
         Textbox.value = id;
-        generatePokemon(id, 'visible', false);
+        generatePokemon(id, 'visible', true); // Set skipIdValidation to true for recall
       } else {
         showToast('No different Pokémon available to recall.');
+        return; // Exit early if no recall is possible
       }
       break;
       
@@ -433,14 +445,15 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       // Reset application to initial state
       Textbox.value = '';
       Body.style.background = convertHexToRgba('#ffffff', 1); // Reset background
-      setStorageItem(STORAGE_KEYS.LAST_POKEMON, Textbox.value);
       id = null;
       ToastCloseButton.click(); // Hide any active toasts
       console.log('Clearing elements, HiddenElementsArray length:', HiddenElementsArray.length);
       getElementVisibility(HiddenElementsArray, 'hidden'); // Hide all cards
-      setStorageItem(STORAGE_KEYS.CURRENT_POKEMON, null); // Clear stored state
-      setStorageItem(STORAGE_KEYS.LAST_POKEMON, null);
-      setStorageItem('id', null); // Clear legacy id storage
+      
+      // Properly clear localStorage by removing the items entirely
+      localStorage.removeItem(STORAGE_KEYS.CURRENT_POKEMON);
+      localStorage.removeItem(STORAGE_KEYS.LAST_POKEMON);
+      localStorage.removeItem('id'); // Clear legacy id storage
       break;
       
     case 'TypeText':

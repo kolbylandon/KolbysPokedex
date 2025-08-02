@@ -455,11 +455,13 @@ export function updateNavigationButtons(currentId, hasGenderDifferences = false)
     const lastPokemon = getStorageItem(STORAGE_KEYS.LAST_POKEMON);
     const currentPokemon = getStorageItem(STORAGE_KEYS.CURRENT_POKEMON);
     
-    // Simple check: show if lastPokemon exists and is different from current
+    // Enhanced check: show if lastPokemon exists, is valid, and is different from current
     const showRecall = lastPokemon && 
                       lastPokemon !== '' && 
                       lastPokemon !== currentPokemon &&
-                      lastPokemon !== '0';
+                      lastPokemon !== '0' &&
+                      lastPokemon !== 'null' &&
+                      currentPokemon !== 'null';
     
     if (showRecall) {
       recallButton.style.display = 'inline-block';
