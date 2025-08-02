@@ -60,7 +60,16 @@ let statsChart = null;
  * @param {number} max - Maximum value for chart scaling (rounded to nearest 25)
  * @param {string} name - Pokemon name for chart title
  */
-function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
+/**
+ * Dynamically loads Chart.js and displays a radar chart for Pokémon stats
+ */
+async function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
+  // Dynamically import Chart.js only when rendering stats
+  // Dynamically import Chart.js ESM build only when rendering stats
+  const ChartModule = await import('https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.esm.js');
+  // Use registerables to register all chart components including controllers
+  const { Chart, registerables } = ChartModule;
+  Chart.register(...registerables);
   // Efficiently destroy existing chart instance to prevent memory leaks
   if (statsChart) {
     statsChart.destroy();
@@ -84,24 +93,43 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
 
   // Configure chart appearance and behavior options
   const chartOptions = {
-    responsive: false,             // Disable auto-resizing for performance
+    responsive: true,              // Enable responsiveness
+    maintainAspectRatio: false,    // Allow dynamic sizing
     animation: {
-      duration: 300                // Reduce animation time for better performance
+      duration: 500                // Smooth animation
     },
     elements: {
+      line: {
+        borderWidth: 2,            // Thicker line
+        tension: 0.4               // Smooth curves
+      },
       point: {
-        radius: 4,                 // Data point size
-        pointStyle: 'star',        // Star-shaped data points for visual appeal
+        radius: 5,                 // Larger data points
+        pointStyle: 'circle',      // Circular points
+        backgroundColor: borderColor, // Match point color
+        borderColor: borderColor,
+        borderWidth: 1
       },
     },
     plugins: {
       title: {
         display: true,
-        text: `Stats For ${capitalizeFirstLetter(name)}`,  // Dynamic title with Pokemon name
+        text: `Stats For ${capitalizeFirstLetter(name)}`,
+        color: TextColor,
+        font: { size: 20, weight: '600' }
       },
-      legend: {
-        display: false,            // Hide legend since we only have one dataset
-      },
+      legend: { display: false },
+      tooltip: {
+        enabled: true,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: borderColor,
+        borderWidth: 1,
+        callbacks: {
+          label: context => `${context.label}: ${context.formattedValue}`
+        }
+      }
     },
     layout: {
       padding: 10,                 // Chart padding for better spacing
@@ -111,18 +139,22 @@ function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
       family: 'Montserrat',        // Match application font family
     },
     scales: {
-      r: {                         // Radial scale configuration
-        min: 0,                    // Always start from 0
-        max,                       // Dynamic maximum based on highest stat
-        ticks: {
-          fontColor: TextColor,    // Tick mark color
-          backdropColor: TransparentColor,  // Transparent tick backgrounds
-          stepSize: 25,            // Grid lines every 25 points
+      r: {
+        min: 0,
+        max,
+        angleLines: {             // Style radial angle lines
+          color: 'rgba(98, 98, 98, 0.3)'
         },
         grid: {
-          color: TextColor,        // Grid line color
+          circular: true,         // Circular grid
+          color: 'rgba(98, 98, 98, 0.2)'
         },
-      },
+        ticks: {
+          color: TextColor,
+          backdropColor: TransparentColor,
+          stepSize: 25
+        }
+      }
     },
   };
   

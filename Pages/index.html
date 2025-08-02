@@ -67,6 +67,13 @@
   <!-- Font Awesome icons for UI elements -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
   
+  <!-- Performance optimizations: preconnect and preload critical assets -->
+  <link rel="preconnect" href="https://pokeapi.co">
+  <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" href="../StyleSheets/style.css" as="style">
+  <link rel="preload" href="../Scripts/main.js" as="script">
+  <link rel="preload" href="../Scripts/pokemon.js" as="script">
   <!-- Main application stylesheet -->
   <link href="../StyleSheets/style.css" rel="stylesheet">
 </head>
@@ -176,11 +183,11 @@
             <tr id="artwork-table-row">
               <!-- Default/normal artwork display -->
               <td id="artwork-table-td-default" class="artwork-table-td">
-                <img id="default-artwork" class="image artwork" alt="Default Official Artwork">
+                <img id="default-artwork" class="image artwork" alt="Default Official Artwork" loading="lazy">
               </td>
               <!-- Shiny variant artwork display -->
               <td id="artwork-table-td-shiny" class="artwork-table-td">
-                <img id="shiny-artwork" class="image artwork" alt="Shiny Official Artwork">
+                <img id="shiny-artwork" class="image artwork" alt="Shiny Official Artwork" loading="lazy">
               </td>
             </tr>
           </tbody>
@@ -204,8 +211,6 @@
     <!-- ====================================
          EXTERNAL SCRIPTS AND MODULES
          ==================================== -->
-    <!-- Chart.js library for data visualization -->
-    <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js"></script>
     
     <!-- Performance monitoring module -->
     <script async defer type="module" src="../Scripts/performance.js"></script>

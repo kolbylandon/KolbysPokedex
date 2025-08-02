@@ -30,7 +30,17 @@
  * @updated 2025-08-02T02:00:00Z
  */
 
-'use strict';
+('use strict');
+// Performance: disable debug logs in production
+const DEBUG = false;
+// Debounce helper to limit rapid function calls
+function debounce(fn, ms = 300) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), ms);
+  };
+}
 
 // Import utility functions and constants from helper modules
 import { showToast, getElementVisibility, Body, createArray } from './utils/dom-utils.js?v=20250802b';
@@ -146,66 +156,69 @@ let id = null;
   
   /** Primary search button - handles Pokémon lookup by ID or name */
   GoButton.addEventListener('click', () => {
+    if (DEBUG) console.log('🔘 [Button Click] Go button clicked');
     buttonClick('Go', true, true);
   });
   
   /** Random Pokémon button - generates a random Pokémon for discovery */
   RandomPokemonButton.addEventListener('click', () => {
+    if (DEBUG) console.log('🔘 [Button Click] Random button clicked');
     buttonClick('Random', true, true);
   });
   
   /** Previous button - navigates to the previous Pokémon in the Pokédex */
   PreviousButton.addEventListener('click', () => {
+    if (DEBUG) console.log('🔘 [Button Click] Previous button clicked');
     buttonClick('Previous', true, true);
   });
   
   /** Next button - navigates to the next Pokémon in the Pokédex */
   NextButton.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Next button clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Next button clicked');
     buttonClick('Next', true, true);
   });
   
   /** Recall button - loads the last viewed Pokémon from local storage */
   RecallButton.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Recall button clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Recall button clicked');
     buttonClick('Recall', true, true);
   });
   
   /** Cry button - plays the Pokémon's cry audio */
   CryButton.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Cry button clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Cry button clicked');
     buttonClick('Cry', true, false);
   });
   
   /** Read Entry button - uses text-to-speech for Pokédx entries */
   ReadEntryButton.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Read Entry button clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Read Entry button clicked');
     buttonClick('ReadEntry', false, false);
   });
   
   /** Clear button - resets the display and hides all cards */
   ClearButton.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Clear button clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Clear button clicked');
     buttonClick('Clear', true, false);
   });
   
   /** Type badges - clickable elements that could show type information */
   TypeText.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Type badge 1 clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Type badge 1 clicked');
     buttonClick('TypeText', true, false);
   });
   TypeText2.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Type badge 2 clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Type badge 2 clicked');
     buttonClick('TypeText2', true, false);
   });
   
   /** Toast notification controls */
   ToastCloseButton.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Toast close button clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Toast close button clicked');
     buttonClick('ToastClose', true, false);
   });
   Toast.addEventListener('click', () => {
-    console.log('🔘 [Button Click] Toast notification clicked');
+    if (DEBUG) console.log('🔘 [Button Click] Toast notification clicked');
     buttonClick('Toast', true, false);
   });
   
@@ -223,7 +236,7 @@ let id = null;
   // INPUT EVENT LISTENERS
   // ====================================
   /** Search textbox input validation and handling */
-  Textbox.addEventListener('input', handleTextboxInput);
+  Textbox.addEventListener('input', debounce(handleTextboxInput, 300));
   Textbox.addEventListener('focus', handleTextboxFocus);
   Textbox.addEventListener('blur', handleTextboxBlur);
   Textbox.addEventListener('keydown', handleTextboxKeydown);

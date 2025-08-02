@@ -1,0 +1,26 @@
+name: Deploy to GitHub Pages
+
+# Trigger deployment on push to the main branch
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  pages: write       # Grant permission to commit to GitHub Pages
+  id-token: write    # Required for OIDC token
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_branch: gh-pages      # Target branch for Pages
+          publish_dir: ./               # Publish the project root
+          github_token: ${{ secrets.GITHUB_TOKEN }}
