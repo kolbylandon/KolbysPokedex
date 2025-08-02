@@ -5,19 +5,7 @@
  * It handles all user interactions, event listeners, and coordinates
  * between different modules to create a cohesive Pokédex experience.
  * 
- * Key Ffunction checkLocalStorageItems() {
-  // Remove duplicate Pokémon entries using new storage keys
-  const currentPokemon = getStorageItem(STORAGE_KEYS.CURRENT_POKEMON);
-  const lastPokemon = getStorageItem(STORAGE_KEYS.LAST_POKEMON);
-  if(currentPokemon === lastPokemon) {
-    setStorageItem(STORAGE_KEYS.LAST_POKEMON, '');
-  }
-  
-  // Handle original vs modern Pokédx mode
-  if('originalPokédx' in localStorage && localStorage.getItem('originalPokédx') === 'true') {
-    localStorage.setItem('originalPokédx', true);
-    localStorage.setItem('maximumId', OriginalMaximumId); // Generation 1 limit
-    return; - User input handling and validation
+ * Key Features:
  * - Navigation between Pokémon entries
  * - Speech synthesis for Pokédex entries
  * - Responsive design adjustments
