@@ -4,7 +4,7 @@
   "short_name": "Pokédex",
   "description": "A comprehensive Pokédex app to browse and search Pokémon with offline support.",
   "lang": "en",
-  "start_url": "/Pages/pokedex.html",
+  "start_url": "/Pages/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -30,7 +30,7 @@
       "name": "Search Pokémon",
       "short_name": "Search",
       "description": "Search for a specific Pokémon",
-      "url": "/Pages/pokedex.html",
+      "url": "/Pages/index.html",
       "icons": [
         {
           "src": "/Images/pokeball.png",
@@ -42,7 +42,7 @@
       "name": "Random Pokémon",
       "short_name": "Random",
       "description": "Get a random Pokémon",
-      "url": "/Pages/pokedex.html?random=true",
+      "url": "/Pages/index.html?random=true",
       "icons": [
         {
           "src": "/Images/pokeball.png",

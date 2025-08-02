@@ -3,34 +3,37 @@
  * =============================================
  * This is the main JavaScript file for Kolby's Pokédex application.
  * It handles all user interactions, event listeners, and coordinates
- * between different modules to create a cohesive Pokédx experience.
+ * between different modules to create a cohesive Pokédex experience.
  * 
  * Key Features:
  * - User input handling and validation
  * - Navigation between Pokémon entries
- * - Speech synthesis for Pokédx entries
+ * - Speech synthesis for Pokédex entries
  * - Responsive design adjustments
  * - Local storage management
  * - Progressive Web App functionality
  * 
  * @author Kolby Landon
- * @version 2.1 (Fixed header corruption and updated imports)
+ * @version 2.3 (Fixed recall button to never recall same Pokemon)
  * @since 2023
- * @updated 2025-08-01T06:20:00Z
+ * @updated 2025-08-02T02:00:00Z
  */
 
 'use strict';
 
 // Import utility functions and constants from helper modules
-import { showToast, getElementVisibility, Body, createArray } from './utils/dom-utils.js?v=20250801i';
-import { playPokemonCry, startReadingEntry, Synth } from './utils/audio-utils.js?v=20250801i';
-import { convertHexToRgba } from './utils/color-utils.js?v=20250801i';
+import { showToast, getElementVisibility, Body, createArray } from './utils/dom-utils.js?v=20250802b';
+import { playPokemonCry, startReadingEntry, Synth } from './utils/audio-utils.js?v=20250802b';
+import { convertHexToRgba } from './utils/color-utils.js?v=20250802b';
+import { 
+  STORAGE_KEYS, getStorageItem, setStorageItem, populateLocalStorage, swapCurrentAndLastPokemon
+} from './utils/storage-utils.js?v=20250802h';
 import { 
   generatePokemon, getRandomPokemon, getDeviceType, 
   applyResponsiveLayout as headerLayout, validateNumericInput as inputCheck,
   validatePokedexNumber as validPokedexNumberCheck,
   ORIGINAL_MAXIMUM_ID as OriginalMaximumId, MAXIMUM_ID as MaximumId
-} from './utils/navigation-utils.js?v=20250801i';
+} from './utils/navigation-utils.js?v=20250802b';
 
 // Import API request functions
 import { 
@@ -240,7 +243,7 @@ let id = null;
  */
 function handleTextboxInput() {
   inputCheck(Textbox.value); // Validate input format
-  validPokedexNumberCheck(); // Check if number is within valid range
+  validPokedexNumberCheck(Textbox); // Check if number is within valid range
 }
 
 /**
@@ -249,7 +252,7 @@ function handleTextboxInput() {
  */
 function handleTextboxFocus() {
   Textbox.value = ''; // Clear for new input
-  validPokedexNumberCheck(); // Update validation state
+  validPokedexNumberCheck(Textbox); // Update validation state
 }
 
 /**
@@ -259,7 +262,7 @@ function handleTextboxFocus() {
 function handleTextboxBlur() {
   if (Textbox.value === '') {
     Textbox.value = id; // Restore current ID if empty
-    validPokedexNumberCheck(); // Update validation state
+    validPokedexNumberCheck(Textbox); // Update validation state
   }
 }
 
@@ -286,7 +289,7 @@ function handleTextboxKeydown(event) {
  */
 function getSystemInformation() {
   deviceType = getDeviceType(); // Detect mobile/tablet/desktop
-  localStorage.setItem('deviceType', deviceType); // Store for future use
+  setStorageItem('deviceType', deviceType); // Store for future use
   headerLayout(deviceType); // Adjust header layout
   
   // Make device type available globally for other modules
@@ -303,8 +306,9 @@ function getSystemInformation() {
  * Automatically displays it if available, providing continuity between sessions
  */
 function loadLastViewedPokemon() {
-  if(localStorage.getItem('id')) {
-    id = localStorage.getItem('id');
+  const storedId = getStorageItem('id'); // Legacy key support
+  if(storedId) {
+    id = storedId;
     generatePokemon(id, 'visible', false); // Load last viewed Pokémon
   }
 } //loadLastViewedPokemon
@@ -358,46 +362,60 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
   switch(buttonClicked) {
     case 'Go':
     case 'Enter':
-      // Store current Pokémon as last viewed before switching
-      if(ClearButton.style.display !== 'none') {  //! Look into combining these two if statements
-        if(localStorage.getItem('currentPokémon') !== id)
-          localStorage.setItem('lastPokémon', NumberHeader.innerText.substring(1));
+      // Store current Pokémon as last viewed before switching (only if different from new search)
+      if(ClearButton.style.display !== 'none') {
+        const currentDisplayedId = NumberHeader.innerText ? NumberHeader.innerText.substring(1) : null;
+        const newSearchId = Textbox.value;
+        
+        // Only store if we have a current Pokemon and it's different from the new search
+        // If searching for the same Pokemon, preserve the existing LAST_POKEMON for toggle functionality
+        if(currentDisplayedId && currentDisplayedId !== newSearchId) {
+          setStorageItem(STORAGE_KEYS.LAST_POKEMON, currentDisplayedId);
+        }
+        // Note: When searching for same Pokemon, we intentionally don't modify LAST_POKEMON
       }
       id = Textbox.value; // Use entered value
       break;
       
     case 'Random':
-      // Store current for recall functionality
-      localStorage.setItem('lastPokémon', Textbox.value);
+      // Store current for recall functionality (only if different)
+      const currentIdForRandom = NumberHeader.innerText ? NumberHeader.innerText.substring(1) : Textbox.value;
+      if(currentIdForRandom && currentIdForRandom !== '') {
+        setStorageItem(STORAGE_KEYS.LAST_POKEMON, currentIdForRandom);
+      }
       id = getRandomPokemon(); // Generate random ID
       Textbox.value = id;
       break;
       
     case 'Previous':
       // Navigate to previous Pokémon in sequence
-      localStorage.setItem('lastPokémon', Textbox.value);
+      const currentIdForPrev = NumberHeader.innerText ? NumberHeader.innerText.substring(1) : Textbox.value;
+      if(currentIdForPrev && currentIdForPrev !== '') {
+        setStorageItem(STORAGE_KEYS.LAST_POKEMON, currentIdForPrev);
+      }
       id = (parseInt(NumberHeader.innerText.substring(1)) - 1).toString();
       Textbox.value = id;
       break;
       
     case 'Next':
       // Navigate to next Pokémon in sequence
-      localStorage.setItem('lastPokémon', Textbox.value);
+      const currentIdForNext = NumberHeader.innerText ? NumberHeader.innerText.substring(1) : Textbox.value;
+      if(currentIdForNext && currentIdForNext !== '') {
+        setStorageItem(STORAGE_KEYS.LAST_POKEMON, currentIdForNext);
+      }
       id = (parseInt(NumberHeader.innerText.substring(1)) + 1).toString();
       Textbox.value = id;
       break;
       
     case 'Recall':
-      // Load previously viewed Pokémon from localStorage
-      if(localStorage.getItem('lastPokémon') !== null && 
-         localStorage.getItem('lastPokémon') !== localStorage.getItem('currentPokémon') && 
-         localStorage.getItem('lastPokémon') !== '') {
-        id = localStorage.getItem('lastPokémon');
+      const recalledPokemonId = swapCurrentAndLastPokemon();
+      
+      if(recalledPokemonId) {
+        id = recalledPokemonId;
         Textbox.value = id;
-        localStorage.setItem('lastPokémon', localStorage.getItem('currentPokémon'));
         generatePokemon(id, 'visible', false);
       } else {
-        showToast('No previous Pokémon to recall.');
+        showToast('No different Pokémon available to recall.');
       }
       break;
       
@@ -415,14 +433,14 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       // Reset application to initial state
       Textbox.value = '';
       Body.style.background = convertHexToRgba('#ffffff', 1); // Reset background
-      localStorage.setItem('lastPokémon', Textbox.value);
+      setStorageItem(STORAGE_KEYS.LAST_POKEMON, Textbox.value);
       id = null;
       ToastCloseButton.click(); // Hide any active toasts
       console.log('Clearing elements, HiddenElementsArray length:', HiddenElementsArray.length);
       getElementVisibility(HiddenElementsArray, 'hidden'); // Hide all cards
-      localStorage.removeItem('currentPokémon'); // Clear stored state
-      localStorage.removeItem('lastPokémon');
-      localStorage.removeItem('id');
+      setStorageItem(STORAGE_KEYS.CURRENT_POKEMON, null); // Clear stored state
+      setStorageItem(STORAGE_KEYS.LAST_POKEMON, null);
+      setStorageItem('id', null); // Clear legacy id storage
       break;
       
     case 'TypeText':

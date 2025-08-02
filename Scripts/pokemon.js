@@ -36,7 +36,7 @@ import {
   punctuationNameCheck, capitalizeFirstLetter
 } from './utils/data-utils.js?v=20250801i';
 import { convertHexToRgba } from './utils/color-utils.js?v=20250801i';
-import { populateLocalStorage } from './utils/storage-utils.js?v=20250801i';
+import { populateLocalStorage } from './utils/storage-utils.js?v=20250802h';
 import { updateNavigationButtons as makeButtonsDisappear, getDeviceType } from './utils/navigation-utils.js?v=20250801i';
 import { 
   displayStatsChart, 
@@ -143,7 +143,7 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   // Populate all Pokemon attribute displays
   displayAttributes();
   
-  // Configure navigation button visibility based on Pokemon ID
+  // Configure navigation button visibility based on Pokemon ID (AFTER storage is updated)
   makeButtonsDisappear(pokemon.id, pokemon.hasGenderDifferences);
   
   // Populate specialized data lists

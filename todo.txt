@@ -52,12 +52,12 @@ TO DO
 129) Fix undefined genera and Pokédex entries (1016) by leaving them blank.
 130) Fix blank abilities in the abilities list (1010).
 131) Create a slideshow that includes the official artwork on the sprite-card.
+137) See about changing this to a typescript implementation.
+138) see about using SCSS modules for the CSS files.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
-078) Look into how to implement service workers.
 126) Click on the Types and pull up a list of all Pokémon with that type.
-132) Fix the bug that allows the lastPokémon and currentPokémon to be the same. --Random Pokémon Button, followed by Go Button -Check currentPokémon vs currentPokemon
 134) Go button will be invisible when no active Pokémon or empty search.
 
 IMPLEMENTED
@@ -172,6 +172,8 @@ IMPLEMENTED
   centered properly. Padding was added with <li> and had to remove it.
 077) Recall previously viewed Pokémon via a button. //Created the Recall button to show the last 
   Pokémon that was viewed.
+078) Look into how to implement service workers. //A service worker has been created and this is now
+  a Progressive Web Application.
 079) Look into storing the last Pokémon viewed before closing the window. //The last ID is now stored
   locally and calls the generatePokemon method.
 080) Look into how to monitor if the width has changed. //Using window.onresize, I call
@@ -218,6 +220,8 @@ IMPLEMENTED
   had hard coded KOMMO-O's name.
 127) Add '(Hidden)' to the hidden abilities in the abilities list. //Added an if check in the helpers.js
   file to add '(Hidden)' after the name. For the time being, I am leaving it read as well.
+132) Fix the bug that allows the lastPokémon and currentPokémon to be the same. //Fixed with simplified storage 
+  logic that explicitly prevents same values by clearing LAST_POKEMON when they would be equal.
 133) Change the mouse to a pokéball when hovering over the types divs. //Used pokeball-bullet.png as the 
   image when hovering.
 135) Include Cries from pokemon API call. //I have added the a button that allows the user to play the 

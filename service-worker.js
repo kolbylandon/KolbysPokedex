@@ -1,6 +1,6 @@
 /**
- * KOLBY'S POKÉDEX - SERVICE WORKER
- * ===============================
+ * KOLBY'S POKÉDX - SERVICE WORKER
+ * =================================
  * 
  * This service worker provides comprehensive offline functionality and caching
  * strategies for the Pokédex application. It implements multiple cache strategies
@@ -32,43 +32,29 @@
 // CACHE CONFIGURATION AND VERSIONING
 // ====================================
 
-const CACHE_NAME = 'pokedex-cache-v18';
-const STATIC_CACHE = 'pokedex-static-v18';
-const DYNAMIC_CACHE = 'pokedex-dynamic-v18';
-const API_CACHE = 'pokedex-api-v18';
-
-// ====================================
-// CACHE STRATEGIES CONFIGURATION
-// ====================================
-
-// Cache strategies for different types of resources
-const CACHE_STRATEGIES = {
-  CACHE_FIRST: 'cache-first',
-  NETWORK_FIRST: 'network-first',
-  STALE_WHILE_REVALIDATE: 'stale-while-revalidate'
-};
-
-// ====================================
-// STATIC ASSETS CONFIGURATION
-// ====================================
+const CACHE_NAME = 'pokedex-cache-v21';
+const STATIC_CACHE = 'pokedex-static-v21';
+const DYNAMIC_CACHE = 'pokedex-dynamic-v21';
+const API_CACHE = 'pokedex-api-v21';
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [
-  '/Pages/pokedex.html',
+  '/Pages/index.html',
   '/StyleSheets/style.css',
   '/Scripts/main.js',
-  '/Scripts/helpers.js',
   '/Scripts/pokemon.js',
   '/Scripts/requests.js',
   '/Scripts/statsChart.js',
-  '/Scripts/sw-manager.js',
-  '/Scripts/sw-debug.js',
+  '/Scripts/performance.js',
+  '/Scripts/utils/dom-utils.js',
+  '/Scripts/utils/audio-utils.js',
+  '/Scripts/utils/data-utils.js',
+  '/Scripts/utils/navigation-utils.js',
+  '/Scripts/utils/storage-utils.js',
+  '/Scripts/utils/color-utils.js',
   '/Images/pokeball.png',
   '/Images/pokeball-bullet.png',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css',
-  'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js'
+  '/manifest.json'
 ];
 
 // API patterns that should be cached
@@ -209,7 +195,7 @@ async function handleFetch(request) {
     // Return offline fallback if available
     if (request.destination === 'document') {
       const cache = await caches.open(STATIC_CACHE);
-      const fallback = await cache.match('/Pages/pokedex.html');
+      const fallback = await cache.match('/Pages/index.html');
       if (fallback) {
         return fallback;
       }

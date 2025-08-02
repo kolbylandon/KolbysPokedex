@@ -25,6 +25,7 @@
 // Import required dependencies
 import { showToast } from './dom-utils.js';
 import { requestPokemon } from '../requests.js';
+import { STORAGE_KEYS, getStorageItem, setStorageItem } from './storage-utils.js?v=20250802h';
 
 // ====================================
 // NAVIGATION CONSTANTS
@@ -206,8 +207,8 @@ const BUTTON_TEMPLATES = {
   desktop: {
     go: `<span id='go-button-top' class='button-top'><i class='fa-solid fa-search'></i> Search</span>`,
     random: `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i> Random</span>`,
-    previous: `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-chevron-left'></i> Previous</span>`,
-    next: `<span id='next-button-top' class='button-top'><i class='fa-solid fa-chevron-right'></i> Next</span>`,
+    previous: `<span id='previous-button-top' class='button-top'><i class='fa-solid fa-chevron-left'></i></span>`,
+    next: `<span id='next-button-top' class='button-top'><i class='fa-solid fa-chevron-right'></i></span>`,
     readEntry: `<span id='read-entry-button-top' class='button-top' title='Read Pokédex entry aloud'><i class='fa-solid fa-book-open'></i></span>`,
     clear: `<span id='clear-button-top' class='button-top' title='Clear all data and reset view'><i class='fa-solid fa-xmark'></i></span>`,
     cry: `<span id='cry-button-top' class='button-top' title='Play Pokémon cry sound'><i class='fa-solid fa-volume-high'></i></span>`,
@@ -451,15 +452,21 @@ export function updateNavigationButtons(currentId, hasGenderDifferences = false)
   
   // Show/hide Recall button based on stored Pokemon data
   if (recallButton) {
-    const lastPokemon = localStorage.getItem('lastPokémon');
-    const showRecall = lastPokemon !== null && lastPokemon !== '';
+    const lastPokemon = getStorageItem(STORAGE_KEYS.LAST_POKEMON);
+    const currentPokemon = getStorageItem(STORAGE_KEYS.CURRENT_POKEMON);
+    
+    // Simple check: show if lastPokemon exists and is different from current
+    const showRecall = lastPokemon && 
+                      lastPokemon !== '' && 
+                      lastPokemon !== currentPokemon &&
+                      lastPokemon !== '0';
     
     if (showRecall) {
       recallButton.style.display = 'inline-block';
-      console.log(`🔄 [Navigation Buttons] Recall button: shown (last Pokemon: ${lastPokemon})`);
+      console.log(`🔄 [Navigation Buttons] Recall button: shown (last: ${lastPokemon}, current: ${currentPokemon})`);
     } else {
       recallButton.style.display = 'none';
-      console.log(`🔄 [Navigation Buttons] Recall button: hidden (no stored Pokemon)`);
+      console.log(`🔄 [Navigation Buttons] Recall button: hidden (last: ${lastPokemon}, current: ${currentPokemon})`);
     }
   }
   
