@@ -531,6 +531,26 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
 } //buttonClick
 
 // ====================================
+// MOBILE AUDIO UNLOCK HANDLER
+// ====================================
+
+/** Global interaction handler to unlock audio context on first user interaction */
+let audioUnlocked = false;
+
+const unlockAudioOnInteraction = () => {
+  if (!audioUnlocked) {
+    console.log('📱 [First Interaction] Unlocking audio context for mobile');
+    unlockAudioContext();
+    audioUnlocked = true;
+  }
+};
+
+// Add listeners for various interaction types - these fire only once
+document.addEventListener('click', unlockAudioOnInteraction, { once: true });
+document.addEventListener('touchstart', unlockAudioOnInteraction, { once: true });
+document.addEventListener('keydown', unlockAudioOnInteraction, { once: true });
+
+// ====================================
 // GLOBAL APPLICATION STATE
 // ====================================
 /**

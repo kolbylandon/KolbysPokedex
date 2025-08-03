@@ -61,7 +61,7 @@ let audioContextUnlocked = false;
  * Mobile browsers require user interaction before audio can play
  * This function should be called on first user interaction
  */
-function unlockAudioContext() {
+export function unlockAudioContext() {
   if (audioContextUnlocked) return;
   
   try {
