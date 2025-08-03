@@ -60,7 +60,6 @@ IN PROGRESS
 126) Click on the Types and pull up a list of all Pokémon with that type.
 134) Go button will be invisible when no active Pokémon or empty search.
 140) Add a loading spinner when the Pokémon is being fetched.
-142) Fix the padding on the info-card for mobile and tablet.
 143) Show the sprites unless they are null, then show the official artwork.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
 
@@ -242,4 +241,6 @@ IMPLEMENTED
   into 14 specialized CSS files and the old style.css file has been removed.
 147) Add a feature that downloads the PWA as an app when you click the Pokédex icon. //The PWA is now 
   downloadable as an app.
+148) Fix excessive padding between header and info card for mobile, tablet, and desktop. //Reduced padding 
+  and adjusted info-card margins for better spacing across all devices.
 

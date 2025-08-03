@@ -18,7 +18,7 @@
   grid-template-columns: 1fr 0.9fr;
   grid-column-gap: var(--spacing-xl);
   grid-row-gap: var(--spacing-md);
-  padding: 8rem var(--spacing-md) var(--spacing-xl);
+  padding: 6rem var(--spacing-md) var(--spacing-xl);
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
