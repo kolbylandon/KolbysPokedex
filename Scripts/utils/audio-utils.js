@@ -82,6 +82,20 @@ function unlockAudioContext() {
         console.log('📱 [Mobile Audio] Could not unlock audio context');
       });
     }
+    
+    // Also try to initialize speech synthesis for mobile
+    if (window.speechSynthesis) {
+      try {
+        // Create a test utterance to "wake up" the speech synthesis on mobile
+        const testUtterance = new SpeechSynthesisUtterance('');
+        testUtterance.volume = 0;
+        Synth.speak(testUtterance);
+        Synth.cancel();
+        console.log('📱 [Mobile Speech] Speech synthesis initialized');
+      } catch (speechError) {
+        console.log('📱 [Mobile Speech] Could not initialize speech synthesis:', speechError);
+      }
+    }
   } catch (error) {
     console.log('📱 [Mobile Audio] Error attempting to unlock audio context:', error);
   }
@@ -416,49 +430,82 @@ export function startReadingEntry(name, genus, entry) {
     return;
   }
 
+  // Check if speech synthesis is supported
+  if (!isSpeechSupported()) {
+    console.error('Speech synthesis not supported in this browser');
+    showToast('Text-to-speech not supported in this browser');
+    return;
+  }
+
+  // Unlock audio context for mobile devices
+  unlockAudioContext();
+
   // Cancel any ongoing speech before starting new reading
   Synth.cancel();
   
   try {
-    // Create utterances for each part of the reading
-    const nameUtterance = new SpeechSynthesisUtterance(name);
-    const genusUtterance = new SpeechSynthesisUtterance(`The ${genus}`);
-    const entryUtterance = new SpeechSynthesisUtterance(entry);
-    
-    // Configure speech parameters for better listening experience
-    [nameUtterance, genusUtterance, entryUtterance].forEach(utterance => {
-      utterance.rate = 0.9;    // Slightly slower for clarity
-      utterance.pitch = 1.0;   // Normal pitch
-      utterance.volume = 0.8;  // 80% volume
-    });
-    
-    // Add event listeners for user feedback
-    nameUtterance.addEventListener('start', () => {
-      console.log('Starting to read Pokemon entry');
-      showToast('Reading Pokemon entry...');
-    });
-    
-    entryUtterance.addEventListener('end', () => {
-      console.log('Finished reading Pokemon entry');
-      showToast('Finished reading entry');
-    });
-    
-    entryUtterance.addEventListener('error', (error) => {
-      console.error('Speech synthesis error:', error);
-      showToast('Error reading entry');
-    });
-    
-    // Queue speech synthesis utterances in sequence
-    Synth.speak(nameUtterance);
-    Synth.speak(genusUtterance);
-    
-    // Brief pause between genus and entry for better flow
+    // Wait a brief moment for speech synthesis to be ready (important on mobile)
     setTimeout(() => {
-      Synth.speak(entryUtterance);
-    }, 100);
+      // Check if voices are available (sometimes takes time to load on mobile)
+      const voices = Synth.getVoices();
+      console.log(`📱 [Speech] Available voices: ${voices.length}`);
+      
+      // Create utterances for each part of the reading
+      const nameUtterance = new SpeechSynthesisUtterance(name);
+      const genusUtterance = new SpeechSynthesisUtterance(`The ${genus}`);
+      const entryUtterance = new SpeechSynthesisUtterance(entry);
+      
+      // Configure speech parameters for better listening experience
+      [nameUtterance, genusUtterance, entryUtterance].forEach(utterance => {
+        utterance.rate = 0.9;    // Slightly slower for clarity
+        utterance.pitch = 1.0;   // Normal pitch
+        utterance.volume = 0.8;  // 80% volume
+        
+        // Set a voice if available (important for some mobile browsers)
+        if (voices.length > 0) {
+          // Prefer English voices
+          const englishVoice = voices.find(voice => voice.lang.startsWith('en'));
+          if (englishVoice) {
+            utterance.voice = englishVoice;
+          }
+        }
+      });
+      
+      // Add event listeners for user feedback
+      nameUtterance.addEventListener('start', () => {
+        console.log('📱 [Speech] Starting to read Pokemon entry');
+        showToast('Reading Pokemon entry...');
+      });
+      
+      entryUtterance.addEventListener('end', () => {
+        console.log('📱 [Speech] Finished reading Pokemon entry');
+        showToast('Finished reading entry');
+      });
+      
+      entryUtterance.addEventListener('error', (error) => {
+        console.error('📱 [Speech] Speech synthesis error:', error);
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+          showToast('Text-to-speech failed on mobile. Try tapping the button again.');
+        } else {
+          showToast('Error reading entry');
+        }
+      });
+      
+      // Queue speech synthesis utterances in sequence
+      console.log('📱 [Speech] Starting speech synthesis');
+      Synth.speak(nameUtterance);
+      Synth.speak(genusUtterance);
+      
+      // Brief pause between genus and entry for better flow
+      setTimeout(() => {
+        Synth.speak(entryUtterance);
+      }, 100);
+      
+    }, 100); // Brief delay to ensure speech synthesis is ready
     
   } catch (error) {
-    console.error('Error setting up speech synthesis:', error);
+    console.error('📱 [Speech] Error setting up speech synthesis:', error);
     showToast('Text-to-speech not available');
   }
 }
@@ -538,7 +585,24 @@ export function isAudioSupported() {
  * }
  */
 export function isSpeechSupported() {
-  return 'speechSynthesis' in window;
+  if (!('speechSynthesis' in window)) {
+    console.log('📱 [Speech Check] speechSynthesis not available in window');
+    return false;
+  }
+  
+  // Additional check for mobile browsers that might have partial support
+  try {
+    const testUtterance = new SpeechSynthesisUtterance('test');
+    if (!testUtterance) {
+      console.log('📱 [Speech Check] Cannot create SpeechSynthesisUtterance');
+      return false;
+    }
+    console.log('📱 [Speech Check] Speech synthesis is supported');
+    return true;
+  } catch (error) {
+    console.log('📱 [Speech Check] Error testing speech synthesis:', error);
+    return false;
+  }
 }
 
 /**

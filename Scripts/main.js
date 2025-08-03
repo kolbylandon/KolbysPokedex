@@ -192,8 +192,21 @@ let id = null;
   });
   
   /** Read Entry button - uses text-to-speech for Pokédx entries */
-  ReadEntryButton.addEventListener('click', () => {
+  ReadEntryButton.addEventListener('click', (event) => {
     if (DEBUG) console.log('🔘 [Button Click] Read Entry button clicked');
+    event.preventDefault();
+    buttonClick('ReadEntry', false, false);
+  });
+  
+  // Add touch event for better mobile support
+  ReadEntryButton.addEventListener('touchstart', (event) => {
+    if (DEBUG) console.log('🔘 [Touch Start] Read Entry button touched');
+    event.preventDefault();
+  });
+  
+  ReadEntryButton.addEventListener('touchend', (event) => {
+    if (DEBUG) console.log('🔘 [Touch End] Read Entry button touch ended');
+    event.preventDefault();
     buttonClick('ReadEntry', false, false);
   });
   
@@ -320,12 +333,24 @@ function getSystemInformation() {
   // Make device type available globally for other modules
   window.deviceType = deviceType;
   
-  // Unlock audio context on first load for mobile devices
+  // Unlock audio context and speech synthesis on first load for mobile devices
   if (deviceType === 'mobile') {
-    console.log('📱 [Mobile] Preparing audio context for mobile device');
+    console.log('📱 [Mobile] Preparing audio context and speech synthesis for mobile device');
     // Add one-time unlock on any user interaction
     document.addEventListener('touchstart', unlockAudioContext, { once: true });
     document.addEventListener('click', unlockAudioContext, { once: true });
+    
+    // Also prepare speech synthesis voices on mobile
+    if (window.speechSynthesis) {
+      // Load voices asynchronously on mobile
+      window.speechSynthesis.addEventListener('voiceschanged', () => {
+        const voices = window.speechSynthesis.getVoices();
+        console.log(`📱 [Mobile Speech] Loaded ${voices.length} voices for speech synthesis`);
+      });
+      
+      // Trigger voices loading
+      window.speechSynthesis.getVoices();
+    }
   }
   if (!window.pokemonApp) window.pokemonApp = {};
   window.pokemonApp.deviceType = deviceType;
