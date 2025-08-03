@@ -32,7 +32,7 @@ function debounce(fn, ms = 300) {
 
 // Import utility functions and constants from helper modules
 import { showToast, getElementVisibility, Body, createArray } from './utils/dom-utils.js?v=20250802b';
-import { playPokemonCry, startReadingEntry, Synth } from './utils/audio-utils.js?v=20250802b';
+import { playPokemonCry, startReadingEntry, Synth, unlockAudioContext } from './utils/audio-utils.js?v=20250802b';
 import { convertHexToRgba } from './utils/color-utils.js?v=20250802b';
 import { 
   STORAGE_KEYS, getStorageItem, setStorageItem, populateLocalStorage, swapCurrentAndLastPokemon
@@ -173,8 +173,21 @@ let id = null;
   });
   
   /** Cry button - plays the Pokémon's cry audio */
-  CryButton.addEventListener('click', () => {
+  CryButton.addEventListener('click', (event) => {
     if (DEBUG) console.log('🔘 [Button Click] Cry button clicked');
+    event.preventDefault();
+    buttonClick('Cry', true, false);
+  });
+  
+  // Add touch event for better mobile support
+  CryButton.addEventListener('touchstart', (event) => {
+    if (DEBUG) console.log('🔘 [Touch Start] Cry button touched');
+    event.preventDefault();
+  });
+  
+  CryButton.addEventListener('touchend', (event) => {
+    if (DEBUG) console.log('🔘 [Touch End] Cry button touch ended');
+    event.preventDefault();
     buttonClick('Cry', true, false);
   });
   
@@ -305,6 +318,15 @@ function getSystemInformation() {
   headerLayout(deviceType); // Adjust header layout
   
   // Make device type available globally for other modules
+  window.deviceType = deviceType;
+  
+  // Unlock audio context on first load for mobile devices
+  if (deviceType === 'mobile') {
+    console.log('📱 [Mobile] Preparing audio context for mobile device');
+    // Add one-time unlock on any user interaction
+    document.addEventListener('touchstart', unlockAudioContext, { once: true });
+    document.addEventListener('click', unlockAudioContext, { once: true });
+  }
   if (!window.pokemonApp) window.pokemonApp = {};
   window.pokemonApp.deviceType = deviceType;
 } //getSystemInformation

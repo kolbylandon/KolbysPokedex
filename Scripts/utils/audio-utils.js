@@ -49,6 +49,44 @@ const ALTERNATIVE_CRY_SOURCES = [
 /** @type {Array<string>} Supported audio formats in order of preference */
 const SUPPORTED_AUDIO_FORMATS = ['.ogg', '.mp3', '.wav'];
 
+/** @type {boolean} Track if audio context has been unlocked for mobile */
+let audioContextUnlocked = false;
+
+// ====================================
+// MOBILE AUDIO CONTEXT MANAGEMENT
+// ====================================
+
+/**
+ * Unlocks audio context for mobile browsers
+ * Mobile browsers require user interaction before audio can play
+ * This function should be called on first user interaction
+ */
+function unlockAudioContext() {
+  if (audioContextUnlocked) return;
+  
+  try {
+    // Create a silent audio element and attempt to play it
+    const silentAudio = new Audio();
+    silentAudio.volume = 0;
+    silentAudio.preload = 'auto';
+    
+    // Use a data URI for a very short silent audio clip
+    silentAudio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmcfCCuFyvLGfC4GM2C57+WUQQ0LTaXU8dlzIwc2jdXz1XgqBTLAy+7dexELLXLG8+ONPQ0PVqXU8dtxIQU6gsOj1VB1jA==';
+    
+    const playPromise = silentAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        audioContextUnlocked = true;
+        console.log('📱 [Mobile Audio] Audio context unlocked successfully');
+      }).catch(() => {
+        console.log('📱 [Mobile Audio] Could not unlock audio context');
+      });
+    }
+  } catch (error) {
+    console.log('📱 [Mobile Audio] Error attempting to unlock audio context:', error);
+  }
+}
+
 // ====================================
 // POKEMON CRY PLAYBACK
 // ====================================
@@ -133,6 +171,9 @@ export function playPokemonCryWithData(pokemon) {
     return;
   }
 
+  // Unlock audio context for mobile browsers on first interaction
+  unlockAudioContext();
+
   const cryButton = document.getElementById('cry-button');
   const cryButtonTop = document.getElementById('cry-button-top');
   
@@ -213,7 +254,15 @@ export function playPokemonCryWithData(pokemon) {
           
           // Handle specific error types with appropriate user feedback
           if (error.name === 'NotAllowedError') {
-            showToast('Please interact with the page first, then try again');
+            // Check if this is likely a mobile browser
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+              showToast('Tap the cry button again to enable audio on mobile');
+              // Try to unlock audio context again
+              unlockAudioContext();
+            } else {
+              showToast('Please interact with the page first, then try again');
+            }
           } else if (error.name === 'NotSupportedError') {
             showToast('Audio format not supported by your browser');
           } else {
@@ -531,6 +580,9 @@ export function preloadPokemonCry(cryUrl) {
 
 // Export for main.js compatibility - maps to current Pokemon cry function
 export { playCurrentPokemonCry as playPokemonCry };
+
+// Export the unlock function for use in other modules
+export { unlockAudioContext };
 
 // Maintain backward compatibility with existing code
 export { playCurrentPokemonCry as playPokemonCryLegacy };
