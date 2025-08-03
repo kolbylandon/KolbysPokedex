@@ -35,7 +35,7 @@ import { showToast, getElementVisibility, Body, createArray } from './utils/dom-
 import { playPokemonCry, startReadingEntry, Synth, unlockAudioContext } from './utils/audio-utils.js?v=20250802b';
 import { convertHexToRgba } from './utils/color-utils.js?v=20250802b';
 import { 
-  STORAGE_KEYS, getStorageItem, setStorageItem, populateLocalStorage, swapCurrentAndLastPokemon
+  STORAGE_KEYS, getStorageItem, setStorageItem, populateLocalStorage, swapCurrentAndLastPokemon, refreshUserIP, getStoredIP
 } from './utils/storage-utils.js?v=20250802h';
 import { 
   generatePokemon, getRandomPokemon, getDeviceType, 
@@ -333,6 +333,11 @@ function getSystemInformation() {
   // Make device type available globally for other modules
   window.deviceType = deviceType;
   
+  // Initialize IP address storage (async, non-blocking)
+  refreshUserIP().catch(error => {
+    console.log('IP address fetch failed:', error.message);
+  });
+  
   // Unlock audio context and speech synthesis on first load for mobile devices
   if (deviceType === 'mobile') {
     console.log('📱 [Mobile] Preparing audio context and speech synthesis for mobile device');
@@ -354,6 +359,10 @@ function getSystemInformation() {
   }
   if (!window.pokemonApp) window.pokemonApp = {};
   window.pokemonApp.deviceType = deviceType;
+  
+  // Make IP functions available globally for debugging
+  window.pokemonApp.getStoredIP = getStoredIP;
+  window.pokemonApp.refreshUserIP = refreshUserIP;
 } //getSystemInformation
 
 // ====================================
