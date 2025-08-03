@@ -236,16 +236,6 @@ let id = null;
     buttonClick('Toast', true, false);
   });
   
-  /** Chart and artwork click handlers - scroll to top for better UX */
-  StatsChart.addEventListener('click', () => {
-    console.log('🔘 [Click] Stats chart clicked, scrolling to top');
-    window.scroll(0, 0);
-  });
-  ArtworkTable.addEventListener('click', () => {
-    console.log('🔘 [Click] Artwork table clicked, scrolling to top');
-    window.scroll(0, 0);
-  });
-  
   // ====================================
   // INPUT EVENT LISTENERS
   // ====================================
