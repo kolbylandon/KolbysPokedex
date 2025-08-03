@@ -29,7 +29,7 @@
 // ====================================
 // MODULE IMPORTS
 // ====================================
-import { getElementVisibility } from './utils/dom-utils.js?v=20250801i';
+import { getElementVisibility, showToast } from './utils/dom-utils.js?v=20250801i';
 import { 
   getAbilityList, getFormList, getGenus, getHeight, getHeldItemList, 
   getLargestStat, getPokedexEntry, getStatTotal, getTypes, getWeight,
@@ -211,18 +211,11 @@ function displayAttributes() {
     StatsText.innerHTML += '<br>';   // Add line break on mobile/tablet
   }
   
-  // Configure default (normal) Pokemon artwork
-  DefaultArtworkElement.setAttribute('src', pokemon.FrontDefaultOfficialArtwork);
-  DefaultArtworkElement.setAttribute('alt', 'Official Artwork Not Available');
-  // Configure artwork element sizing to match container dimensions
-  DefaultArtworkElement.style.width = DefaultArtworkElement.parentElement.style.width;
-  DefaultArtworkElement.style.height = DefaultArtworkElement.parentElement.style.height;
+  // Configure default (normal) Pokemon artwork with Android-specific handling
+  configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultOfficialArtwork, 'Official Artwork Not Available');
   
-  // Configure shiny Pokemon artwork
-  ShinyArtworkElement.setAttribute('src', pokemon.FrontShinyOfficialArtwork);
-  ShinyArtworkElement.setAttribute('alt', 'Shiny Official Artwork Not Available');
-  ShinyArtworkElement.style.width = ShinyArtworkElement.parentElement.style.width;
-  ShinyArtworkElement.style.height = ShinyArtworkElement.parentElement.style.height;
+  // Configure shiny Pokemon artwork with Android-specific handling
+  configureArtworkElement(ShinyArtworkElement, pokemon.FrontShinyOfficialArtwork, 'Shiny Official Artwork Not Available');
   
   // Legacy sprite code (preserved for potential future use)
   // FrontDefault.setAttribute('src', pokemon.FrontDefaultSprite);
@@ -354,6 +347,107 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
     pokemonObj.backFemaleShinySprite = pokemonResponse.sprites.back_shiny_female;
   }
 } //setGenderDifferenceSprites
+
+// ====================================
+// ARTWORK LOADING UTILITIES
+// ====================================
+
+/**
+ * Configures artwork element with Android-specific error handling and fallback loading
+ * @param {HTMLImageElement} element - The image element to configure
+ * @param {string} imageUrl - Primary image URL to load
+ * @param {string} altText - Alt text for accessibility
+ */
+function configureArtworkElement(element, imageUrl, altText) {
+  // Clear any existing error handlers
+  element.onerror = null;
+  element.onload = null;
+  
+  // Set initial attributes
+  element.setAttribute('alt', altText);
+  
+  // Configure artwork element sizing to match container dimensions
+  element.style.width = element.parentElement.style.width;
+  element.style.height = element.parentElement.style.height;
+  
+  // Android-specific: Add loading strategies for better compatibility
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isMobile = window.deviceType === 'mobile';
+  
+  if (isAndroid) {
+    console.log('🤖 [Android] Configuring artwork with Android-specific loading strategy');
+    
+    // Android-specific: Set longer timeout and add crossorigin
+    element.crossOrigin = 'anonymous';
+    element.loading = 'lazy';
+    
+    // Android-specific: Add retry mechanism
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    function attemptLoad() {
+      // Add cache-busting for Android if this is a retry
+      const urlToLoad = retryCount > 0 ? `${imageUrl}?retry=${retryCount}&t=${Date.now()}` : imageUrl;
+      
+      element.onload = function() {
+        console.log(`✅ [Android] Artwork loaded successfully: ${element.alt}`);
+        // Android-specific: Force a repaint to ensure visibility
+        element.style.display = 'none';
+        element.offsetHeight; // Trigger reflow
+        element.style.display = '';
+      };
+      
+      element.onerror = function() {
+        retryCount++;
+        console.warn(`❌ [Android] Artwork load failed (attempt ${retryCount}): ${element.alt}`);
+        
+        if (retryCount <= maxRetries) {
+          console.log(`🔄 [Android] Retrying artwork load in ${retryCount * 1000}ms...`);
+          setTimeout(() => {
+            attemptLoad();
+          }, retryCount * 1000); // Progressive delay: 1s, 2s, 3s
+        } else {
+          console.error(`💥 [Android] All artwork load attempts failed for: ${element.alt}`);
+          // Set a placeholder or hide the element
+          element.style.opacity = '0.3';
+          element.style.filter = 'grayscale(100%)';
+          
+          // Show user feedback
+          if (typeof showToast !== 'undefined') {
+            showToast('Some artwork may not load properly on this device');
+          }
+        }
+      };
+      
+      // Set the source to start loading
+      element.src = urlToLoad;
+    }
+    
+    // Start the loading process
+    attemptLoad();
+    
+  } else {
+    // Non-Android devices: Standard loading
+    element.onload = function() {
+      console.log(`✅ Artwork loaded: ${element.alt}`);
+    };
+    
+    element.onerror = function() {
+      console.warn(`❌ Artwork load failed: ${element.alt}`);
+      element.style.opacity = '0.5';
+    };
+    
+    // Set the source
+    element.src = imageUrl;
+  }
+  
+  // Additional mobile optimizations
+  if (isMobile) {
+    // Mobile-specific: Preload hint for better performance
+    element.decoding = 'async';
+    element.style.willChange = 'transform';
+  }
+}
 
 // ====================================
 // MODULE EXPORTS

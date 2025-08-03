@@ -794,6 +794,15 @@ body::-webkit-scrollbar {
   border: none;
   background: transparent;
   display: block;
+  /* Android-specific optimizations */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Improve Android image loading */
+  image-rendering: auto;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #root #artwork-card .artwork-table-td .image.artwork:hover {
@@ -1827,4 +1836,52 @@ body::-webkit-scrollbar {
   background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 100%);
   background-size: 200px 100%;
   animation: shimmer 1.5s infinite;
+}
+
+/* ====================================
+   ANDROID-SPECIFIC FIXES
+   ==================================== */
+
+/* Android Chrome and WebView specific artwork fixes */
+@supports (-webkit-appearance: none) {
+  /* Webkit-based Android browsers */
+  #root #artwork-card .artwork-table-td .image.artwork {
+    /* Force hardware acceleration on Android */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    /* Improve image rendering on Android */
+    -webkit-optimize-contrast: auto;
+    image-rendering: -webkit-optimize-contrast;
+    /* Prevent Android image scaling issues */
+    -webkit-background-size: contain;
+    background-size: contain;
+    /* Force redraw on Android when needed */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Android-specific loading state */
+  #root #artwork-card .artwork-table-td .image.artwork[src=""] {
+    background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%),
+                linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    min-height: 200px;
+  }
+}
+
+/* Android device targeting (using user agent in JavaScript handles this better) */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  /* Likely mobile device optimizations */
+  #root #artwork-card .artwork-table-td .image.artwork {
+    /* Reduce complexity on smaller Android devices */
+    transition: opacity 0.2s ease;
+    border-radius: var(--radius-md); /* Slightly less radius for performance */
+  }
+  
+  #root #artwork-card .artwork-table-td .image.artwork:hover {
+    /* Simplified hover effects for touch devices */
+    transform: none;
+    opacity: 0.9;
+  }
 }

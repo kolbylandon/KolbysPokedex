@@ -61,6 +61,7 @@ const STATIC_ASSETS = [
 const API_PATTERNS = [
   /^https:\/\/pokeapi\.co\/api\/v2\//,
   /^https:\/\/raw\.githubusercontent\.com\/PokeAPI\/cries\//,
+  /^https:\/\/raw\.githubusercontent\.com\/PokeAPI\/sprites\//,
   /^https:\/\/pokemoncries\.com\//,
   /^https:\/\/play\.pokemonshowdown\.com\/audio\//
 ];
