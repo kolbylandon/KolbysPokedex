@@ -10,7 +10,7 @@
  * - Pokemon data formatting and validation
  * - Ability, held item, and form list generation
  * - Height/weight unit conversion (metric to imperial)
- * - Pokédx entry text processing and cleanup
+ * - Pokédex entry text processing and cleanup
  * - Type system processing and visual styling
  * - Statistical data processing and calculation
  * 
@@ -57,10 +57,10 @@ const TextColor = 'rgba(98, 98, 98, 0.95)';
 /** @type {string} Special color for hidden abilities to distinguish them */
 const HiddenAbilityTextColor = 'rgba(255, 111, 97, 0.95)';
 
-/** @type {number} Maximum Pokédx number for original 151 Pokemon */
+/** @type {number} Maximum Pokédex number for original 151 Pokemon */
 const OriginalMaximumId = 151;
 
-/** @type {number} Maximum Pokédx number including all generations */
+/** @type {number} Maximum Pokédex number including all generations */
 let MaximumId = 1025;
 
 // ====================================
@@ -283,10 +283,10 @@ export function getLargestStat(statsArray) {
 // ====================================
 
 /**
- * Extracts and formats Pokédx entry text from flavor text entries
+ * Extracts and formats Pokédex entry text from flavor text entries
  * Filters for English entries and cleans up formatting/whitespace
  * @param {Array} flavorTextEntries - Array of flavor text objects from Pokemon species API
- * @returns {string} Formatted Pokédx entry text
+ * @returns {string} Formatted Pokédex entry text
  * @example
  * const entries = [
  *   { flavor_text: 'A strange seed was planted...', language: { name: 'en' } }
@@ -296,7 +296,7 @@ export function getLargestStat(statsArray) {
 export function getPokedexEntry(flavorTextEntries) {
   if (!flavorTextEntries || !Array.isArray(flavorTextEntries)) {
     console.warn('getPokedexEntry: Invalid flavor text entries provided');
-    return 'No Pokédx entry available.';
+    return 'No Pokédex entry available.';
   }
 
   // RegEx pattern to remove various Unicode whitespace and control characters
@@ -312,7 +312,7 @@ export function getPokedexEntry(flavorTextEntries) {
   }
   
   if (entriesArray.length === 0) {
-    return 'No English Pokédx entry available.';
+    return 'No English Pokédex entry available.';
   }
   
   // Select random entry from available English entries
@@ -462,9 +462,9 @@ export function getTypes(types) {
 // ====================================
 
 /**
- * Determines which Pokédx version to use (original 151 or all Pokemon)
- * @param {string} showOnlyOriginalPokemon - String indicating preference for original Pokédx
- * @returns {number} Maximum ID limit for the selected Pokédx version
+ * Determines which Pokédex version to use (original 151 or all Pokemon)
+ * @param {string} showOnlyOriginalPokemon - String indicating preference for original Pokédex
+ * @returns {number} Maximum ID limit for the selected Pokédex version
  * @example
  * const maxId = getPokedexType('true'); // Returns 151
  * const maxId = getPokedexType('false'); // Returns 1025
@@ -484,7 +484,7 @@ export function getPokedexType(showOnlyOriginalPokemon) {
 // ====================================
 
 /**
- * Generates a random Pokemon ID within the current Pokédx range
+ * Generates a random Pokemon ID within the current Pokédex range
  * @returns {number} Random Pokemon ID between 1 and MaximumId
  * @example
  * const randomId = getRandomPokemon(); // Returns number between 1-1025

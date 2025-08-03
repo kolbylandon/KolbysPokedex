@@ -193,7 +193,6 @@ const BUTTON_TEMPLATES = {
     recall: `<span id='recall-button-top' class='button-top' title='Show last viewed Pokémon'><i class='fa-solid fa-history'></i></span>`
   },
   tablet: {
-    tablet: {
     go: `<span id='go-button-top' class='button-top'><i class='fa-solid fa-search'></i> Search</span>`,
     random: `<span id='random-pokemon-button-top' class='button-top'><i class='fa-solid fa-shuffle'></i> Random</span>`,
     previous: `<span id='previous-button-top' class='button-top' title='Go to previous Pokémon'><i class='fa-solid fa-chevron-left'></i></span>`,
@@ -202,7 +201,6 @@ const BUTTON_TEMPLATES = {
     clear: `<span id='clear-button-top' class='button-top' title='Clear all data and reset view'><i class='fa-solid fa-xmark'></i></span>`,
     cry: `<span id='cry-button-top' class='button-top' title='Play Pokémon cry sound'><i class='fa-solid fa-volume-high'></i></span>`,
     recall: `<span id='recall-button-top' class='button-top' title='Show last viewed Pokémon'><i class='fa-solid fa-history'></i></span>`
-  },
   },
   desktop: {
     go: `<span id='go-button-top' class='button-top'><i class='fa-solid fa-search'></i> Search</span>`,
@@ -392,10 +390,10 @@ export function setPokedexType(showOnlyOriginal) {
   
   if (useOriginal) {
     MAXIMUM_ID = ORIGINAL_MAXIMUM_ID;
-    console.log('Pokédx limited to original 151 Pokemon');
+    console.log('Pokédex limited to original 151 Pokemon');
   } else {
     MAXIMUM_ID = 1025; // Current total as of Gen 9
-    console.log('Pokédx set to include all Pokemon');
+    console.log('Pokédex set to include all Pokemon');
   }
   
   // Update UI if maximum ID display exists
@@ -414,7 +412,7 @@ export function setPokedexType(showOnlyOriginal) {
  * @param {boolean} hasGenderDifferences - Whether Pokemon has gender differences (legacy parameter)
  * @example
  * updateNavigationButtons(1);    // Hides Previous button (at minimum)
- * updateNavigationButtons(151);  // Hides Next button (if using original Pokédx)
+ * updateNavigationButtons(151);  // Hides Next button (if using original Pokédex)
  */
 export function updateNavigationButtons(currentId, hasGenderDifferences = false) {
   console.log(`🧭 [Navigation Buttons] Updating for Pokemon ID: ${currentId}, range: ${MINIMUM_ID}-${MAXIMUM_ID}`);
@@ -514,7 +512,7 @@ export function validateNumericInput(input) {
 }
 
 /**
- * Validates Pokédx number input and provides visual feedback
+ * Validates Pokédex number input and provides visual feedback
  * Changes input field color based on validity of entered Pokemon ID
  * @param {HTMLInputElement} textboxElement - Input element to validate
  * @returns {boolean} True if the input is valid, false otherwise

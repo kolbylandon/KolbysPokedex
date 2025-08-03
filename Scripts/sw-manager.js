@@ -1,5 +1,5 @@
 /**
- * KOLBY'S POKÉDX - SERVICE WORKER MANAGER
+ * KOLBY'S POKÉDEX - SERVICE WORKER MANAGER
  * ======================================
  * 
  * This module manages service worker registration, lifecycle events, and provides

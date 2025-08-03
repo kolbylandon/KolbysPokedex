@@ -191,7 +191,7 @@ let id = null;
     buttonClick('Cry', true, false);
   });
   
-  /** Read Entry button - uses text-to-speech for Pokédx entries */
+  /** Read Entry button - uses text-to-speech for Pokédex entries */
   ReadEntryButton.addEventListener('click', (event) => {
     if (DEBUG) console.log('🔘 [Button Click] Read Entry button clicked');
     event.preventDefault();

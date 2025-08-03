@@ -416,10 +416,10 @@ export function tryAlternativeCry(pokemon) {
 
 /**
  * Initiates text-to-speech reading of Pokemon entry information
- * Reads Pokemon name, genus, and Pokédx entry using Web Speech API
+ * Reads Pokemon name, genus, and Pokédex entry using Web Speech API
  * @param {string} name - Pokemon name to announce
  * @param {string} genus - Pokemon genus classification (e.g., "Seed Pokémon")
- * @param {string} entry - Pokédx entry text to read
+ * @param {string} entry - Pokédex entry text to read
  * @example
  * startReadingEntry('Bulbasaur', 'Seed Pokémon', 'A strange seed was planted...');
  */
