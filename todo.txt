@@ -65,6 +65,7 @@ IN PROGRESS
 143) Show the sprites unless they are null, then show the official artwork.
 144) Split the index.html file into a css file and a js file.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
+147) Add a feature that downloads the PWA as an app when you click the Pokédex icon.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------

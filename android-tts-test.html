@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android TTS Test - Kolby's Pokédex</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        .success {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        .warning {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+        .instructions {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .voice-info {
+            font-family: monospace;
+            font-size: 12px;
+            background: #f1f3f4;
+            padding: 10px;
+            border-radius: 3px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Android Text-to-Speech Test</h1>
+    <p>This page helps diagnose TTS issues on Android devices for Kolby's Pokédex.</p>
+    
+    <div class="instructions">
+        <h3>🤖 For Android Users:</h3>
+        <p>If text-to-speech doesn't work, try these steps:</p>
+        <ol>
+            <li><strong>Enable Google TTS:</strong> Settings → Accessibility → Text-to-speech output → Select Google Text-to-Speech</li>
+            <li><strong>Install TTS Engine:</strong> Install "Google Text-to-Speech" from Play Store</li>
+            <li><strong>Test TTS:</strong> Settings → Accessibility → Text-to-speech → Listen to example</li>
+            <li><strong>Alternative:</strong> Enable "TalkBack" or "Select to Speak" in Accessibility settings</li>
+        </ol>
+    </div>
+
+    <div>
+        <button class="button" onclick="checkTTSSupport()">🔍 Check TTS Support</button>
+        <button class="button" onclick="testSimpleTTS()">🗣️ Test Simple TTS</button>
+        <button class="button" onclick="testPokemonTTS()">⚡ Test Pokémon TTS</button>
+        <button class="button" onclick="listVoices()">📋 List Available Voices</button>
+        <button class="button" onclick="stopTTS()">🛑 Stop TTS</button>
+    </div>
+
+    <div id="status"></div>
+    <div id="voices"></div>
+
+    <script>
+        function log(message, type = 'status') {
+            const statusDiv = document.getElementById('status');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            statusDiv.appendChild(div);
+            statusDiv.scrollTop = statusDiv.scrollHeight;
+            console.log(`[TTS Test] ${message}`);
+        }
+
+        function checkTTSSupport() {
+            log('🔍 Checking Text-to-Speech support...');
+            
+            if (!('speechSynthesis' in window)) {
+                log('❌ speechSynthesis not available in this browser', 'error');
+                return false;
+            }
+
+            log('✅ speechSynthesis is available');
+
+            try {
+                const testUtterance = new SpeechSynthesisUtterance('test');
+                log('✅ Can create SpeechSynthesisUtterance');
+            } catch (error) {
+                log(`❌ Cannot create SpeechSynthesisUtterance: ${error.message}`, 'error');
+                return false;
+            }
+
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            if (isAndroid) {
+                log('🤖 Android device detected');
+                
+                const voices = window.speechSynthesis.getVoices();
+                log(`📊 Immediate voice count: ${voices.length}`);
+                
+                if (voices.length === 0) {
+                    log('⚠️ No voices available immediately (common on Android)', 'warning');
+                    
+                    // Try to trigger voice loading
+                    window.speechSynthesis.addEventListener('voiceschanged', function handler() {
+                        const newVoices = window.speechSynthesis.getVoices();
+                        log(`📊 Voices after voiceschanged event: ${newVoices.length}`);
+                        window.speechSynthesis.removeEventListener('voiceschanged', handler);
+                        
+                        if (newVoices.length === 0) {
+                            log('❌ Still no voices available. TTS may not be properly installed.', 'error');
+                        } else {
+                            log('✅ Voices loaded successfully!', 'success');
+                        }
+                    });
+                    
+                    // Force voice loading
+                    window.speechSynthesis.getVoices();
+                } else {
+                    log('✅ Voices are available!', 'success');
+                }
+            } else {
+                log('💻 Non-Android device detected');
+            }
+
+            return true;
+        }
+
+        function testSimpleTTS() {
+            if (!checkTTSSupport()) return;
+            
+            log('🗣️ Testing simple TTS...');
+            
+            try {
+                const utterance = new SpeechSynthesisUtterance('Hello, this is a test');
+                utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+                utterance.volume = 0.8;
+                
+                utterance.addEventListener('start', () => {
+                    log('✅ Simple TTS started successfully!', 'success');
+                });
+                
+                utterance.addEventListener('end', () => {
+                    log('✅ Simple TTS completed successfully!', 'success');
+                });
+                
+                utterance.addEventListener('error', (event) => {
+                    log(`❌ Simple TTS failed: ${event.error} - ${event.message}`, 'error');
+                });
+                
+                window.speechSynthesis.speak(utterance);
+                log('🚀 Simple TTS command sent...');
+                
+                // Check if it actually started
+                setTimeout(() => {
+                    if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+                        log('⚠️ TTS command sent but not speaking. May need manual activation.', 'warning');
+                    }
+                }, 500);
+                
+            } catch (error) {
+                log(`❌ Error in simple TTS: ${error.message}`, 'error');
+            }
+        }
+
+        function testPokemonTTS() {
+            if (!checkTTSSupport()) return;
+            
+            log('⚡ Testing Pokémon-style TTS...');
+            
+            try {
+                const text = 'Pikachu. The Mouse Pokémon. It has small electric sacs on both its cheeks. If threatened, it looses electric charges from the sacs.';
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Use similar settings to the Pokédex
+                utterance.rate = 0.7;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                // Try to use an English voice
+                const voices = window.speechSynthesis.getVoices();
+                const englishVoice = voices.find(voice => 
+                    voice.lang.startsWith('en') && voice.localService === true
+                ) || voices.find(voice => voice.lang.startsWith('en'));
+                
+                if (englishVoice) {
+                    utterance.voice = englishVoice;
+                    log(`🎯 Using voice: ${englishVoice.name} (${englishVoice.lang})`);
+                }
+                
+                utterance.addEventListener('start', () => {
+                    log('✅ Pokémon TTS started successfully!', 'success');
+                });
+                
+                utterance.addEventListener('end', () => {
+                    log('✅ Pokémon TTS completed successfully!', 'success');
+                });
+                
+                utterance.addEventListener('error', (event) => {
+                    log(`❌ Pokémon TTS failed: ${event.error} - ${event.message}`, 'error');
+                });
+                
+                window.speechSynthesis.speak(utterance);
+                log('🚀 Pokémon TTS command sent...');
+                
+            } catch (error) {
+                log(`❌ Error in Pokémon TTS: ${error.message}`, 'error');
+            }
+        }
+
+        function listVoices() {
+            log('📋 Listing available voices...');
+            
+            const voices = window.speechSynthesis.getVoices();
+            const voicesDiv = document.getElementById('voices');
+            
+            if (voices.length === 0) {
+                log('❌ No voices available', 'error');
+                voicesDiv.innerHTML = '<div class="status error">No voices found</div>';
+                return;
+            }
+            
+            log(`📊 Found ${voices.length} voices`);
+            
+            let voicesHTML = '<h3>Available Voices:</h3>';
+            voices.forEach((voice, index) => {
+                const isEnglish = voice.lang.startsWith('en');
+                const status = isEnglish ? 'success' : 'status';
+                voicesHTML += `
+                    <div class="voice-info">
+                        <strong>${index + 1}. ${voice.name}</strong><br>
+                        Language: ${voice.lang}<br>
+                        Local Service: ${voice.localService}<br>
+                        Default: ${voice.default}
+                        ${isEnglish ? ' <span style="color: green;">✅ ENGLISH</span>' : ''}
+                    </div>
+                `;
+            });
+            
+            voicesDiv.innerHTML = voicesHTML;
+        }
+
+        function stopTTS() {
+            log('🛑 Stopping TTS...');
+            window.speechSynthesis.cancel();
+            log('✅ TTS stopped');
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            log('🚀 TTS Test page loaded');
+            
+            // Android-specific initialization
+            if (/Android/i.test(navigator.userAgent)) {
+                log('🤖 Android detected - setting up enhanced initialization');
+                
+                // Listen for voiceschanged event
+                window.speechSynthesis.addEventListener('voiceschanged', () => {
+                    const voices = window.speechSynthesis.getVoices();
+                    log(`📊 Voices updated: ${voices.length} voices available`);
+                });
+                
+                // Trigger voice loading
+                setTimeout(() => {
+                    window.speechSynthesis.getVoices();
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
