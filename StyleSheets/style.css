@@ -1286,9 +1286,9 @@ body::-webkit-scrollbar {
 
   /* Enhanced tablet info-card positioning */
   #root #info-card {
-    margin-top: var(--spacing-2xl);
+    margin-top: var(--spacing-3xl);
     margin-bottom: var(--spacing-sm);
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-sm) var(--spacing-xs);
   }
 
   #root #info-card .list-no-bullets #number-and-name-list-item {
@@ -1412,8 +1412,8 @@ body::-webkit-scrollbar {
 
   #root #info-card {
     grid-area: 1/1/2/2;
-    margin: var(--spacing-xl) 0 var(--spacing-sm);
-    padding: var(--spacing-xs) var(--spacing-md);
+    margin: var(--spacing-2xl) 0 var(--spacing-sm);
+    padding: var(--spacing-lg) var(--spacing-md) var(--spacing-xs);
   }
 
   #root #info-card .list-no-bullets #number-and-name-list-item {
