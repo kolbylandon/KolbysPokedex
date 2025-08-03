@@ -195,13 +195,13 @@
 
   #root .type-text {
     padding: var(--spacing-xs);
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
     margin: var(--spacing-xs);
   }
 
   #root .text {
     padding: 1px;
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
     line-height: 1.2;
   }
 }
@@ -343,6 +343,14 @@
     transition: all 0.3s ease;
     will-change: transform;
     transform: translateZ(0);
+  }
+
+  #root .type-text {
+    font-size: var(--font-sm);
+  }
+
+  #root .text {
+    font-size: var(--font-sm);
   }
 }
 
