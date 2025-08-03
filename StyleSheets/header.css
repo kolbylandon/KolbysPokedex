@@ -1,0 +1,208 @@
+/*
+  KOLBY'S POKÉDEX - HEADER COMPONENT
+  ==================================
+  
+  Fixed header with navigation, search, and action buttons.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   HEADER POSITIONING
+   ==================================== */
+body > #header,
+body header#header,
+header[id="header"],
+#header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 1000 !important;
+  background: transparent !important;
+  right: 0 !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  will-change: auto !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  clear: both !important;
+}
+
+/* More aggressive targeting for JavaScript interference */
+#header[style] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
+/* Override any class-based positioning */
+#header.mobile-layout,
+#header.tablet-layout,
+#header.desktop-layout {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+}
+
+/* ====================================
+   HEADER FORM CONTAINER
+   ==================================== */
+#header form {
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(229, 62, 62, 0.15);
+  box-shadow: 
+    0 4px 20px rgba(229, 62, 62, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: var(--spacing-md) var(--spacing-lg);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  min-height: 70px;
+  box-sizing: border-box;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  position: relative !important;
+  margin: 0 !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
+/* ====================================
+   HEADER LAYOUT SECTIONS
+   ==================================== */
+.header-brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+  justify-content: center;
+  max-width: 500px;
+  margin: 0 var(--spacing-md);
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 120px;
+  justify-content: flex-end;
+}
+
+/* ====================================
+   HEADER BRANDING
+   ==================================== */
+#header form #header-text-button {
+  background-color: transparent; 
+}
+
+#header form #header-text {
+  color: var(--pokeball-red);
+  display: inline-block;
+  font-size: var(--font-2xl);
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, var(--pokeball-red) 0%, #ff6b6b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+#header form #header-text::before {
+  content: '';
+  background-image: url('../Images/pokeball.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: var(--spacing-sm);
+  vertical-align: middle;
+  opacity: 0.9;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* ====================================
+   SEARCH INPUT
+   ==================================== */
+#header form #pokemon-textbox {
+  border: 2px solid rgba(229, 62, 62, 0.2);
+  background: var(--pokeball-white);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  text-align: center;
+  font-weight: 500;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--pokeball-dark);
+  box-shadow: 
+    0 4px 12px rgba(229, 62, 62, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 250px;
+  min-width: 150px;
+}
+
+#header form #pokemon-textbox::placeholder {
+  color: var(--pokeball-gray);
+  font-weight: 400;
+}
+
+#header form #pokemon-textbox:focus {
+  outline: none;
+  border-color: var(--pokeball-red);
+  box-shadow: 
+    0 8px 25px rgba(229, 62, 62, 0.15),
+    0 0 0 3px rgba(229, 62, 62, 0.1);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+/* ====================================
+   HEADER ELEMENT STYLING
+   ==================================== */
+#header form .header-element {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--font-sm);
+}

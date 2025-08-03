@@ -1,0 +1,139 @@
+/*
+  KOLBY'S POKÉDEX - CARD COMPONENTS
+  =================================
+  
+  Card-based component system with glassmorphism effects.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   MAIN CONTENT LAYOUT
+   ==================================== */
+#root {
+  display: grid;
+  background-color: transparent;
+  grid-template-columns: 1fr 0.9fr;
+  grid-column-gap: var(--spacing-xl);
+  grid-row-gap: var(--spacing-md);
+  padding: 8rem var(--spacing-md) var(--spacing-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ====================================
+   TOAST NOTIFICATIONS
+   ==================================== */
+#root #toast-text {
+  color: var(--pokeball-dark);
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+#root .toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: var(--spacing-xl);
+  right: -50%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid rgba(229, 62, 62, 0.15);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001;
+  box-shadow: 
+    0 8px 32px rgba(229, 62, 62, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  min-width: 280px;
+  max-width: 400px;
+  gap: var(--spacing-md);
+}
+
+#root .show-toast {
+  background-color: var(--white-95);
+  color: var(--text-color);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm);
+  cursor: url(../Images/pokeball-bullet.png), auto;
+}
+
+#root .toast-active {
+  right: var(--spacing-xl);
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#root .toast-close-button {
+  background: rgba(229, 62, 62, 0.1);
+  color: var(--pokeball-red);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+#root .toast-close-button:hover {
+  background: var(--pokeball-red);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* ====================================
+   CARD BASE STYLES
+   ==================================== */
+#root .card {
+  backdrop-filter: blur(25px);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 8px 32px rgba(229, 62, 62, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(229, 62, 62, 0.12);
+  -webkit-backdrop-filter: blur(25px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+#root .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(229, 62, 62, 0.05),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+#root .top-card {
+  margin-bottom: var(--spacing-sm);
+}
+
+#root .bottom-card {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+}

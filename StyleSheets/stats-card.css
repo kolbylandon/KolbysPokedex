@@ -1,0 +1,28 @@
+/*
+  KOLBY'S POKÉDEX - STATS CARD COMPONENT
+  ======================================
+  
+  Pokemon statistics chart display card.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   STATS CARD LAYOUT
+   ==================================== */
+#root #stats-card {
+  float: right;
+  grid-area: 2/2/3/3;
+  margin-right: 2.625rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root #stats-card #stats-chart {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  transition: all 0.3s ease;
+}

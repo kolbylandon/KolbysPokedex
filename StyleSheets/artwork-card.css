@@ -1,0 +1,150 @@
+/*
+  KOLBY'S POKÉDEX - ARTWORK CARD COMPONENT
+  ========================================
+  
+  Pokemon artwork display with image gallery functionality.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   ARTWORK CARD LAYOUT
+   ==================================== */
+#root #artwork-card {
+  float: left;
+  grid-area: 2/1/3/2;
+  margin-left: 2.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+#root #artwork-card .image {
+  display: block;
+  margin: var(--spacing-sm);
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+  max-width: 100%;
+  object-fit: contain;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(229, 62, 62, 0.1);
+  background: var(--pokeball-white);
+}
+
+#root #artwork-card .image:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-pokeball);
+  border-color: rgba(229, 62, 62, 0.3);
+}
+
+/* ====================================
+   ARTWORK TABLE STYLING
+   ==================================== */
+#root #artwork-card #artwork-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background: transparent;
+  margin: 0 auto;
+}
+
+#root #artwork-card .artwork-table-td {
+  padding: var(--spacing-xs);
+  border: none;
+  background: transparent;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+}
+
+#root #artwork-card .artwork-table-td:first-child {
+  padding-right: calc(var(--spacing-xs) / 2);
+}
+
+#root #artwork-card .artwork-table-td:last-child {
+  padding-left: calc(var(--spacing-xs) / 2);
+}
+
+/* ====================================
+   ARTWORK IMAGES
+   ==================================== */
+#root #artwork-card .artwork-table-td .image.artwork {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: var(--radius-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  display: block;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  image-rendering: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#root #artwork-card .artwork-table-td .image.artwork:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: none;
+}
+
+#root #artwork-card .artwork-table-td .image.artwork {
+  animation: fadeInArtwork 0.4s ease-out;
+}
+
+@keyframes fadeInArtwork {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====================================
+   ANDROID OPTIMIZATIONS
+   ==================================== */
+@supports (-webkit-appearance: none) {
+  #root #artwork-card .artwork-table-td .image.artwork {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-optimize-contrast: auto;
+    image-rendering: -webkit-optimize-contrast;
+    -webkit-background-size: contain;
+    background-size: contain;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  #root #artwork-card .artwork-table-td .image.artwork[src=""] {
+    background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%),
+                linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    min-height: 200px;
+  }
+}
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  #root #artwork-card .artwork-table-td .image.artwork {
+    transition: opacity 0.2s ease;
+    border-radius: var(--radius-md);
+  }
+  
+  #root #artwork-card .artwork-table-td .image.artwork:hover {
+    transform: none;
+    opacity: 0.9;
+  }
+}

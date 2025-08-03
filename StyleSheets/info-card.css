@@ -1,0 +1,175 @@
+/*
+  KOLBY'S POKÉDEX - INFO CARD COMPONENT
+  =====================================
+  
+  Pokemon information display card with styling for names, types, and details.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   INFO CARD LAYOUT
+   ==================================== */
+#root #info-card {
+  grid-area: 1/1/2/3;
+  margin: var(--spacing-xl) 2.625rem var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+  position: relative;
+}
+
+/* ====================================
+   POKEMON NAME & NUMBER
+   ==================================== */
+#root #info-card .list-no-bullets #number-and-name-list-item {
+  font-size: var(--font-5xl);
+  text-align: center;
+  font-weight: 800;
+  color: var(--pokeball-dark);
+  margin-bottom: var(--spacing-sm);
+  margin-top: 0;
+  padding: var(--spacing-xs) var(--spacing-xs);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  line-height: 1.1;
+}
+
+#root #info-card .list-no-bullets #genus-sub-header-list-item {
+  font-weight: 600;
+  text-align: center;
+  font-size: var(--font-lg);
+  color: var(--pokeball-gray);
+  margin-bottom: var(--spacing-md);
+  padding: 2px var(--spacing-xs);
+  line-height: 1.2;
+}
+
+/* ====================================
+   LIST STYLES
+   ==================================== */
+#root #info-card .list-no-bullets {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#root #info-card .list-bulleted {
+  list-style-image: url(../Images/pokeball-bullet.png);
+  padding-left: var(--spacing-xl);
+  margin-top: var(--spacing-sm);
+  color: var(--pokeball-gray);
+  line-height: 1.2;
+  font-size: var(--font-sm);
+}
+
+#root #info-card .list-bulleted .form-text {
+  cursor: url(../Images/pokeball-bullet.png), auto;
+}
+
+#root #info-card .list-no-bullets li {
+  padding: 2px var(--spacing-sm);
+  margin-bottom: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  line-height: 1.2;
+}
+
+#root #info-card .list-no-bullets li:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateX(2px);
+}
+
+/* ====================================
+   TEXT STYLES
+   ==================================== */
+#root .headers {
+  color: var(--pokeball-dark);
+  font-weight: 600;
+  font-size: var(--font-lg);
+}
+
+#root .text {
+  color: var(--pokeball-gray);
+  padding: 2px;
+  line-height: 1.2;
+  font-size: var(--font-sm);
+}
+
+#pokedex-entry-text {
+  font-size: var(--font-sm);
+}
+
+/* ====================================
+   TYPE BADGES
+   ==================================== */
+#root .type-text {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-md);
+  margin: 2px var(--spacing-xs);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  text-transform: capitalize;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  vertical-align: middle;
+  cursor: url(../Images/pokeball-bullet.png), auto;
+}
+
+.type-container {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+  margin: var(--spacing-xs) 0;
+}
+
+#root .type-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+#root .type-text:hover::before {
+  left: 100%;
+}
+
+#root .type-text:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+#root .type-text[hidden] {
+  display: none !important;
+}
+
+#root #type-text-2[hidden] {
+  display: none !important;
+}

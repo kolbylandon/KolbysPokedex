@@ -1,0 +1,52 @@
+/*
+  KOLBY'S POKÉDEX - MAIN STYLESHEET
+  =================================
+  
+  This is the main entry point that imports all modular CSS files.
+  The stylesheet provides a modern Pokéball-inspired design system 
+  with responsive layouts and progressive enhancement patterns.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   IMPORT ALL MODULAR STYLESHEETS
+   ==================================== */
+
+/* Core system variables and design tokens */
+@import url("variables.css");
+
+/* Base styles, reset, and foundational elements */
+@import url("base.css");
+
+/* Fixed header component with navigation */
+@import url("header.css");
+
+/* Button system with multiple variants */
+@import url("buttons.css");
+
+/* Card-based component system */
+@import url("cards.css");
+
+/* Pokemon information display card */
+@import url("info-card.css");
+
+/* Pokemon artwork gallery card */
+@import url("artwork-card.css");
+
+/* Pokemon statistics chart card */
+@import url("stats-card.css");
+
+/* Responsive design system */
+@import url("responsive.css");
+
+/* Footer component */
+@import url("footer.css");
+
+/* Utility classes and accessibility features */
+@import url("utilities.css");
+
+/* Progressive Web App and service worker styles */
+@import url("service-worker.css");

@@ -1,0 +1,31 @@
+/*
+  KOLBY'S POKÉDEX - FOOTER COMPONENT
+  ==================================
+  
+  Clean footer design with attribution and branding.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   FOOTER LAYOUT
+   ==================================== */
+#footer {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(229, 62, 62, 0.1);
+  padding: var(--spacing-xl) var(--spacing-md);
+  text-align: center;
+  margin-top: var(--spacing-3xl);
+  box-shadow: var(--shadow-sm);
+}
+
+#footer #footer-text {
+  color: var(--pokeball-gray);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  margin: 0;
+}

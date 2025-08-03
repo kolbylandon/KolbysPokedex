@@ -59,6 +59,12 @@ IN PROGRESS
 -----------------------------------------------------------------------------------------
 126) Click on the Types and pull up a list of all Pokémon with that type.
 134) Go button will be invisible when no active Pokémon or empty search.
+140) Add a loading spinner when the Pokémon is being fetched.
+141) Fix the Android pokedex entry read issue.
+142) Fix the padding on the info-card for mobile and tablet.
+143) Show the sprites unless they are null, then show the official artwork.
+144) Split the index.html file into a css file and a js file.
+146) Add a tooltip to the secondary buttons in the header to show what they do.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -228,5 +234,7 @@ IMPLEMENTED
   Pokémon's cry with the playPokemonCry function in the helpers file.
 136) Change official artwork instead of the sprites. //Now displays 1 default and 1 shiny official artwork 
   instead of the 4 sprite images.
-
-
+139) Make the header sticky on mobile and tablet. //The header is now sticky on all devices: mobile, tablet, 
+  and desktop.
+145) Split the style.css file into multiple files. //Successfully modularized the monolithic style.css 
+  into 14 specialized CSS files and the old style.css file has been removed.

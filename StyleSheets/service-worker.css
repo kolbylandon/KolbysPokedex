@@ -1,0 +1,177 @@
+/*
+  KOLBY'S POKÉDEX - SERVICE WORKER STYLES
+  =======================================
+  
+  Styles for Progressive Web App features and service worker UI.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   SERVICE WORKER NOTIFICATIONS
+   ==================================== */
+.sw-notification {
+  position: fixed !important;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  transform: translateX(400px);
+  transition: transform 0.3s ease-in-out;
+  max-width: 300px;
+  border-left: 4px solid #4CAF50;
+}
+
+.sw-notification.show {
+  transform: translateX(0);
+}
+
+.sw-notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sw-notification-text {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.sw-notification-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* ====================================
+   SERVICE WORKER BUTTONS
+   ==================================== */
+.sw-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sw-button-primary {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.sw-button-primary:hover {
+  background-color: #45a049;
+}
+
+.sw-button-secondary {
+  background-color: #757575;
+  color: white;
+}
+
+.sw-button-secondary:hover {
+  background-color: #616161;
+}
+
+/* ====================================
+   CONNECTION INDICATOR
+   ==================================== */
+.connection-indicator {
+  position: fixed !important;
+  bottom: 20px;
+  left: 20px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+.connection-indicator.offline {
+  background-color: #f44336;
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.connection-indicator.online {
+  background-color: #4CAF50;
+  color: white;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* ====================================
+   SERVICE WORKER TOASTS
+   ==================================== */
+.sw-toast {
+  position: fixed !important;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  z-index: 9999;
+  transform: translateY(100px);
+  transition: transform 0.3s ease-in-out;
+  max-width: 250px;
+}
+
+.sw-toast.show {
+  transform: translateY(0);
+}
+
+.sw-toast-success {
+  border-left: 4px solid #4CAF50;
+}
+
+.sw-toast-warning {
+  border-left: 4px solid #FF9800;
+}
+
+.sw-toast-error {
+  border-left: 4px solid #f44336;
+}
+
+.sw-toast-info {
+  border-left: 4px solid #2196F3;
+}
+
+/* ====================================
+   RESPONSIVE SERVICE WORKER UI
+   ==================================== */
+@media (max-width: 768px) {
+  .sw-notification {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    transform: translateY(-100px);
+  }
+  
+  .sw-notification.show {
+    transform: translateY(0);
+  }
+  
+  .sw-toast {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .connection-indicator {
+    left: 10px;
+    right: 10px;
+    text-align: center;
+  }
+}

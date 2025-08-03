@@ -1,0 +1,139 @@
+/*
+  KOLBY'S POKÉDEX - BASE STYLES
+  =============================
+  
+  Reset styles, base elements, and foundational styles.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+/* ====================================
+   EXTERNAL FONT IMPORTS
+   ==================================== */
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+
+/* ====================================
+   RESET & BASE STYLES
+   ==================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+html {
+  position: static;
+  overflow-x: hidden;
+}
+
+body {
+  font-size: var(--font-xl);
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  line-height: 1.6;
+  will-change: scroll-position;
+  background: linear-gradient(
+    135deg, 
+    #f8fafc 0%, 
+    #f1f5f9 25%, 
+    #e2e8f0 50%, 
+    #f1f5f9 75%, 
+    #f8fafc 100%
+  );
+  background-size: 400% 400%;
+  animation: subtleShift 20s ease infinite;
+  min-height: 100vh;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+@keyframes subtleShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Enhanced decorative elements */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(229, 62, 62, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(229, 62, 62, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(229, 62, 62, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  animation: float 15s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ====================================
+   UTILITY CLASSES
+   ==================================== */
+/* Performance optimizations */
+.lazy {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.lazy.loaded {
+  opacity: 1;
+}
+
+/* Element visibility control */
+.hidden-element {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.visible-element {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.hidden-element.visible-element {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* GPU acceleration for animations */
+.card,
+.header-element,
+.button-top {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
