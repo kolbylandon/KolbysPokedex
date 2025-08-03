@@ -392,6 +392,28 @@ function getSystemInformation() {
           console.log('📱 [Android] Speech button clicked, ensuring TTS is ready');
           unlockAudioContext();
           androidSpeechInit();
+          
+          // Additional Android-specific preparation
+          setTimeout(() => {
+            // Force voice reload for Android
+            if (window.speechSynthesis) {
+              const voices = window.speechSynthesis.getVoices();
+              console.log(`📱 [Android] Voices available for speech: ${voices.length}`);
+              
+              // If no voices, try to force load them
+              if (voices.length === 0) {
+                console.log('📱 [Android] No voices found, attempting to force load');
+                const dummyUtterance = new SpeechSynthesisUtterance(' ');
+                dummyUtterance.volume = 0;
+                window.speechSynthesis.speak(dummyUtterance);
+                setTimeout(() => {
+                  window.speechSynthesis.cancel();
+                  const newVoices = window.speechSynthesis.getVoices();
+                  console.log(`📱 [Android] After force load: ${newVoices.length} voices`);
+                }, 100);
+              }
+            }
+          }, 200);
         });
       }
     }
@@ -554,7 +576,33 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       
     case 'ReadEntry':
       // Toggle text-to-speech for Pokédex entry
-      Synth.speaking ? Synth.cancel() : startReadingEntry(NameHeader.textContent, GenusSubHeader.textContent, PokemonEntryText.textContent);
+      if (Synth.speaking) {
+        Synth.cancel();
+        showToast('🔇 Stopped reading entry');
+        // Reset button visual state
+        ReadEntryButtonTop.innerHTML = `<i class="fa-solid fa-book-open"></i>`;
+      } else {
+        // Change button appearance to show it's processing
+        ReadEntryButtonTop.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+        
+        // Check if we have the required text content
+        const pokemonName = NameHeader.textContent;
+        const pokemonGenus = GenusSubHeader.textContent;
+        const pokemonEntry = PokemonEntryText.textContent;
+        
+        if (!pokemonName || !pokemonGenus || !pokemonEntry) {
+          showToast('❌ No Pokémon data available to read');
+          ReadEntryButtonTop.innerHTML = `<i class="fa-solid fa-book-open"></i>`;
+        } else {
+          // Start reading and reset button after a delay
+          startReadingEntry(pokemonName, pokemonGenus, pokemonEntry);
+          
+          // Reset button visual state after starting speech
+          setTimeout(() => {
+            ReadEntryButtonTop.innerHTML = `<i class="fa-solid fa-book-open"></i>`;
+          }, 2000);
+        }
+      }
       break;
       
     case 'Clear':

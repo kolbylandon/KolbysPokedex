@@ -520,8 +520,28 @@ export function startReadingEntry(name, genus, entry) {
   // Cancel any ongoing speech before starting new reading
   Synth.cancel();
   
+  // Provide immediate feedback for Android users
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  if (isAndroid) {
+    showToast('🤖 Preparing Android text-to-speech...');
+    
+    // Android-specific: Check if TTS services are available
+    if (window.speechSynthesis) {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        console.log('📱 [Android Speech] No voices immediately available, this may indicate TTS services are disabled');
+        showToast('⚠️ If speech doesn\'t work, enable Google Text-to-Speech in Settings → Accessibility → Text-to-speech output');
+        setTimeout(() => {
+          const delayedVoices = window.speechSynthesis.getVoices();
+          if (delayedVoices.length === 0) {
+            showToast('💡 Android TTS Setup: Settings → Apps → Google Text-to-Speech → Enable');
+          }
+        }, 1000);
+      }
+    }
+  }
+  
   try {
-    const isAndroid = /Android/i.test(navigator.userAgent);
     
     // Android-specific: More aggressive initialization
     if (isAndroid) {
@@ -656,13 +676,13 @@ export function startReadingEntry(name, genus, entry) {
               
               retryUtterance.addEventListener('error', () => {
                 console.log('📱 [Android Speech] Retry also failed');
-                showToast('❌ Text-to-speech unavailable. Please check device settings.');
+                showToast('❌ Text-to-speech unavailable. Try enabling "TalkBack" or "Select to Speak" in Android Accessibility settings, then try again.');
               });
               
               Synth.speak(retryUtterance);
             }, 1000);
           } else {
-            showToast('❌ Text-to-speech failed. Please try again or check device settings.');
+            showToast('❌ Text-to-speech failed. On Android, try enabling "TalkBack" or "Select to Speak" in Accessibility settings.');
           }
         });
         
@@ -691,6 +711,25 @@ export function startReadingEntry(name, genus, entry) {
                 forceUtterance.addEventListener('end', () => {
                   setTimeout(() => {
                     Synth.speak(utterance);
+                    
+                    // Final check - if still not working, provide help
+                    setTimeout(() => {
+                      if (!Synth.speaking && !Synth.pending) {
+                        console.log('📱 [Android Speech] All attempts failed');
+                        showToast('� Text-to-speech unavailable. Try: Settings → Accessibility → Text-to-speech → Install or update Google TTS');
+                        
+                        // Provide a one-time diagnostic
+                        setTimeout(() => {
+                          const diagnosticVoices = window.speechSynthesis.getVoices();
+                          console.log('📱 [Android Diagnostic] Final voice count:', diagnosticVoices.length);
+                          if (diagnosticVoices.length === 0) {
+                            showToast('🚨 No TTS voices found. Install Google Text-to-Speech from Play Store');
+                          } else {
+                            showToast('⚙️ TTS voices found but not working. Check TTS settings or restart browser');
+                          }
+                        }, 2000);
+                      }
+                    }, 1000);
                   }, 200);
                 });
                 Synth.speak(forceUtterance);
@@ -850,6 +889,13 @@ export function isSpeechSupported() {
     // If no voices are available immediately, try to wait for them (Android issue)
     if (voices.length === 0) {
       console.log('📱 [Speech Check] No voices available immediately, will retry when needed');
+      
+      // Android-specific: Provide helpful guidance
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        console.log('📱 [Android Speech Check] Android device detected - TTS may need manual activation');
+        return true; // Still return true, but with a warning that it might need setup
+      }
     }
     
     console.log('📱 [Speech Check] Speech synthesis is supported');
