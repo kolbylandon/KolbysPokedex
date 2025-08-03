@@ -250,7 +250,7 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
         ticks: {
           color: TextColor,
           backdropColor: TransparentColor,
-          stepSize: 25,
+          stepSize: 10, // Step size for ticks
           font: {
             size: config.tickFontSize // Responsive tick size
           },
