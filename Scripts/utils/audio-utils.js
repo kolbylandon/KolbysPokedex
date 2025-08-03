@@ -83,15 +83,53 @@ function unlockAudioContext() {
       });
     }
     
-    // Also try to initialize speech synthesis for mobile
+    // Android-specific speech synthesis initialization
     if (window.speechSynthesis) {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      
       try {
-        // Create a test utterance to "wake up" the speech synthesis on mobile
-        const testUtterance = new SpeechSynthesisUtterance('');
-        testUtterance.volume = 0;
-        Synth.speak(testUtterance);
-        Synth.cancel();
-        console.log('📱 [Mobile Speech] Speech synthesis initialized');
+        if (isAndroid) {
+          // Android-specific initialization: Force voices to load
+          console.log('📱 [Android Speech] Initializing speech synthesis for Android');
+          
+          // Create multiple test utterances to ensure Android wakes up TTS
+          const testUtterance1 = new SpeechSynthesisUtterance('');
+          const testUtterance2 = new SpeechSynthesisUtterance(' ');
+          
+          testUtterance1.volume = 0;
+          testUtterance2.volume = 0;
+          testUtterance1.rate = 1;
+          testUtterance2.rate = 1;
+          
+          // Speak and immediately cancel to initialize the system
+          Synth.speak(testUtterance1);
+          setTimeout(() => {
+            Synth.cancel();
+            Synth.speak(testUtterance2);
+            setTimeout(() => {
+              Synth.cancel();
+              console.log('📱 [Android Speech] Speech synthesis initialized');
+              
+              // Force voices to load on Android
+              const voices = Synth.getVoices();
+              if (voices.length === 0) {
+                console.log('📱 [Android Speech] No voices loaded, triggering voiceschanged event');
+                // Trigger the voices loading event
+                const utterance = new SpeechSynthesisUtterance('test');
+                utterance.volume = 0;
+                Synth.speak(utterance);
+                Synth.cancel();
+              }
+            }, 50);
+          }, 50);
+        } else {
+          // Non-Android initialization
+          const testUtterance = new SpeechSynthesisUtterance('');
+          testUtterance.volume = 0;
+          Synth.speak(testUtterance);
+          Synth.cancel();
+          console.log('📱 [Mobile Speech] Speech synthesis initialized');
+        }
       } catch (speechError) {
         console.log('📱 [Mobile Speech] Could not initialize speech synthesis:', speechError);
       }
@@ -444,65 +482,134 @@ export function startReadingEntry(name, genus, entry) {
   Synth.cancel();
   
   try {
-    // Wait a brief moment for speech synthesis to be ready (important on mobile)
-    setTimeout(() => {
-      // Check if voices are available (sometimes takes time to load on mobile)
-      const voices = Synth.getVoices();
+    // Android-specific: Wait for voices to load if they're not available immediately
+    const waitForVoices = () => {
+      return new Promise((resolve) => {
+        let voices = Synth.getVoices();
+        
+        if (voices.length > 0) {
+          resolve(voices);
+        } else {
+          // Android often needs time to load voices
+          const voicesChangedHandler = () => {
+            voices = Synth.getVoices();
+            if (voices.length > 0) {
+              Synth.removeEventListener('voiceschanged', voicesChangedHandler);
+              resolve(voices);
+            }
+          };
+          
+          Synth.addEventListener('voiceschanged', voicesChangedHandler);
+          
+          // Fallback timeout for Android devices that might not fire voiceschanged
+          setTimeout(() => {
+            Synth.removeEventListener('voiceschanged', voicesChangedHandler);
+            voices = Synth.getVoices();
+            resolve(voices);
+          }, 1000);
+        }
+      });
+    };
+
+    // Wait for voices to be available before proceeding
+    waitForVoices().then((voices) => {
       console.log(`📱 [Speech] Available voices: ${voices.length}`);
       
-      // Create utterances for each part of the reading
-      const nameUtterance = new SpeechSynthesisUtterance(name);
-      const genusUtterance = new SpeechSynthesisUtterance(`The ${genus}`);
-      const entryUtterance = new SpeechSynthesisUtterance(entry);
+      // Android-specific: Combine all text into a single utterance for better reliability
+      const isAndroid = /Android/i.test(navigator.userAgent);
       
-      // Configure speech parameters for better listening experience
-      [nameUtterance, genusUtterance, entryUtterance].forEach(utterance => {
-        utterance.rate = 0.9;    // Slightly slower for clarity
-        utterance.pitch = 1.0;   // Normal pitch
-        utterance.volume = 0.8;  // 80% volume
+      if (isAndroid) {
+        // Android works better with a single utterance
+        const fullText = `${name}. The ${genus}. ${entry}`;
+        const utterance = new SpeechSynthesisUtterance(fullText);
         
-        // Set a voice if available (important for some mobile browsers)
+        // Configure speech parameters for Android
+        utterance.rate = 0.8;    // Slower rate for Android
+        utterance.pitch = 1.0;   // Normal pitch
+        utterance.volume = 1.0;  // Full volume for Android
+        
+        // Set English voice if available
         if (voices.length > 0) {
-          // Prefer English voices
-          const englishVoice = voices.find(voice => voice.lang.startsWith('en'));
+          const englishVoice = voices.find(voice => 
+            voice.lang.startsWith('en') && !voice.name.toLowerCase().includes('network')
+          );
           if (englishVoice) {
             utterance.voice = englishVoice;
+            console.log('📱 [Android Speech] Using voice:', englishVoice.name);
           }
         }
-      });
-      
-      // Add event listeners for user feedback
-      nameUtterance.addEventListener('start', () => {
-        console.log('📱 [Speech] Starting to read Pokemon entry');
-        showToast('Reading Pokemon entry...');
-      });
-      
-      entryUtterance.addEventListener('end', () => {
-        console.log('📱 [Speech] Finished reading Pokemon entry');
-        showToast('Finished reading entry');
-      });
-      
-      entryUtterance.addEventListener('error', (error) => {
-        console.error('📱 [Speech] Speech synthesis error:', error);
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        if (isMobile) {
-          showToast('Text-to-speech failed on mobile. Try tapping the button again.');
-        } else {
-          showToast('Error reading entry');
-        }
-      });
-      
-      // Queue speech synthesis utterances in sequence
-      console.log('📱 [Speech] Starting speech synthesis');
-      Synth.speak(nameUtterance);
-      Synth.speak(genusUtterance);
-      
-      // Brief pause between genus and entry for better flow
-      setTimeout(() => {
-        Synth.speak(entryUtterance);
-      }, 100);
-      
-    }, 100); // Brief delay to ensure speech synthesis is ready
+        
+        // Add event listeners for feedback
+        utterance.addEventListener('start', () => {
+          console.log('📱 [Android Speech] Starting to read Pokemon entry');
+          showToast('Reading Pokemon entry...');
+        });
+        
+        utterance.addEventListener('end', () => {
+          console.log('📱 [Android Speech] Finished reading Pokemon entry');
+          showToast('Finished reading entry');
+        });
+        
+        utterance.addEventListener('error', (error) => {
+          console.error('📱 [Android Speech] Speech synthesis error:', error);
+          showToast('Text-to-speech failed. Please try again.');
+        });
+        
+        // Android-specific: Brief delay before speaking
+        setTimeout(() => {
+          console.log('📱 [Android Speech] Starting speech synthesis');
+          Synth.speak(utterance);
+        }, 200);
+        
+      } else {
+        // Non-Android devices: Use separate utterances for better control
+        const nameUtterance = new SpeechSynthesisUtterance(name);
+        const genusUtterance = new SpeechSynthesisUtterance(`The ${genus}`);
+        const entryUtterance = new SpeechSynthesisUtterance(entry);
+        
+        // Configure speech parameters for better listening experience
+        [nameUtterance, genusUtterance, entryUtterance].forEach(utterance => {
+          utterance.rate = 0.9;    // Slightly slower for clarity
+          utterance.pitch = 1.0;   // Normal pitch
+          utterance.volume = 0.8;  // 80% volume
+          
+          // Set a voice if available (important for some mobile browsers)
+          if (voices.length > 0) {
+            // Prefer English voices
+            const englishVoice = voices.find(voice => voice.lang.startsWith('en'));
+            if (englishVoice) {
+              utterance.voice = englishVoice;
+            }
+          }
+        });
+        
+        // Add event listeners for user feedback
+        nameUtterance.addEventListener('start', () => {
+          console.log('📱 [Speech] Starting to read Pokemon entry');
+          showToast('Reading Pokemon entry...');
+        });
+        
+        entryUtterance.addEventListener('end', () => {
+          console.log('📱 [Speech] Finished reading Pokemon entry');
+          showToast('Finished reading entry');
+        });
+        
+        entryUtterance.addEventListener('error', (error) => {
+          console.error('📱 [Speech] Speech synthesis error:', error);
+          showToast('Error reading entry. Try tapping the button again.');
+        });
+        
+        // Queue speech synthesis utterances in sequence
+        console.log('📱 [Speech] Starting speech synthesis');
+        Synth.speak(nameUtterance);
+        Synth.speak(genusUtterance);
+        
+        // Brief pause between genus and entry for better flow
+        setTimeout(() => {
+          Synth.speak(entryUtterance);
+        }, 100);
+      }
+    });
     
   } catch (error) {
     console.error('📱 [Speech] Error setting up speech synthesis:', error);
@@ -597,6 +704,16 @@ export function isSpeechSupported() {
       console.log('📱 [Speech Check] Cannot create SpeechSynthesisUtterance');
       return false;
     }
+    
+    // Android-specific check - ensure voices are available
+    const voices = window.speechSynthesis.getVoices();
+    console.log('📱 [Speech Check] Available voices:', voices.length);
+    
+    // If no voices are available immediately, try to wait for them (Android issue)
+    if (voices.length === 0) {
+      console.log('📱 [Speech Check] No voices available immediately, will retry when needed');
+    }
+    
     console.log('📱 [Speech Check] Speech synthesis is supported');
     return true;
   } catch (error) {
