@@ -4,8 +4,8 @@
   "short_name": "Pokédex",
   "description": "A comprehensive Pokédex app to browse and search Pokémon with offline support.",
   "lang": "en",
-  "start_url": "/Pages/index.html",
-  "scope": "/",
+  "start_url": "Pages/pokedex.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#1a1a2e",
@@ -13,49 +13,49 @@
   "categories": ["games", "entertainment", "education"],
   "icons": [
     {
-      "src": "/Images/pokeball.png",
+      "src": "Images/pokeball.png",
       "sizes": "48x48",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Images/pokeball.png",
+      "src": "Images/pokeball.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Images/pokeball.png",
+      "src": "Images/pokeball.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Images/pokeball.png",
+      "src": "Images/pokeball.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Images/pokeball.png",
+      "src": "Images/pokeball.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/Images/pokeball.png",
+      "src": "Images/pokeball.png",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Images/pokeball.png",
+      "src": "Images/pokeball.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Images/pokeball.png",
+      "src": "Images/pokeball.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -66,10 +66,10 @@
       "name": "Search Pokémon",
       "short_name": "Search",
       "description": "Search for a specific Pokémon",
-      "url": "/Pages/index.html",
+      "url": "Pages/pokedex.html",
       "icons": [
         {
-          "src": "/Images/pokeball.png",
+          "src": "Images/pokeball.png",
           "sizes": "96x96"
         }
       ]
@@ -78,10 +78,10 @@
       "name": "Random Pokémon",
       "short_name": "Random",
       "description": "Get a random Pokémon",
-      "url": "/Pages/index.html?random=true",
+      "url": "Pages/pokedex.html?random=true",
       "icons": [
         {
-          "src": "/Images/pokeball.png",
+          "src": "Images/pokeball.png",
           "sizes": "96x96"
         }
       ]

@@ -1,0 +1,89 @@
+/*
+  KOLBY'S POKÉDEX - INDEX PAGE STYLES
+  ===================================
+  
+  Styles for the index redirect page that provides a clean entry point
+  while automatically redirecting users to the main Pokédex application.
+  
+  @author Kolby Landon
+  @version 2.0
+  @since 2023
+*/
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #e53e3e 0%, #fff 50%, #333 100%);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.redirect-container {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+}
+
+.pokeball-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem auto;
+  animation: bounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.pokeball-icon:hover {
+  transform: scale(1.1);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+h1 {
+  color: #e53e3e;
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+p {
+  color: #666;
+  margin: 0 0 1.5rem 0;
+}
+
+.redirect-link {
+  display: inline-block;
+  background: #e53e3e;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.redirect-link:hover {
+  background: #c53030;
+}
