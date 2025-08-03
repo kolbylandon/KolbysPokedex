@@ -204,6 +204,10 @@
     font-size: var(--font-sm);
     line-height: 1.2;
   }
+
+  #root #info-card .list-bulleted {
+    font-size: var(--font-sm);
+  }
 }
 
 /* ====================================
@@ -350,6 +354,10 @@
   }
 
   #root .text {
+    font-size: var(--font-sm);
+  }
+
+  #root #info-card .list-bulleted {
     font-size: var(--font-sm);
   }
 }
