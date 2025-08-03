@@ -704,17 +704,7 @@ body::-webkit-scrollbar {
   transition: left 0.6s ease;
 }
 
-#root .card:hover::before {
-  left: 100%;
-}
 
-#root .card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 
-    0 20px 40px rgba(229, 62, 62, 0.15),
-    0 4px 12px rgba(0, 0, 0, 0.08);
-  border-color: rgba(229, 62, 62, 0.25);
-}
 
 #root .top-card {
   margin-bottom: var(--spacing-sm);
@@ -846,7 +836,7 @@ body::-webkit-scrollbar {
 /* INFO CARD */
 #root #info-card {
   grid-area: 1/1/2/3;
-  margin: var(--spacing-md) 2.625rem var(--spacing-md);
+  margin: var(--spacing-xl) 2.625rem var(--spacing-md);
   padding: var(--spacing-xs) var(--spacing-md) var(--spacing-md);
   position: relative;
 }
@@ -1103,7 +1093,7 @@ body::-webkit-scrollbar {
 
   /* Enhanced mobile info-card positioning */
   #root #info-card {
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-xl);
     margin-bottom: var(--spacing-sm);
     padding: 2px var(--spacing-xs);
   }
@@ -1160,7 +1150,7 @@ body::-webkit-scrollbar {
 
   #root #stats-card #stats-chart {
     width: 100% !important;
-    height: 240px !important;
+    height: 300px !important;
     background: transparent;
     /* Improve mobile performance */
     will-change: transform;
@@ -1280,7 +1270,7 @@ body::-webkit-scrollbar {
 
   /* Enhanced tablet info-card positioning */
   #root #info-card {
-    margin-top: var(--spacing-xl);
+    margin-top: var(--spacing-5xl);
     margin-bottom: var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-sm);
   }
@@ -1329,14 +1319,9 @@ body::-webkit-scrollbar {
     -webkit-tap-highlight-color: transparent;
   }
 
-  #root #stats-card:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-    transform: translateY(-2px);
-  }
-
   #root #stats-card #stats-chart {
     width: 100% !important;
-    height: 280px !important;
+    height: 350px !important;
     background: transparent;
     transition: all 0.3s ease;
     /* Improve tablet performance */
@@ -1405,7 +1390,7 @@ body::-webkit-scrollbar {
 
   #root #info-card {
     grid-area: 1/1/2/2;
-    margin: var(--spacing-md) 0 var(--spacing-sm);
+    margin: var(--spacing-3xl) 0 var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-md);
   }
 
@@ -1467,14 +1452,9 @@ body::-webkit-scrollbar {
     cursor: pointer;
   }
 
-  #root #stats-card:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transform: translateY(-3px);
-  }
-
   #root #stats-card #stats-chart {
     width: 100% !important;
-    height: 320px !important;
+    height: 380px !important;
     background: transparent;
     transition: all 0.3s ease;
     /* Optimize large tablet performance */
