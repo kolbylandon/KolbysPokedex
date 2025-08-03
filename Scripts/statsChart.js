@@ -38,6 +38,72 @@ import { TRANSPARENT_COLOR as TransparentColor } from './utils/color-utils.js?v=
 const TextColor = 'rgba(98, 98, 98, 0.95)';
 
 // ====================================
+// DEVICE DETECTION HELPERS
+// ====================================
+
+/**
+ * Detects device type for optimized chart rendering
+ * @returns {string} Device type: 'mobile', 'tablet', or 'desktop'
+ */
+function getDeviceTypeForChart() {
+  const width = window.innerWidth;
+  if (width <= 480) return 'mobile';
+  if (width <= 1024) return 'tablet';
+  return 'desktop';
+}
+
+/**
+ * Gets responsive chart configuration based on device type
+ * @param {string} deviceType - Current device type
+ * @returns {Object} Configuration object with responsive settings
+ */
+function getResponsiveChartConfig(deviceType) {
+  const configs = {
+    mobile: {
+      lineWidth: 3,
+      pointRadius: 6,
+      pointBorderWidth: 2,
+      pointHoverRadius: 8,
+      titleFontSize: 16,
+      labelFontSize: 12,
+      tickFontSize: 10,
+      padding: 15,
+      backdropPadding: 4,
+      tooltipPadding: 12,
+      titlePadding: { top: 10, bottom: 10 }
+    },
+    tablet: {
+      lineWidth: 2.5,
+      pointRadius: 5,
+      pointBorderWidth: 1.5,
+      pointHoverRadius: 7,
+      titleFontSize: 18,
+      labelFontSize: 14,
+      tickFontSize: 12,
+      padding: 15,
+      backdropPadding: 4,
+      tooltipPadding: 12,
+      titlePadding: { top: 15, bottom: 15 }
+    },
+    desktop: {
+      lineWidth: 2,
+      pointRadius: 4,
+      pointBorderWidth: 1,
+      pointHoverRadius: 6,
+      titleFontSize: 20,
+      labelFontSize: 16,
+      tickFontSize: 14,
+      padding: 10,
+      backdropPadding: 3,
+      tooltipPadding: 10,
+      titlePadding: { top: 20, bottom: 20 }
+    }
+  };
+  
+  return configs[deviceType] || configs.desktop;
+}
+
+// ====================================
 // CHART ELEMENT REFERENCES
 // ====================================
 
@@ -70,11 +136,13 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
   // Use registerables to register all chart components including controllers
   const { Chart, registerables } = ChartModule;
   Chart.register(...registerables);
+  
   // Efficiently destroy existing chart instance to prevent memory leaks
-  if (statsChart) {
-    statsChart.destroy();
-    statsChart = null;
-  }
+  cleanupStatsChart();
+  
+  // Get device-specific configuration
+  const deviceType = getDeviceTypeForChart();
+  const config = getResponsiveChartConfig(deviceType);
   
   // Apply punctuation fixes to Pokemon name for proper display
   name = punctuationNameCheck(name);
@@ -91,24 +159,30 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
     }],
   };
 
-  // Configure chart appearance and behavior options
+  // Configure chart appearance and behavior options with responsive settings
   const chartOptions = {
     responsive: true,              // Enable responsiveness
     maintainAspectRatio: false,    // Allow dynamic sizing
+    devicePixelRatio: window.devicePixelRatio || 2, // Better quality on high-DPI screens
     animation: {
-      duration: 500                // Smooth animation
+      duration: deviceType === 'mobile' ? 300 : 500 // Faster animations on mobile
+    },
+    interaction: {
+      intersect: false,            // Better touch interaction
+      mode: 'nearest'              // Improved mobile touch response
     },
     elements: {
       line: {
-        borderWidth: 2,            // Thicker line
+        borderWidth: config.lineWidth, // Responsive line width
         tension: 0.4               // Smooth curves
       },
       point: {
-        radius: 5,                 // Larger data points
+        radius: config.pointRadius, // Responsive point size
         pointStyle: 'circle',      // Circular points
         backgroundColor: borderColor, // Match point color
         borderColor: borderColor,
-        borderWidth: 1
+        borderWidth: config.pointBorderWidth, // Responsive border width
+        hoverRadius: config.pointHoverRadius   // Responsive hover radius
       },
     },
     plugins: {
@@ -116,43 +190,72 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
         display: true,
         text: `Stats For ${capitalizeFirstLetter(name)}`,
         color: TextColor,
-        font: { size: 20, weight: '600' }
+        font: { 
+          size: config.titleFontSize, // Responsive title font size
+          weight: '600' 
+        },
+        padding: config.titlePadding // Responsive padding
       },
       legend: { display: false },
       tooltip: {
         enabled: true,
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
         titleColor: '#fff',
         bodyColor: '#fff',
         borderColor: borderColor,
         borderWidth: 1,
+        cornerRadius: deviceType === 'mobile' ? 6 : 8,
+        padding: config.tooltipPadding, // Responsive padding
+        titleFont: {
+          size: config.titleFontSize - 2 // Slightly smaller than title
+        },
+        bodyFont: {
+          size: config.labelFontSize // Match label font size
+        },
         callbacks: {
           label: context => `${context.label}: ${context.formattedValue}`
         }
       }
     },
     layout: {
-      padding: 10,                 // Chart padding for better spacing
+      padding: config.padding, // Responsive padding
     },
+    // Global font configuration
     font: {
-      size: 24,                    // Font size for chart text
-      family: 'Montserrat',        // Match application font family
+      family: deviceType === 'mobile' ? 
+        "'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif" : 
+        "'Montserrat', 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif"
     },
     scales: {
       r: {
         min: 0,
         max,
         angleLines: {             // Style radial angle lines
-          color: 'rgba(98, 98, 98, 0.3)'
+          color: 'rgba(98, 98, 98, 0.3)',
+          lineWidth: deviceType === 'mobile' ? 1.5 : 1 // Thicker lines on mobile
         },
         grid: {
           circular: true,         // Circular grid
-          color: 'rgba(98, 98, 98, 0.2)'
+          color: 'rgba(98, 98, 98, 0.2)',
+          lineWidth: deviceType === 'mobile' ? 1.5 : 1 // Thicker grid lines on mobile
+        },
+        pointLabels: {
+          color: TextColor,
+          font: {
+            size: config.labelFontSize, // Responsive label size
+            weight: '500'
+          },
+          padding: deviceType === 'mobile' ? 8 : 5 // More padding on mobile
         },
         ticks: {
           color: TextColor,
           backdropColor: TransparentColor,
-          stepSize: 25
+          stepSize: 25,
+          font: {
+            size: config.tickFontSize // Responsive tick size
+          },
+          showLabelBackdrop: deviceType === 'mobile', // Show backdrop on mobile for better readability
+          backdropPadding: config.backdropPadding
         }
       }
     },
@@ -168,7 +271,50 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
   // Ensure chart sizing matches its container
   chart.style.width = chart.parentElement.style.width;
   chart.style.height = chart.parentElement.style.height;
+  
+  // Add resize listener for responsive updates
+  const resizeHandler = () => {
+    if (statsChart) {
+      const newDeviceType = getDeviceTypeForChart();
+      if (newDeviceType !== deviceType) {
+        // Redraw chart with new responsive settings if device type changed
+        setTimeout(() => {
+          displayStatsChart(backgroundColor, borderColor, stats, max, name);
+        }, 100);
+      } else {
+        // Just resize the chart if device type hasn't changed
+        statsChart.resize();
+      }
+    }
+  };
+  
+  // Remove any existing resize listeners to prevent duplicates
+  window.removeEventListener('resize', resizeHandler);
+  window.addEventListener('resize', resizeHandler);
+  
+  // Store reference for cleanup
+  statsChart._resizeHandler = resizeHandler;
 } //displayStatsChart
+
+// ====================================
+// CHART MANAGEMENT FUNCTIONS
+// ====================================
+
+/**
+ * Cleans up the current chart instance and removes event listeners
+ * Call this before creating a new chart to prevent memory leaks
+ */
+function cleanupStatsChart() {
+  if (statsChart) {
+    // Remove resize listener if it exists
+    if (statsChart._resizeHandler) {
+      window.removeEventListener('resize', statsChart._resizeHandler);
+    }
+    // Destroy the chart instance
+    statsChart.destroy();
+    statsChart = null;
+  }
+}
 
 // ====================================
 // MODULE EXPORTS
@@ -176,4 +322,5 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
 
 export {
   displayStatsChart,  // Main function for creating Pokemon stats charts
+  cleanupStatsChart,  // Function for cleaning up chart instances
 };

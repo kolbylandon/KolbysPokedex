@@ -822,12 +822,23 @@ body::-webkit-scrollbar {
   float: right;
   grid-area: 2/2/3/3;
   margin-right: 2.625rem;
+  /* Enhanced for mobile interaction */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root #stats-card #stats-chart {
   width: 100%;
   height: 100%;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  transition: all 0.3s ease;
+}
+
+#root #stats-card #stats-chart:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
 /* INFO CARD */
@@ -1133,9 +1144,27 @@ body::-webkit-scrollbar {
     padding: var(--spacing-xs) calc(var(--spacing-xs) / 2);
   }
 
+  #root #stats-card {
+    margin: var(--spacing-md) 0 var(--spacing-xl) 0;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Enhanced mobile touch */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   #root #stats-card #stats-chart {
     width: 100% !important;
-    height: 200px !important;
+    height: 240px !important;
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    /* Improve mobile performance */
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   #root .toast {
@@ -1287,9 +1316,39 @@ body::-webkit-scrollbar {
     padding: var(--spacing-sm) var(--spacing-xs);
   }
 
+  #root #stats-card {
+    margin: var(--spacing-md) var(--spacing-sm) var(--spacing-xl) var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+    /* Enhanced tablet touch */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #root #stats-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    transform: translateY(-2px);
+  }
+
   #root #stats-card #stats-chart {
     width: 100% !important;
-    height: 250px !important;
+    height: 280px !important;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    transition: all 0.3s ease;
+    /* Improve tablet performance */
+    will-change: transform;
+    transform: translateZ(0);
+  }
+  
+  #root #stats-card #stats-chart:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
   }
 }
 
@@ -1378,9 +1437,9 @@ body::-webkit-scrollbar {
     float: none;
   }
 
-  #root #stats-card {
-    grid-area: 3/1/4/2;
-    margin: 0;
+  #root #artwork-card {
+    grid-area: 2/1/3/2;
+    margin: 0 0 var(--spacing-sm);
     float: none;
   }
 
@@ -1400,9 +1459,41 @@ body::-webkit-scrollbar {
     padding: var(--spacing-sm);
   }
 
+  #root #stats-card {
+    grid-area: 3/1/4/2;
+    margin: 0;
+    float: none;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+    /* Enhanced large tablet interaction */
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  #root #stats-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+  }
+
   #root #stats-card #stats-chart {
     width: 100% !important;
-    height: 300px !important;
+    height: 320px !important;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    transition: all 0.3s ease;
+    /* Optimize large tablet performance */
+    will-change: transform;
+    transform: translateZ(0);
+  }
+  
+  #root #stats-card #stats-chart:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    transform: translateY(-3px);
   }
 }
 
