@@ -228,6 +228,104 @@ async function handleFetch(request) {
   }
 }
 
+// ====================================
+// SIMPLE CACHING STRATEGIES (NO TTL)
+// ====================================
+
+/**
+ * Cache First strategy: Try cache first, fallback to network
+ * @param {Request} request - The request to handle
+ * @param {string} cacheName - Name of the cache to use
+ * @returns {Promise<Response>} - Cached or network response
+ */
+async function cacheFirst(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cachedResponse = await cache.match(request);
+  
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+  
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse.ok) {
+      cache.put(request, networkResponse.clone());
+      await limitCacheSize(cacheName);
+      return networkResponse;
+    }
+  } catch (error) {
+    console.warn('[ServiceWorker] Network failed:', error);
+  }
+  
+  throw new Error('No cache available and network failed');
+}
+
+/**
+ * Network First strategy: Try network first, fallback to cache
+ * @param {Request} request - The request to handle
+ * @param {string} cacheName - Name of the cache to use
+ * @returns {Promise<Response>} - Network or cached response
+ */
+async function networkFirst(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse.ok) {
+      cache.put(request, networkResponse.clone());
+      await limitCacheSize(cacheName);
+      return networkResponse;
+    }
+  } catch (error) {
+    console.warn('[ServiceWorker] Network failed, trying cache:', error);
+  }
+  
+  const cachedResponse = await cache.match(request);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+  
+  throw new Error('Network failed and no cache available');
+}
+
+/**
+ * Stale While Revalidate strategy: Return cache immediately, update in background
+ * @param {Request} request - The request to handle
+ * @param {string} cacheName - Name of the cache to use
+ * @returns {Promise<Response>} - Cached response (network update happens in background)
+ */
+async function staleWhileRevalidate(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cachedResponse = await cache.match(request);
+  
+  // Always try to update in background
+  const networkUpdate = fetch(request).then(response => {
+    if (response.ok) {
+      cache.put(request, response.clone());
+      limitCacheSize(cacheName);
+    }
+    return response;
+  }).catch(error => {
+    console.warn('[ServiceWorker] Background update failed:', error);
+  });
+  
+  // Return cache immediately if available
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+  
+  // If no cache, wait for network
+  try {
+    return await networkUpdate;
+  } catch (error) {
+    throw new Error('No cache available and network failed');
+  }
+}
+
+// ====================================
+// ADVANCED CACHING STRATEGIES (WITH TTL)
+// ====================================
+
 /**
  * Cache First strategy with TTL: Try cache first, check expiry, fallback to network
  * @param {Request} request - The request to handle

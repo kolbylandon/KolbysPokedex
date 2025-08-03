@@ -80,8 +80,13 @@ async function initializeServiceWorker() {
  */
 async function registerServiceWorker() {
   try {
-    swRegistration = await navigator.serviceWorker.register('/service-worker.js', {
-      scope: '/'
+    // Determine the appropriate service worker path based on current location
+    const isInSubdirectory = window.location.pathname.includes('/Pages/');
+    const swPath = isInSubdirectory ? '../service-worker.js' : './service-worker.js';
+    const scope = isInSubdirectory ? '../' : './';
+    
+    swRegistration = await navigator.serviceWorker.register(swPath, {
+      scope: scope
     });
 
     console.log('ServiceWorker registered successfully with scope:', swRegistration.scope);
