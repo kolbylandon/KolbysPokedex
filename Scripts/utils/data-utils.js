@@ -542,10 +542,10 @@ export function punctuationNameCheck(name) {
   name = capitalizeAfterHyphen(name);
   
   // Handle specific Pokemon name formatting cases
-  return name.includes('mr-') ? name.replace('mr-', 'Mr. ') :      // Mr. Mime (121) / Mr. Rime (866)
-    name.includes('-Jr') ? name.replace('-Jr', ' Jr.') :           // Mime Jr. (439)
-    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') :       // Pikachu Ph.D. (25)
-    name.includes('hd') ? name.replace('hd', `h'd`) :              // Farfetch'd (83) / Sirfetch'd (865)
-    name.includes('o-O') ? name.replace('o-O', 'o-o') :            // Kommo-o (784)
+  return name.toLowerCase().includes('mr-') ? name.replace(/mr-/i, 'Mr. ') :  // Mr. Mime (122) / Mr. Rime (866)
+    name.includes('-Jr') ? name.replace('-Jr', ' Jr.') :                      // Mime Jr. (439)
+    name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') :                  // Pikachu Ph.D. (25)
+    name.includes('hd') ? name.replace('hd', `h'd`) :                         // Farfetch'd (83) / Sirfetch'd (865)
+    name.includes('o-O') ? name.replace('o-O', 'o-o') :                       // Kommo-o (784)
     name;
 }

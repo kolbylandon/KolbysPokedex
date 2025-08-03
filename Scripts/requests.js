@@ -200,12 +200,12 @@ async function requestForm(url, listItem) {
       let name = punctuationNameCheck(form.name);
       
       // Handle special case formatting for Kommo-o forms
-      if(!name.includes('kommo-o')) {
+      if(!name.toLowerCase().includes('kommo-o')) {
         name = name.replaceAll('-', ' '); // Standard hyphen replacement
-      } else if(name === 'kommo-o') {
-        name = 'kommo-o';                 // Preserve Kommo-o name
+      } else if(name.toLowerCase() === 'kommo-o') {
+        name = 'Kommo-o';                 // Preserve Kommo-o name with proper capitalization
       } else {
-        name = 'kommo-o Totem';          // Special Totem form
+        name = 'Kommo-o Totem';          // Special Totem form
       }
       
       // Set formatted form name
