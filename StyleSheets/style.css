@@ -249,8 +249,10 @@ body::-webkit-scrollbar {
     0 4px 20px rgba(229, 62, 62, 0.08),
     0 1px 3px rgba(0, 0, 0, 0.05);
   padding: var(--spacing-md) var(--spacing-lg);
-  position: static;
+  position: fixed;
   width: 100%;
+  top: 0;
+  left: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -596,7 +598,7 @@ body::-webkit-scrollbar {
   grid-template-columns: 1fr 0.9fr;
   grid-column-gap: var(--spacing-xl);
   grid-row-gap: var(--spacing-md);
-  padding: var(--spacing-xl) var(--spacing-md) var(--spacing-xl);
+  padding: 5rem var(--spacing-md) var(--spacing-xl);
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
@@ -1084,7 +1086,7 @@ body::-webkit-scrollbar {
   #root #info-card,
   #root #artwork-card,
   #root #stats-card {
-    margin: var(--spacing-md) 0;
+    margin: var(--spacing-lg) 0;
     float: none;
     width: 100%;
   }
@@ -1268,7 +1270,7 @@ body::-webkit-scrollbar {
 
   /* Enhanced tablet info-card positioning */
   #root #info-card {
-    margin-top: var(--spacing-5xl);
+    margin-top: var(--spacing-2xl);
     margin-bottom: var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-sm);
   }
@@ -1388,7 +1390,7 @@ body::-webkit-scrollbar {
 
   #root #info-card {
     grid-area: 1/1/2/2;
-    margin: var(--spacing-3xl) 0 var(--spacing-sm);
+    margin: var(--spacing-xl) 0 var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-md);
   }
 
