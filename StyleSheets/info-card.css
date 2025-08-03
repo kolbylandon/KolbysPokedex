@@ -14,7 +14,7 @@
    ==================================== */
 #root #info-card {
   grid-area: 1/1/2/3;
-  margin: var(--spacing-md) 2.625rem var(--spacing-md);
+  margin: var(--spacing-lg) 2.625rem var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
   position: relative;
 }
