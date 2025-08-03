@@ -762,9 +762,6 @@ export function preloadPokemonCry(cryUrl) {
 // Export for main.js compatibility - maps to current Pokemon cry function
 export { playCurrentPokemonCry as playPokemonCry };
 
-// Export the unlock function for use in other modules
-export { unlockAudioContext };
-
 // Maintain backward compatibility with existing code
 export { playCurrentPokemonCry as playPokemonCryLegacy };
 export { tryAlternativeCry as tryAlternativeCryLegacy };
