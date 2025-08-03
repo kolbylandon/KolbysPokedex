@@ -1271,7 +1271,7 @@ body::-webkit-scrollbar {
 
   /* Enhanced tablet info-card positioning */
   #root #info-card {
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-xl);
     margin-bottom: var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-sm);
   }
