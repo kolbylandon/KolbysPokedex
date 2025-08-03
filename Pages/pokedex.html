@@ -177,21 +177,19 @@
       
       <!-- Artwork display card showing default and shiny sprites -->
       <div id="artwork-card" class="card bottom-card hidden-element fade-in-up">
-        <!-- Table layout for side-by-side sprite comparison -->
-        <table id="artwork-table" style="width: 100%">
-          <tbody>
-            <tr id="artwork-table-row">
-              <!-- Default/normal artwork display -->
-              <td id="artwork-table-td-default" class="artwork-table-td">
-                <img id="default-artwork" class="image artwork" alt="Default Official Artwork" loading="lazy">
-              </td>
-              <!-- Shiny variant artwork display -->
-              <td id="artwork-table-td-shiny" class="artwork-table-td">
-                <img id="shiny-artwork" class="image artwork" alt="Shiny Official Artwork" loading="lazy">
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- Flexbox container for side-by-side sprite comparison -->
+        <div id="artwork-container" class="artwork-container">
+          <!-- Default/normal artwork display -->
+          <div class="artwork-wrapper">
+            <img id="default-artwork" class="image artwork" alt="Default Official Artwork" loading="lazy">
+            <p class="artwork-label">Default</p>
+          </div>
+          <!-- Shiny variant artwork display -->
+          <div class="artwork-wrapper">
+            <img id="shiny-artwork" class="image artwork" alt="Shiny Official Artwork" loading="lazy">
+            <p class="artwork-label">Shiny</p>
+          </div>
+        </div>
       </div>
       
       <!-- Interactive statistics chart display -->

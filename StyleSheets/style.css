@@ -756,53 +756,58 @@ body::-webkit-scrollbar {
   border-color: rgba(229, 62, 62, 0.3);
 }
 
-/* ARTWORK TABLE STYLING - SEAMLESS CARD INTEGRATION */
-#root #artwork-card #artwork-table {
+/* ARTWORK CONTAINER STYLING - FLEXBOX LAYOUT FOR CONSISTENT SIZING */
+#root #artwork-card .artwork-container {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-  background: transparent;
+  max-width: 500px;
   margin: 0 auto;
 }
 
-#root #artwork-card .artwork-table-td {
-  padding: var(--spacing-xs);
-  border: none;
-  background: transparent;
-  vertical-align: middle;
+#root #artwork-card .artwork-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0; /* Allows flex items to shrink below their content size */
+}
+
+#root #artwork-card .artwork-wrapper .artwork-label {
+  margin: var(--spacing-xs) 0 0 0;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
   text-align: center;
-  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-#root #artwork-card .artwork-table-td:first-child {
-  padding-right: calc(var(--spacing-xs) / 2);
-}
-
-#root #artwork-card .artwork-table-td:last-child {
-  padding-left: calc(var(--spacing-xs) / 2);
-}
-
-/* Enhanced image styling within table cells */
-#root #artwork-card .artwork-table-td .image.artwork {
-  margin: 0 auto;
+/* Enhanced image styling with consistent sizing */
+#root #artwork-card .artwork-wrapper .image.artwork {
   width: 100%;
+  height: 200px; /* Fixed height for consistency */
   max-width: 200px;
-  height: auto;
+  object-fit: contain; /* Maintains aspect ratio while fitting within bounds */
+  object-position: center;
   border-radius: var(--radius-lg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: none;
-  border: none;
-  background: transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  background: var(--pokeball-white);
   display: block;
 }
 
-#root #artwork-card .artwork-table-td .image.artwork:hover {
+#root #artwork-card .artwork-wrapper .image.artwork:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: none;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: rgba(229, 62, 62, 0.3);
 }
 
 /* Subtle animation for artwork switching */
-#root #artwork-card .artwork-table-td .image.artwork {
+#root #artwork-card .artwork-wrapper .image.artwork {
   animation: fadeInArtwork 0.4s ease-out;
 }
 
@@ -1123,14 +1128,20 @@ body::-webkit-scrollbar {
     display: block;
   }
 
-  /* Mobile responsive artwork table styling */
-  #root #artwork-card .artwork-table-td .image.artwork {
-    max-width: 150px;
-    margin: 0 auto;
+  /* Mobile responsive artwork container styling */
+  #root #artwork-card .artwork-container {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-width: 300px;
   }
-
-  #root #artwork-card .artwork-table-td {
-    padding: var(--spacing-xs) calc(var(--spacing-xs) / 2);
+  
+  #root #artwork-card .artwork-wrapper .image.artwork {
+    height: 150px;
+    max-width: 150px;
+  }
+  
+  #root #artwork-card .artwork-wrapper .artwork-label {
+    font-size: var(--font-size-xs);
   }
 
   #root #stats-card #stats-chart {
@@ -1260,14 +1271,16 @@ body::-webkit-scrollbar {
     display: block;
   }
 
-  /* Tablet responsive artwork table styling */
-  #root #artwork-card .artwork-table-td .image.artwork {
-    max-width: 200px;
-    margin: 0 auto;
+  /* Tablet responsive artwork container styling */
+  #root #artwork-card .artwork-container {
+    flex-direction: row;
+    gap: var(--spacing-lg);
+    max-width: 450px;
   }
-
-  #root #artwork-card .artwork-table-td {
-    padding: var(--spacing-sm) var(--spacing-xs);
+  
+  #root #artwork-card .artwork-wrapper .image.artwork {
+    height: 180px;
+    max-width: 180px;
   }
 
   #root #stats-card #stats-chart {
@@ -1355,14 +1368,16 @@ body::-webkit-scrollbar {
     display: block;
   }
 
-  /* Large tablet responsive artwork table styling */
-  #root #artwork-card .artwork-table-td .image.artwork {
-    max-width: 250px;
-    margin: 0 auto;
+  /* Large tablet responsive artwork container styling */
+  #root #artwork-card .artwork-container {
+    flex-direction: row;
+    gap: var(--spacing-xl);
+    max-width: 600px;
   }
-
-  #root #artwork-card .artwork-table-td {
-    padding: var(--spacing-sm);
+  
+  #root #artwork-card .artwork-wrapper .image.artwork {
+    height: 220px;
+    max-width: 220px;
   }
 
   #root #stats-card #stats-chart {
