@@ -83,47 +83,86 @@ export function unlockAudioContext() {
       });
     }
     
-    // Android-specific speech synthesis initialization
+    // Enhanced Android-specific speech synthesis initialization
     if (window.speechSynthesis) {
       const isAndroid = /Android/i.test(navigator.userAgent);
       
       try {
         if (isAndroid) {
-          // Android-specific initialization: Force voices to load
-          console.log('📱 [Android Speech] Initializing speech synthesis for Android');
+          // Enhanced Android-specific initialization
+          console.log('📱 [Android Speech] Enhanced Android speech synthesis initialization');
           
-          // Create multiple test utterances to ensure Android wakes up TTS
-          const testUtterance1 = new SpeechSynthesisUtterance('');
-          const testUtterance2 = new SpeechSynthesisUtterance(' ');
+          // Multiple initialization attempts with different strategies
+          const initStrategies = [
+            // Strategy 1: Empty utterance
+            () => {
+              const utterance = new SpeechSynthesisUtterance('');
+              utterance.volume = 0;
+              utterance.rate = 1;
+              utterance.pitch = 1;
+              Synth.speak(utterance);
+              setTimeout(() => Synth.cancel(), 50);
+            },
+            
+            // Strategy 2: Single space
+            () => {
+              const utterance = new SpeechSynthesisUtterance(' ');
+              utterance.volume = 0;
+              utterance.rate = 1;
+              utterance.pitch = 1;
+              Synth.speak(utterance);
+              setTimeout(() => Synth.cancel(), 50);
+            },
+            
+            // Strategy 3: Single word
+            () => {
+              const utterance = new SpeechSynthesisUtterance('test');
+              utterance.volume = 0;
+              utterance.rate = 1;
+              utterance.pitch = 1;
+              Synth.speak(utterance);
+              setTimeout(() => Synth.cancel(), 100);
+            }
+          ];
           
-          testUtterance1.volume = 0;
-          testUtterance2.volume = 0;
-          testUtterance1.rate = 1;
-          testUtterance2.rate = 1;
+          // Execute each strategy with delays
+          initStrategies.forEach((strategy, index) => {
+            setTimeout(strategy, index * 200);
+          });
           
-          // Speak and immediately cancel to initialize the system
-          Synth.speak(testUtterance1);
-          setTimeout(() => {
-            Synth.cancel();
-            Synth.speak(testUtterance2);
-            setTimeout(() => {
-              Synth.cancel();
-              console.log('📱 [Android Speech] Speech synthesis initialized');
+          // Force voices to load multiple times for Android
+          const loadVoices = () => {
+            const voices = Synth.getVoices();
+            if (voices.length === 0) {
+              console.log('📱 [Android Speech] No voices loaded, forcing reload attempt');
               
-              // Force voices to load on Android
-              const voices = Synth.getVoices();
-              if (voices.length === 0) {
-                console.log('📱 [Android Speech] No voices loaded, triggering voiceschanged event');
-                // Trigger the voices loading event
-                const utterance = new SpeechSynthesisUtterance('test');
-                utterance.volume = 0;
-                Synth.speak(utterance);
+              // Try different methods to trigger voice loading
+              setTimeout(() => {
+                const triggerUtterance = new SpeechSynthesisUtterance('voice test');
+                triggerUtterance.volume = 0;
+                triggerUtterance.rate = 0.1;
+                Synth.speak(triggerUtterance);
                 Synth.cancel();
-              }
-            }, 50);
-          }, 50);
+                
+                // Check again after trigger
+                setTimeout(() => {
+                  const newVoices = Synth.getVoices();
+                  console.log(`📱 [Android Speech] Voice reload result: ${newVoices.length} voices`);
+                }, 500);
+              }, 300);
+            } else {
+              console.log(`📱 [Android Speech] Found ${voices.length} voices on initialization`);
+            }
+          };
+          
+          // Load voices immediately and with delays
+          loadVoices();
+          setTimeout(loadVoices, 500);
+          setTimeout(loadVoices, 1000);
+          setTimeout(loadVoices, 2000);
+          
         } else {
-          // Non-Android initialization
+          // Non-Android initialization (simplified)
           const testUtterance = new SpeechSynthesisUtterance('');
           testUtterance.volume = 0;
           Synth.speak(testUtterance);
@@ -482,6 +521,25 @@ export function startReadingEntry(name, genus, entry) {
   Synth.cancel();
   
   try {
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    
+    // Android-specific: More aggressive initialization
+    if (isAndroid) {
+      console.log('📱 [Android Speech] Starting Android-specific speech initialization');
+      
+      // Force multiple initialization attempts for Android
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const initUtterance = new SpeechSynthesisUtterance('');
+          initUtterance.volume = 0;
+          initUtterance.rate = 1;
+          initUtterance.pitch = 1;
+          Synth.speak(initUtterance);
+          setTimeout(() => Synth.cancel(), 10);
+        }, i * 100);
+      }
+    }
+    
     // Android-specific: Wait for voices to load if they're not available immediately
     const waitForVoices = () => {
       return new Promise((resolve) => {
@@ -501,12 +559,21 @@ export function startReadingEntry(name, genus, entry) {
           
           Synth.addEventListener('voiceschanged', voicesChangedHandler);
           
-          // Fallback timeout for Android devices that might not fire voiceschanged
+          // Extended timeout for Android devices that might not fire voiceschanged
           setTimeout(() => {
             Synth.removeEventListener('voiceschanged', voicesChangedHandler);
             voices = Synth.getVoices();
-            resolve(voices);
-          }, 1000);
+            if (voices.length === 0) {
+              console.log('📱 [Android Speech] No voices found, forcing another attempt');
+              // Force another getVoices call for stubborn Android devices
+              setTimeout(() => {
+                voices = Synth.getVoices();
+                resolve(voices);
+              }, 500);
+            } else {
+              resolve(voices);
+            }
+          }, isAndroid ? 2000 : 1000);
         }
       });
     };
@@ -515,51 +582,122 @@ export function startReadingEntry(name, genus, entry) {
     waitForVoices().then((voices) => {
       console.log(`📱 [Speech] Available voices: ${voices.length}`);
       
-      // Android-specific: Combine all text into a single utterance for better reliability
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      
       if (isAndroid) {
-        // Android works better with a single utterance
+        // Android-specific implementation with enhanced error handling
         const fullText = `${name}. The ${genus}. ${entry}`;
         const utterance = new SpeechSynthesisUtterance(fullText);
         
-        // Configure speech parameters for Android
-        utterance.rate = 0.8;    // Slower rate for Android
+        // Enhanced Android speech parameters
+        utterance.rate = 0.7;    // Even slower rate for Android reliability
         utterance.pitch = 1.0;   // Normal pitch
         utterance.volume = 1.0;  // Full volume for Android
         
-        // Set English voice if available
+        // Set best available English voice for Android
         if (voices.length > 0) {
+          // Prioritize local voices over network voices for Android
           const englishVoice = voices.find(voice => 
-            voice.lang.startsWith('en') && !voice.name.toLowerCase().includes('network')
+            voice.lang.startsWith('en') && 
+            voice.localService === true
+          ) || voices.find(voice => 
+            voice.lang.startsWith('en') && 
+            !voice.name.toLowerCase().includes('network')
+          ) || voices.find(voice => 
+            voice.lang.startsWith('en')
           );
+          
           if (englishVoice) {
             utterance.voice = englishVoice;
-            console.log('📱 [Android Speech] Using voice:', englishVoice.name);
+            console.log('📱 [Android Speech] Using voice:', englishVoice.name, 'Local:', englishVoice.localService);
+          } else {
+            console.log('📱 [Android Speech] No English voice found, using default');
           }
+        } else {
+          console.log('📱 [Android Speech] No voices available, proceeding with default');
         }
         
-        // Add event listeners for feedback
+        // Enhanced Android event listeners
         utterance.addEventListener('start', () => {
-          console.log('📱 [Android Speech] Starting to read Pokemon entry');
-          showToast('Reading Pokemon entry...');
+          console.log('📱 [Android Speech] Successfully started reading Pokemon entry');
+          showToast('📢 Reading Pokédex entry...');
         });
         
         utterance.addEventListener('end', () => {
-          console.log('📱 [Android Speech] Finished reading Pokemon entry');
-          showToast('Finished reading entry');
+          console.log('📱 [Android Speech] Successfully finished reading Pokemon entry');
+          showToast('✅ Finished reading entry');
         });
         
         utterance.addEventListener('error', (error) => {
           console.error('📱 [Android Speech] Speech synthesis error:', error);
-          showToast('Text-to-speech failed. Please try again.');
+          console.log('📱 [Android Speech] Error details:', {
+            error: error.error,
+            message: error.message,
+            type: error.type
+          });
+          
+          // Android-specific error handling and retry logic
+          if (error.error === 'network' || error.error === 'synthesis-failed') {
+            console.log('📱 [Android Speech] Network/synthesis error, attempting retry with different settings');
+            showToast('⚠️ Speech failed, trying again...');
+            
+            // Retry with simplified text and different settings
+            setTimeout(() => {
+              const retryUtterance = new SpeechSynthesisUtterance(fullText);
+              retryUtterance.rate = 0.6;
+              retryUtterance.pitch = 1.0;
+              retryUtterance.volume = 0.9;
+              
+              // Use default voice for retry
+              retryUtterance.voice = null;
+              
+              retryUtterance.addEventListener('start', () => {
+                console.log('📱 [Android Speech] Retry successful');
+                showToast('📢 Reading Pokédex entry...');
+              });
+              
+              retryUtterance.addEventListener('error', () => {
+                console.log('📱 [Android Speech] Retry also failed');
+                showToast('❌ Text-to-speech unavailable. Please check device settings.');
+              });
+              
+              Synth.speak(retryUtterance);
+            }, 1000);
+          } else {
+            showToast('❌ Text-to-speech failed. Please try again or check device settings.');
+          }
         });
         
-        // Android-specific: Brief delay before speaking
+        // Android-specific: Multiple initialization attempts before speaking
         setTimeout(() => {
-          console.log('📱 [Android Speech] Starting speech synthesis');
-          Synth.speak(utterance);
-        }, 200);
+          console.log('📱 [Android Speech] Attempting to start speech synthesis');
+          
+          // Clear any pending speech before starting
+          Synth.cancel();
+          
+          // Additional delay for Android TTS engine initialization
+          setTimeout(() => {
+            console.log('📱 [Android Speech] Starting utterance');
+            Synth.speak(utterance);
+            
+            // Android fallback: Check if speech actually started
+            setTimeout(() => {
+              if (!Synth.speaking && !Synth.pending) {
+                console.log('📱 [Android Speech] Speech did not start, attempting manual trigger');
+                showToast('🔄 Initializing speech... Please wait.');
+                
+                // Force another attempt
+                const forceUtterance = new SpeechSynthesisUtterance('Ready');
+                forceUtterance.volume = 0.1;
+                forceUtterance.rate = 1;
+                forceUtterance.addEventListener('end', () => {
+                  setTimeout(() => {
+                    Synth.speak(utterance);
+                  }, 200);
+                });
+                Synth.speak(forceUtterance);
+              }
+            }, 500);
+          }, 300);
+        }, 400);
         
       } else {
         // Non-Android devices: Use separate utterances for better control

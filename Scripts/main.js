@@ -32,7 +32,7 @@ function debounce(fn, ms = 300) {
 
 // Import utility functions and constants from helper modules
 import { showToast, getElementVisibility, Body, createArray } from './utils/dom-utils.js?v=20250802b';
-import { playPokemonCry, startReadingEntry, Synth, unlockAudioContext } from './utils/audio-utils.js?v=20250802b';
+import { playPokemonCry, startReadingEntry, Synth, unlockAudioContext } from './utils/audio-utils.js?v=20250802c';
 import { convertHexToRgba } from './utils/color-utils.js?v=20250802b';
 import { 
   STORAGE_KEYS, getStorageItem, setStorageItem, populateLocalStorage, swapCurrentAndLastPokemon, refreshUserIP, getStoredIP
@@ -345,12 +345,71 @@ function getSystemInformation() {
     document.addEventListener('touchstart', unlockAudioContext, { once: true });
     document.addEventListener('click', unlockAudioContext, { once: true });
     
+    // Android-specific speech synthesis preparation
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    if (isAndroid) {
+      console.log('📱 [Android] Detected Android device, applying enhanced speech synthesis initialization');
+      
+      // Multiple event listeners for Android speech synthesis activation
+      const androidSpeechInit = () => {
+        if (window.speechSynthesis) {
+          console.log('📱 [Android] User interaction detected, initializing speech synthesis');
+          
+          // Enhanced Android speech initialization
+          const testUtterance = new SpeechSynthesisUtterance('ready');
+          testUtterance.volume = 0;
+          testUtterance.rate = 1;
+          testUtterance.pitch = 1;
+          
+          testUtterance.addEventListener('start', () => {
+            console.log('📱 [Android] Speech synthesis successfully activated');
+          });
+          
+          testUtterance.addEventListener('error', (e) => {
+            console.log('📱 [Android] Speech synthesis activation failed:', e);
+          });
+          
+          window.speechSynthesis.speak(testUtterance);
+          setTimeout(() => window.speechSynthesis.cancel(), 100);
+          
+          // Force voice loading for Android
+          setTimeout(() => {
+            const voices = window.speechSynthesis.getVoices();
+            console.log(`📱 [Android] Post-activation voices available: ${voices.length}`);
+          }, 500);
+        }
+      };
+      
+      // Listen for various Android user interaction events
+      document.addEventListener('touchstart', androidSpeechInit, { once: true });
+      document.addEventListener('touchend', androidSpeechInit, { once: true });
+      document.addEventListener('click', androidSpeechInit, { once: true });
+      
+      // Special handling for the speech button on Android
+      const readEntryButton = document.getElementById('read-entry-button');
+      if (readEntryButton) {
+        readEntryButton.addEventListener('click', () => {
+          console.log('📱 [Android] Speech button clicked, ensuring TTS is ready');
+          unlockAudioContext();
+          androidSpeechInit();
+        });
+      }
+    }
+    
     // Also prepare speech synthesis voices on mobile
     if (window.speechSynthesis) {
       // Load voices asynchronously on mobile
       window.speechSynthesis.addEventListener('voiceschanged', () => {
         const voices = window.speechSynthesis.getVoices();
         console.log(`📱 [Mobile Speech] Loaded ${voices.length} voices for speech synthesis`);
+        
+        // Android-specific: Log voice details for debugging
+        if (isAndroid && voices.length > 0) {
+          console.log('📱 [Android Speech] Available voices:');
+          voices.forEach((voice, index) => {
+            console.log(`  ${index + 1}. ${voice.name} (${voice.lang}) - Local: ${voice.localService}`);
+          });
+        }
       });
       
       // Trigger voices loading

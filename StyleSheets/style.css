@@ -249,17 +249,21 @@ body::-webkit-scrollbar {
     0 4px 20px rgba(229, 62, 62, 0.08),
     0 1px 3px rgba(0, 0, 0, 0.05);
   padding: var(--spacing-md) var(--spacing-lg);
-  position: fixed;
-  width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1000;
+  position: fixed !important;
+  width: 100% !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 1000 !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: all 0.3s ease;
   min-height: 70px;
   box-sizing: border-box;
+  /* Ensure header stays on top at all times */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .header-brand {
@@ -1024,6 +1028,12 @@ body::-webkit-scrollbar {
     padding: var(--spacing-md);
     min-height: auto;
     align-items: stretch;
+    /* Ensure header stays fixed on mobile */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
   }
 
   .header-brand {
@@ -1079,7 +1089,7 @@ body::-webkit-scrollbar {
 
   #root {
     display: block;
-    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-xl);
+    padding: 7rem var(--spacing-md) var(--spacing-xl);
     max-width: 100vw;
   }
 
@@ -1214,6 +1224,12 @@ body::-webkit-scrollbar {
     padding: var(--spacing-md);
     min-height: auto;
     align-items: stretch;
+    /* Ensure header stays fixed on tablet */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
   }
 
   .header-brand {
@@ -1257,7 +1273,7 @@ body::-webkit-scrollbar {
 
   #root {
     display: block;
-    padding: var(--spacing-xl) var(--spacing-md);
+    padding: 6rem var(--spacing-md);
   }
 
   #root #info-card,
@@ -1347,6 +1363,12 @@ body::-webkit-scrollbar {
     padding: var(--spacing-md);
     min-height: auto;
     align-items: stretch;
+    /* Ensure header stays fixed on large tablet */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
   }
 
   .header-brand {
@@ -1384,7 +1406,7 @@ body::-webkit-scrollbar {
   #root {
     grid-template-columns: 1fr;
     grid-column-gap: 0;
-    padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-xl);
+    padding: 6rem var(--spacing-lg) var(--spacing-xl);
     max-width: 800px;
   }
 
@@ -1533,6 +1555,12 @@ body::-webkit-scrollbar {
 @media screen and (max-height: 600px) and (orientation: landscape) {
   #header form {
     padding: var(--spacing-xs) var(--spacing-sm);
+    /* Ensure header stays fixed in landscape */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
   }
 
   #header form #header-text {
@@ -1540,7 +1568,7 @@ body::-webkit-scrollbar {
   }
 
   #root {
-    padding-top: var(--spacing-lg);
+    padding-top: 4rem;
   }
 
   #root #info-card .list-no-bullets #number-and-name-list-item {

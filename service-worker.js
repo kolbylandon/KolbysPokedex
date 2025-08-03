@@ -32,29 +32,29 @@
 // CACHE CONFIGURATION AND VERSIONING
 // ====================================
 
-const CACHE_NAME = 'pokedex-cache-v21';
-const STATIC_CACHE = 'pokedex-static-v21';
-const DYNAMIC_CACHE = 'pokedex-dynamic-v21';
-const API_CACHE = 'pokedex-api-v21';
+const CACHE_NAME = 'pokedex-cache-v23';
+const STATIC_CACHE = 'pokedex-static-v23';
+const DYNAMIC_CACHE = 'pokedex-dynamic-v23';
+const API_CACHE = 'pokedex-api-v23';
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [
-  '/Pages/index.html',
-  '/StyleSheets/style.css',
-  '/Scripts/main.js',
-  '/Scripts/pokemon.js',
-  '/Scripts/requests.js',
-  '/Scripts/statsChart.js',
-  '/Scripts/performance.js',
-  '/Scripts/utils/dom-utils.js',
-  '/Scripts/utils/audio-utils.js',
-  '/Scripts/utils/data-utils.js',
-  '/Scripts/utils/navigation-utils.js',
-  '/Scripts/utils/storage-utils.js',
-  '/Scripts/utils/color-utils.js',
-  '/Images/pokeball.png',
-  '/Images/pokeball-bullet.png',
-  '/manifest.json'
+  './Pages/pokedex.html',
+  './StyleSheets/style.css',
+  './Scripts/main.js',
+  './Scripts/pokemon.js',
+  './Scripts/requests.js',
+  './Scripts/statsChart.js',
+  './Scripts/performance.js',
+  './Scripts/utils/dom-utils.js',
+  './Scripts/utils/audio-utils.js',
+  './Scripts/utils/data-utils.js',
+  './Scripts/utils/navigation-utils.js',
+  './Scripts/utils/storage-utils.js',
+  './Scripts/utils/color-utils.js',
+  './Images/pokeball.png',
+  './Images/pokeball-bullet.png',
+  './manifest.json'
 ];
 
 // API patterns that should be cached
@@ -92,17 +92,25 @@ self.addEventListener('install', event => {
   
   event.waitUntil(
     Promise.all([
-      // Cache static assets
+      // Cache static assets with better error handling
       caches.open(STATIC_CACHE).then(cache => {
         console.log('[ServiceWorker] Caching static assets');
         return Promise.allSettled(
           STATIC_ASSETS.map(url => 
             cache.add(url).catch(err => {
-              console.warn('[ServiceWorker] Failed to cache:', url, err);
+              console.warn('[ServiceWorker] Failed to cache:', url, err.message);
+              // Don't fail the entire installation for individual assets
               return null;
             })
           )
-        );
+        ).then(results => {
+          const successful = results.filter(result => result.status === 'fulfilled').length;
+          const failed = results.filter(result => result.status === 'rejected').length;
+          console.log(`[ServiceWorker] Cached ${successful}/${STATIC_ASSETS.length} static assets (${failed} failed)`);
+          
+          // Continue installation even if some assets failed to cache
+          return true;
+        });
       }),
       // Initialize other caches
       caches.open(DYNAMIC_CACHE),
@@ -112,6 +120,8 @@ self.addEventListener('install', event => {
       return self.skipWaiting();
     }).catch(err => {
       console.error('[ServiceWorker] Installation failed:', err);
+      // Don't prevent installation completely - let it proceed
+      return self.skipWaiting();
     })
   );
 });
@@ -166,6 +176,20 @@ self.addEventListener('fetch', event => {
     return;
   }
   
+  // Skip service worker bypass for development/debugging
+  if (url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) {
+    console.log('[ServiceWorker] Bypassing cache for:', request.url);
+    return;
+  }
+  
+  // Skip certain external resources that might cause issues
+  if (url.hostname.includes('fonts.googleapis.com') || 
+      url.hostname.includes('cdnjs.cloudflare.com') ||
+      url.hostname.includes('cdn.jsdelivr.net')) {
+    console.log('[ServiceWorker] Skipping external CDN:', request.url);
+    return;
+  }
+  
   event.respondWith(handleFetch(request));
 });
 
@@ -203,29 +227,38 @@ async function handleFetch(request) {
   } catch (error) {
     console.error('[ServiceWorker] Fetch failed:', error);
     
-    // Return offline fallback if available
-    if (request.destination === 'document') {
-      const cache = await caches.open(STATIC_CACHE);
-      const fallback = await cache.match('/Pages/index.html');
-      if (fallback) {
-        return fallback;
+    // Try to find a fallback in any available cache
+    const cacheNames = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE];
+    for (const cacheName of cacheNames) {
+      try {
+        const cache = await caches.open(cacheName);
+        const fallback = await cache.match(request);
+        if (fallback) {
+          console.log(`[ServiceWorker] Found fallback in ${cacheName} for:`, request.url);
+          return fallback;
+        }
+      } catch (cacheError) {
+        console.warn(`[ServiceWorker] Cache lookup failed for ${cacheName}:`, cacheError);
       }
     }
     
-    // Return a basic offline response
-    return new Response(
-      JSON.stringify({
-        error: 'Offline',
-        message: 'This content is not available offline'
-      }), 
-      { 
-        status: 503, 
-        statusText: 'Service Unavailable',
-        headers: {
-          'Content-Type': 'application/json'
+    // Return offline fallback if available for HTML documents
+    if (request.destination === 'document' || request.url.includes('.html')) {
+      try {
+        const cache = await caches.open(STATIC_CACHE);
+        const fallback = await cache.match('./Pages/pokedex.html');
+        if (fallback) {
+          console.log('[ServiceWorker] Returning HTML fallback');
+          return fallback;
         }
+      } catch (fallbackError) {
+        console.warn('[ServiceWorker] HTML fallback failed:', fallbackError);
       }
-    );
+    }
+    
+    // Let the network handle the request naturally instead of returning 503
+    console.log('[ServiceWorker] No cache available, letting network handle request');
+    return fetch(request);
   }
 }
 
@@ -250,15 +283,35 @@ async function cacheFirst(request, cacheName) {
   try {
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
+      // Only cache successful responses
       cache.put(request, networkResponse.clone());
       await limitCacheSize(cacheName);
       return networkResponse;
     }
+    // For non-OK responses, just return them without caching
+    return networkResponse;
   } catch (error) {
-    console.warn('[ServiceWorker] Network failed:', error);
+    console.warn('[ServiceWorker] Network failed for:', request.url, error.message);
+    
+    // Try to find the resource in other caches
+    const otherCaches = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE].filter(name => name !== cacheName);
+    for (const otherCacheName of otherCaches) {
+      try {
+        const otherCache = await caches.open(otherCacheName);
+        const fallback = await otherCache.match(request);
+        if (fallback) {
+          console.log(`[ServiceWorker] Found fallback in ${otherCacheName}`);
+          return fallback;
+        }
+      } catch (fallbackError) {
+        // Continue to next cache
+      }
+    }
+    
+    // If it's a critical resource, re-throw the error
+    // Otherwise, let the browser handle it naturally
+    throw error;
   }
-  
-  throw new Error('No cache available and network failed');
 }
 
 /**
@@ -273,20 +326,41 @@ async function networkFirst(request, cacheName) {
   try {
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
+      // Cache successful responses
       cache.put(request, networkResponse.clone());
       await limitCacheSize(cacheName);
       return networkResponse;
     }
+    // Return non-OK responses without caching
+    return networkResponse;
   } catch (error) {
-    console.warn('[ServiceWorker] Network failed, trying cache:', error);
+    console.warn('[ServiceWorker] Network failed for:', request.url, 'trying cache:', error.message);
+    
+    // Try the specified cache first
+    const cachedResponse = await cache.match(request);
+    if (cachedResponse) {
+      console.log(`[ServiceWorker] Found cached response in ${cacheName}`);
+      return cachedResponse;
+    }
+    
+    // Try other caches as fallback
+    const otherCaches = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE].filter(name => name !== cacheName);
+    for (const otherCacheName of otherCaches) {
+      try {
+        const otherCache = await caches.open(otherCacheName);
+        const fallback = await otherCache.match(request);
+        if (fallback) {
+          console.log(`[ServiceWorker] Found fallback in ${otherCacheName}`);
+          return fallback;
+        }
+      } catch (fallbackError) {
+        // Continue to next cache
+      }
+    }
+    
+    // Re-throw error if no cache available
+    throw error;
   }
-  
-  const cachedResponse = await cache.match(request);
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-  
-  throw new Error('Network failed and no cache available');
 }
 
 /**
