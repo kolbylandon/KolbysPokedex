@@ -136,7 +136,7 @@ header[id="header"],
 
 #header form #header-text::before {
   content: '';
-  background-image: url('../Images/pokeball.png');
+  background-image: url('../Images/pokedex.jpeg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

@@ -60,12 +60,9 @@ IN PROGRESS
 126) Click on the Types and pull up a list of all Pokémon with that type.
 134) Go button will be invisible when no active Pokémon or empty search.
 140) Add a loading spinner when the Pokémon is being fetched.
-141) Fix the Android pokedex entry read issue.
 142) Fix the padding on the info-card for mobile and tablet.
 143) Show the sprites unless they are null, then show the official artwork.
-144) Split the index.html file into a css file and a js file.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
-147) Add a feature that downloads the PWA as an app when you click the Pokédex icon.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -215,27 +212,34 @@ IMPLEMENTED
  "Card".
 109) Be able to click on something and it takes you to the top of the page. //The user is returned to 
   the top when you click on one of the bottom cards
-110) Create a Recall button that will retrieve the last viewed Pokémon. //There is a LocalStorage item
+110) Create a Recall button that will retrieve the last viewed Pokémon. //There is a LocalStorage item 
   that is called when the Recall button is pressed.
-114) Hide Recall button if the lastPokémon is null. //I have added a check in the makeButtonsDisappear
+114) Hide Recall button if the lastPokémon is null. //I have added a check in the makeButtonsDisappear 
   function.
-123) Get rid of Toast when the user clicks on a button. //I have added the removal of the Toast to the 
-  bottom of buttonClick in main.js.
+123) Get rid of Toast when the user clicks on a button. //I have added the removal of the Toast to 
+  the bottom of buttonClick in main.js.
 124) Make the Toast static so that it does not move when the user scrolls. //Changed the position of 
   #root .toast to fixed in the glass.css file.
-125) Fix KOMMO-O's Pokédex forms (784). //Added logic to the requestForm function in requests.js where I
-  had hard coded KOMMO-O's name.
-127) Add '(Hidden)' to the hidden abilities in the abilities list. //Added an if check in the helpers.js
+125) Fix KOMMO-O's Pokédex forms (784). //Added logic to the requestForm function in requests.js where 
+  I had hard coded KOMMO-O's name.
+127) Add '(Hidden)' to the hidden abilities in the abilities list. //Added an if check in the helpers.js 
   file to add '(Hidden)' after the name. For the time being, I am leaving it read as well.
-132) Fix the bug that allows the lastPokémon and currentPokémon to be the same. //Fixed with simplified storage 
-  logic that explicitly prevents same values by clearing LAST_POKEMON when they would be equal.
+132) Fix the bug that allows the lastPokémon and currentPokémon to be the same. //Fixed with simplified 
+  storage logic that explicitly prevents same values by clearing LAST_POKEMON when they would be equal.
 133) Change the mouse to a pokéball when hovering over the types divs. //Used pokeball-bullet.png as the 
   image when hovering.
 135) Include Cries from pokemon API call. //I have added the a button that allows the user to play the 
   Pokémon's cry with the playPokemonCry function in the helpers file.
 136) Change official artwork instead of the sprites. //Now displays 1 default and 1 shiny official artwork 
   instead of the 4 sprite images.
-139) Make the header sticky on mobile and tablet. //The header is now sticky on all devices: mobile, tablet, 
-  and desktop.
+139) Make the header sticky on mobile and tablet. //The header is now sticky on all devices: mobile, 
+  tablet, and desktop.
+141) Fix the Android pokedex entry read issue. //The Android Pokédex entry is now read properly with the 
+  TTS properly implemented.
+144) Split the index.html file into a css file and a js file. //The index.html file has been split into
+  index.css and index.js files. The old index.html file has been removed.
 145) Split the style.css file into multiple files. //Successfully modularized the monolithic style.css 
   into 14 specialized CSS files and the old style.css file has been removed.
+147) Add a feature that downloads the PWA as an app when you click the Pokédex icon. //The PWA is now 
+  downloadable as an app.
+
