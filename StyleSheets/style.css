@@ -1190,22 +1190,39 @@ body::-webkit-scrollbar {
 
   /* TABLET HEADER LAYOUT */
   #header form {
-    padding: var(--spacing-md) var(--spacing-lg);
-    gap: var(--spacing-md);
-    min-height: 65px;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    min-height: auto;
+    align-items: stretch;
+  }
+
+  .header-brand {
+    align-self: center;
+    margin-bottom: var(--spacing-xs);
+    min-width: auto;
   }
 
   .header-center {
-    max-width: 400px;
+    flex-direction: row;
     gap: var(--spacing-sm);
+    max-width: none;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
   }
 
   #header form #pokemon-textbox {
     max-width: 200px;
+    min-width: 140px;
   }
 
   .header-actions {
+    justify-content: center;
+    flex-wrap: wrap;
     gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+    min-width: auto;
   }
 
   .primary-btn, .secondary-btn {
@@ -1288,21 +1305,39 @@ body::-webkit-scrollbar {
 
   /* LARGE TABLET HEADER LAYOUT */
   #header form {
-    padding: var(--spacing-md) var(--spacing-xl);
-    gap: var(--spacing-lg);
-    min-height: 70px;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    min-height: auto;
+    align-items: stretch;
+  }
+
+  .header-brand {
+    align-self: center;
+    margin-bottom: var(--spacing-xs);
+    min-width: auto;
   }
 
   .header-center {
-    max-width: 450px;
+    flex-direction: row;
+    gap: var(--spacing-sm);
+    max-width: none;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
   }
 
   #header form #pokemon-textbox {
     max-width: 220px;
+    min-width: 160px;
   }
 
   .header-actions {
+    justify-content: center;
+    flex-wrap: wrap;
     gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+    min-width: auto;
   }
 
   .primary-btn, .secondary-btn {
