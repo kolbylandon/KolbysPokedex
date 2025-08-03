@@ -138,7 +138,7 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   
   // Generate and display stats chart with appropriate scaling
   const max = getLargestStat(pokemon.statsArray);
-  displayStatsChart(backgroundColor, borderColor, pokemon.statsArray, max + 25, pokemon.name);
+  displayStatsChart(backgroundColor, borderColor, pokemon.statsArray, max, pokemon.name);
   
   // Populate all Pokemon attribute displays
   displayAttributes();

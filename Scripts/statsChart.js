@@ -148,6 +148,9 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
   name = punctuationNameCheck(name);
   const chart = RadarChart;
   
+  // Ensure max is divisible by 25
+  max = Math.ceil(max / 25) * 25;
+  
   // Pre-configure chart data structure for optimal performance
   const chartData = {
     // Pokemon stat labels in standard order
@@ -229,7 +232,7 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
     scales: {
       r: {
         min: 0,
-        max,
+        max, // max value for the chart, rounded to nearest 25
         angleLines: {             // Style radial angle lines
           color: 'rgba(98, 98, 98, 0.3)',
           lineWidth: deviceType === 'mobile' ? 1.5 : 1 // Thicker lines on mobile
@@ -250,7 +253,7 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
         ticks: {
           color: TextColor,
           backdropColor: TransparentColor,
-          stepSize: 10, // Step size for ticks
+          stepSize: 25, // Step size for ticks
           font: {
             size: config.tickFontSize // Responsive tick size
           },
