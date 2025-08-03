@@ -775,16 +775,6 @@ body::-webkit-scrollbar {
   min-width: 0; /* Allows flex items to shrink below their content size */
 }
 
-#root #artwork-card .artwork-wrapper .artwork-label {
-  margin: var(--spacing-xs) 0 0 0;
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
 /* Enhanced image styling with consistent sizing */
 #root #artwork-card .artwork-wrapper .image.artwork {
   width: 100%;
@@ -1138,10 +1128,6 @@ body::-webkit-scrollbar {
   #root #artwork-card .artwork-wrapper .image.artwork {
     height: 150px;
     max-width: 150px;
-  }
-  
-  #root #artwork-card .artwork-wrapper .artwork-label {
-    font-size: var(--font-size-xs);
   }
 
   #root #stats-card #stats-chart {
