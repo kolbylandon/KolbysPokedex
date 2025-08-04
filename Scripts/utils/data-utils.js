@@ -547,5 +547,8 @@ export function punctuationNameCheck(name) {
     name.includes('-Phd') ? name.replace('-Phd', ' Ph.D.') :                  // Pikachu Ph.D. (25)
     name.includes('hd') ? name.replace('hd', `h'd`) :                         // Farfetch'd (83) / Sirfetch'd (865)
     name.includes('o-O') ? name.replace('o-O', 'o-o') :                       // Kommo-o (784)
+    name.toLowerCase().includes('type-null') ? 'Type: Null' :                 // Type: Null (772)
+    name.toLowerCase().includes('nidoran-f') ? 'Nidoran♀' :                   // Nidoran♀ (29)
+    name.toLowerCase().includes('nidoran-m') ? 'Nidoran♂' :                   // Nidoran♂ (32)
     name;
 }

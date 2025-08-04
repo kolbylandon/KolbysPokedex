@@ -62,6 +62,7 @@ IN PROGRESS
 140) Add a loading spinner when the Pokémon is being fetched.
 143) Show the sprites unless they are null, then show the official artwork.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
+149) Double check all Pokémon names with special characters to ensure they are correct.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------

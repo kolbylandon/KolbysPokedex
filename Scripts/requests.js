@@ -199,15 +199,15 @@ async function requestForm(url, listItem) {
     formsResponse.forms.forEach(form => {
       let name = punctuationNameCheck(form.name);
       
-      // Handle special case formatting for Kommo-o forms
-      if(!name.toLowerCase().includes('kommo-o')) {
-        name = name.replaceAll('-', ' '); // Standard hyphen replacement
+      // Handle special case formatting for Kommo-o forms (784)
+      if(!name.toLowerCase().includes('kommo-o') && !name.includes('♀') && !name.includes('♂') && name !== 'Type: Null') {
+        name = name.replaceAll('-', ' '); // Standard hyphen replacement for other Pokemon
       } else if(name.toLowerCase() === 'kommo-o') {
         name = 'Kommo-o';                 // Preserve Kommo-o name with proper capitalization
-      } else {
+      } else if(name.toLowerCase().includes('kommo-o') && name !== 'Kommo-o') {
         name = 'Kommo-o Totem';          // Special Totem form
       }
-      
+
       // Set formatted form name
       listItem.innerText = capitalizeFirstLetter(name);
     });
