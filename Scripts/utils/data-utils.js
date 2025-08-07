@@ -550,5 +550,6 @@ export function punctuationNameCheck(name) {
     name.toLowerCase().includes('type-null') ? 'Type: Null' :                 // Type: Null (772)
     name.toLowerCase().includes('nidoran-f') ? 'Nidoran♀' :                   // Nidoran♀ (29)
     name.toLowerCase().includes('nidoran-m') ? 'Nidoran♂' :                   // Nidoran♂ (32)
+    name.toLowerCase().includes('flabebe') ? 'Flabébé' :                      // Flabébé (669)
     name;
 }

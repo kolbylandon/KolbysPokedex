@@ -65,7 +65,6 @@ IN PROGRESS
 140) Add a loading spinner when the Pokémon is being fetched.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
 149) Double check all Pokémon names with special characters to ensure they are correct.
-152) Add back the ability to search by Pokémon name.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -249,4 +248,5 @@ IMPLEMENTED
   downloadable as an app.
 148) Fix excessive padding between header and info card for mobile, tablet, and desktop. //Reduced padding 
   and adjusted info-card margins for better spacing across all devices.
-
+152) Add back the ability to search by Pokémon name. //The user can now search by Pokémon name again by 
+  clicking the info text in the header.
