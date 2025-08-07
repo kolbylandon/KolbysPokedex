@@ -42,7 +42,8 @@ import {
   applyResponsiveLayout as headerLayout, validateNumericInput as inputCheck,
   validatePokedexNumber as validPokedexNumberCheck,
   ORIGINAL_MAXIMUM_ID as OriginalMaximumId, MAXIMUM_ID as MaximumId
-} from './utils/navigation-utils.js?v=20250802b';
+} from './utils/navigation-utils.js?v=20250806a';
+import { initializePlaceholderRotation } from './utils/placeholder-utils.js';
 
 // Import API request functions
 import { 
@@ -259,6 +260,9 @@ let id = null;
   
   // Set initial focus to search input for immediate user interaction
   Textbox.focus();
+  
+  // Initialize dynamic placeholder rotation
+  initializePlaceholderRotation(Textbox, 4000); // Rotate every 4 seconds
 })();
 
 // ====================================
@@ -270,8 +274,15 @@ let id = null;
  * Validates input and updates UI state accordingly
  */
 function handleTextboxInput() {
-  inputCheck(Textbox.value); // Validate input format
-  validPokedexNumberCheck(Textbox); // Check if number is within valid range
+  const input = Textbox.value.trim();
+  
+  // If input is numeric, validate it as a Pokédex number
+  if (/^\d+$/.test(input)) {
+    validPokedexNumberCheck(Textbox); // Check if number is within valid range
+  } else {
+    // For non-numeric input (names), reset to normal color
+    Textbox.style.color = 'rgba(98, 98, 98, 0.95)';
+  }
 }
 
 /**

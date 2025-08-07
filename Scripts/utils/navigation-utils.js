@@ -26,6 +26,7 @@
 import { showToast } from './dom-utils.js';
 import { requestPokemon } from '../requests.js';
 import { STORAGE_KEYS, getStorageItem, setStorageItem } from './storage-utils.js?v=20250802h';
+import { normalizePokemonName } from './pokemon-names.js';
 
 // ====================================
 // NAVIGATION CONSTANTS
@@ -294,37 +295,64 @@ export function applyResponsiveLayout(deviceType) {
 // ====================================
 
 /**
- * Validates Pokemon ID and initiates Pokemon data request
- * Handles ID validation logic, boundary checks, and error messaging
- * @param {number|string} id - Pokemon ID to generate
+ * Validates Pokemon ID/name and initiates Pokemon data request
+ * Handles both numeric IDs and Pokemon names with flexible validation
+ * @param {number|string} id - Pokemon ID (1-1025) or Pokemon name (case-insensitive)
  * @param {string} visibility - Visibility state for generated Pokemon UI
  * @param {boolean} skipIdValidation - Whether to skip ID boundary validation
  * @example
- * generatePokemon(25, 'visible', false);        // Normal validation
+ * generatePokemon(25, 'visible', false);        // Normal ID validation
+ * generatePokemon('pikachu', 'visible', false);  // Pokemon name search
  * generatePokemon(152, 'visible', true);        // Skip validation for forms
  */
 export function generatePokemon(id, visibility = 'visible', skipIdValidation = false) {
-  console.log(`🔍 [Generate Pokemon] Request for ID: ${id}, visibility: ${visibility}, skipValidation: ${skipIdValidation}`);
-  
-  // Convert string IDs to numbers
-  const pokemonId = typeof id === 'string' ? parseInt(id, 10) : id;
-  console.log(`🔢 [Generate Pokemon] Parsed ID: ${pokemonId} (type: ${typeof pokemonId})`);
-  
-  // Validate ID is a number
-  if (isNaN(pokemonId)) {
-    console.error(`❌ [Generate Pokemon] Invalid ID provided: ${id} → ${pokemonId} (NaN)`);
-    showToast('Please enter a valid Pokédex number');
-    return;
-  }
+  console.log(`🔍 [Generate Pokemon] Request for: ${id}, visibility: ${visibility}, skipValidation: ${skipIdValidation}`);
   
   // Get input textbox for color feedback
-  const textbox = document.getElementById('textbox');
+  const textbox = document.getElementById('pokemon-textbox');
   console.log(`🔍 [Generate Pokemon] Textbox element: ${textbox ? 'found' : 'not found'}`);
   
   try {
+    // Handle string input (Pokemon names)
+    if (typeof id === 'string' && isNaN(parseInt(id, 10))) {
+      console.log(`🔤 [Generate Pokemon] String input detected: "${id}", treating as Pokemon name`);
+      
+      // Clean up and normalize the Pokemon name
+      const pokemonName = normalizePokemonName(id);
+      
+      if (pokemonName === '') {
+        console.warn(`⚠️ [Generate Pokemon] Empty or invalid string provided: "${id}"`);
+        showToast('Please enter a valid Pokémon name or ID');
+        if (textbox) textbox.style.color = ERROR_COLOR;
+        return;
+      }
+      
+      console.log(`✅ [Generate Pokemon] Requesting Pokemon by name: "${pokemonName}" (normalized from "${id}")`);
+      requestPokemon(pokemonName, visibility);
+      if (textbox) {
+        textbox.style.color = TEXT_COLOR;
+        console.log(`🎨 [Generate Pokemon] Set textbox color to success state for name search`);
+      }
+      return;
+    }
+    
+    // Handle numeric input (Pokemon IDs)
+    const pokemonId = typeof id === 'string' ? parseInt(id, 10) : id;
+    console.log(`🔢 [Generate Pokemon] Numeric ID: ${pokemonId} (type: ${typeof pokemonId})`);
+    
+    // Validate ID is a number
+    if (isNaN(pokemonId)) {
+      console.error(`❌ [Generate Pokemon] Invalid input provided: ${id} → ${pokemonId} (NaN)`);
+      showToast('Please enter a valid Pokémon name or ID');
+      if (textbox) textbox.style.color = ERROR_COLOR;
+      return;
+    }
+  const textbox = document.getElementById('textbox');
+  console.log(`🔍 [Generate Pokemon] Textbox element: ${textbox ? 'found' : 'not found'}`);
+    
     // Handle validation based on skipIdValidation flag
     if (!skipIdValidation) {
-      console.log(`✅ [Generate Pokemon] Performing validation (range: ${MINIMUM_ID}-${MAXIMUM_ID})`);
+      console.log(`✅ [Generate Pokemon] Performing ID validation (range: ${MINIMUM_ID}-${MAXIMUM_ID})`);
       // Normal validation - check boundaries
       if (pokemonId >= MINIMUM_ID && pokemonId <= MAXIMUM_ID) {
         console.log(`✅ [Generate Pokemon] ID ${pokemonId} is within valid range, requesting Pokemon data`);
@@ -337,7 +365,7 @@ export function generatePokemon(id, visibility = 'visible', skipIdValidation = f
       } else {
         // ID out of bounds
         console.warn(`⚠️ [Generate Pokemon] ID ${pokemonId} is out of bounds (${MINIMUM_ID}-${MAXIMUM_ID})`);
-        showToast(`Please enter a number between ${MINIMUM_ID} and ${MAXIMUM_ID}`);
+        showToast(`Please enter a number between ${MINIMUM_ID} and ${MAXIMUM_ID} or a Pokémon name`);
         if (textbox) {
           textbox.style.color = ERROR_COLOR;
           console.log(`🎨 [Generate Pokemon] Set textbox color to error state`);

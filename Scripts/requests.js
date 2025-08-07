@@ -97,14 +97,38 @@ async function fetchJson(url) {
  * @param {Error|Response} exception - Error object or failed HTTP response
  */
 function handleError(exception) {
-  // Construct detailed error message for debugging
-  const ErrorMessage = `Line Number: ${exception.lineNumber || ''}\n\nMessage: ${exception.message || exception.statusText}\n\nStack: ${exception.stack || ''}`;
+  let userMessage = '';
+  
+  // Handle HTTP error responses
+  if (exception.status) {
+    switch (exception.status) {
+      case 404:
+        userMessage = 'Pokémon not found. Please check the name or ID and try again.';
+        break;
+      case 500:
+        userMessage = 'Server error. Please try again later.';
+        break;
+      case 503:
+        userMessage = 'Service temporarily unavailable. Please try again later.';
+        break;
+      default:
+        userMessage = `Network error (${exception.status}). Please check your connection.`;
+    }
+  } else {
+    // Handle network or parsing errors
+    userMessage = 'Unable to load Pokémon data. Please check your connection and try again.';
+  }
   
   // Show user-friendly error notification
-  showToast(ErrorMessage);
+  showToast(userMessage);
   
-  // Log structured error data for debugging
-  console.table(exception);
+  // Log detailed error information for debugging
+  console.error('API Request Error:', {
+    status: exception.status || 'Unknown',
+    message: exception.message || exception.statusText || 'Unknown error',
+    url: exception.url || 'Unknown URL',
+    stack: exception.stack || 'No stack trace'
+  });
 } //fetchJson
 
 // ====================================
