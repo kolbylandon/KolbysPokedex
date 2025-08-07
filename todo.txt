@@ -63,7 +63,6 @@ IN PROGRESS
 126) Click on the Types and pull up a list of all Pokémon with that type.
 134) Go button will be invisible when no active Pokémon or empty search.
 140) Add a loading spinner when the Pokémon is being fetched.
-143) Show the sprites unless they are null, then show the official artwork.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
 149) Double check all Pokémon names with special characters to ensure they are correct.
 152) Add back the ability to search by Pokémon name.
@@ -240,6 +239,8 @@ IMPLEMENTED
   tablet, and desktop.
 141) Fix the Android pokedex entry read issue. //The Android Pokédex entry is now read properly with the 
   TTS properly implemented.
+143) Show the sprites unless they are null, then show the official artwork. //Implemented priority loading 
+  system that attempts to load sprites first, then falls back to official artwork if sprites fail or are null.
 144) Split the index.html file into a css file and a js file. //The index.html file has been split into
   index.css and index.js files. The old index.html file has been removed.
 145) Split the style.css file into multiple files. //Successfully modularized the monolithic style.css 

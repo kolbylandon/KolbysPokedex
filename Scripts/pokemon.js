@@ -211,21 +211,21 @@ function displayAttributes() {
     StatsText.innerHTML += '<br>';   // Add line break on mobile/tablet
   }
   
-  // Configure default (normal) Pokemon artwork with Android-specific handling
-  configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultOfficialArtwork, 'Official Artwork Not Available');
+  // Configure default Pokemon image with sprite priority, artwork fallback
+  configurePriorityArtworkElement(
+    DefaultArtworkElement, 
+    pokemon.FrontDefaultSprite, 
+    pokemon.FrontDefaultOfficialArtwork, 
+    'Default Sprite or Official Artwork'
+  );
   
-  // Configure shiny Pokemon artwork with Android-specific handling
-  configureArtworkElement(ShinyArtworkElement, pokemon.FrontShinyOfficialArtwork, 'Shiny Official Artwork Not Available');
-  
-  // Legacy sprite code (preserved for potential future use)
-  // FrontDefault.setAttribute('src', pokemon.FrontDefaultSprite);
-  // FrontDefault.setAttribute('alt', 'Front Sprite Not Available');
-  // FrontShiny.setAttribute('src', pokemon.FrontShinySprite);
-  // FrontShiny.setAttribute('alt', 'Front Shiny Sprite Not Available');
-  // BackDefault.setAttribute('src', pokemon.BackDefaultSprite);
-  // BackDefault.setAttribute('alt', 'Back Sprite Not Available');
-  // BackShiny.setAttribute('src', pokemon.BackShinySprite);
-  // BackShiny.setAttribute('alt', 'Back Shiny Sprite Not Available');
+  // Configure shiny Pokemon image with sprite priority, artwork fallback  
+  configurePriorityArtworkElement(
+    ShinyArtworkElement, 
+    pokemon.FrontShinySprite, 
+    pokemon.FrontShinyOfficialArtwork, 
+    'Shiny Sprite or Official Artwork'
+  );
 } //displayAttributes
 
 // ====================================
@@ -284,22 +284,24 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     generation: speciesResponse.generation.name.substring(11).toUpperCase(), // Extract generation number
     pokedexEntry: entry,
     
-    // Artwork URLs (using official artwork for better quality)
+    // Sprite URLs (prioritized for display)
+    FrontDefaultSprite: pokemonResponse.sprites.front_default,
+    FrontShinySprite: pokemonResponse.sprites.front_shiny,
+    BackDefaultSprite: pokemonResponse.sprites.back_default,
+    BackShinySprite: pokemonResponse.sprites.back_shiny,
+    
+    // Artwork URLs (fallback when sprites are not available)
     FrontDefaultOfficialArtwork: `${DefaultArtworkUrl}${speciesResponse.id}.png`,
     FrontShinyOfficialArtwork: `${ShinyArtworkUrl}${speciesResponse.id}.png`,
     
     // Gender differences (for future implementation)
     hasGenderDifferences: speciesResponse.has_gender_differences,
     
-    // Legacy sprite URLs (preserved for potential future use)
-    // FrontDefaultSprite: pokemonResponse.sprites.front_default,
-    // BackDefaultSprite: pokemonResponse.sprites.back_default,
-    // FrontShinySprite: pokemonResponse.sprites.front_shiny,
-    // BackShinySprite: pokemonResponse.sprites.back_shiny,
-    // frontFemaleSprite: null,
-    // backFemaleSprite: null,
-    // frontFemaleShinySprite: null,
-    // backFemaleShinySprite: null,
+    // Gender-specific sprites (for future implementation)
+    frontFemaleSprite: null,
+    backFemaleSprite: null,
+    frontFemaleShinySprite: null,
+    backFemaleShinySprite: null,
   };
   
   // Set gender-specific sprites if Pokemon has gender differences (future feature)
@@ -351,6 +353,80 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
 // ====================================
 // ARTWORK LOADING UTILITIES
 // ====================================
+
+/**
+ * Configures artwork element to prioritize sprites over official artwork
+ * Tries to load sprite first, falls back to official artwork if sprite fails
+ * @param {HTMLImageElement} element - The image element to configure
+ * @param {string} spriteUrl - Primary sprite URL to try first
+ * @param {string} artworkUrl - Fallback official artwork URL
+ * @param {string} altText - Alt text for accessibility
+ */
+function configurePriorityArtworkElement(element, spriteUrl, artworkUrl, altText) {
+  // Clear any existing handlers
+  element.onerror = null;
+  element.onload = null;
+  
+  // Set initial attributes
+  element.setAttribute('alt', altText);
+  
+  // Configure element sizing
+  element.style.width = element.parentElement.style.width;
+  element.style.height = element.parentElement.style.height;
+  
+  // Android and mobile detection for optimization
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isMobile = window.deviceType === 'mobile';
+  
+  // Function to attempt loading official artwork as fallback
+  const loadOfficialArtwork = () => {
+    console.log(`🖼️ Loading official artwork fallback: ${altText}`);
+    
+    element.onload = function() {
+      console.log(`✅ Official artwork loaded: ${altText}`);
+    };
+    
+    element.onerror = function() {
+      console.warn(`❌ Both sprite and artwork failed: ${altText}`);
+      element.style.opacity = '0.5';
+      element.style.filter = 'grayscale(100%)';
+    };
+    
+    element.src = artworkUrl;
+  };
+  
+  // Try sprite first, fallback to artwork on failure
+  if (spriteUrl && spriteUrl !== null) {
+    console.log(`🎮 Attempting sprite load: ${altText}`);
+    
+    element.onload = function() {
+      console.log(`✅ Sprite loaded successfully: ${altText}`);
+    };
+    
+    element.onerror = function() {
+      console.warn(`❌ Sprite failed, trying official artwork: ${altText}`);
+      loadOfficialArtwork();
+    };
+    
+    // Android-specific optimizations
+    if (isAndroid) {
+      element.crossOrigin = 'anonymous';
+      element.loading = 'lazy';
+    }
+    
+    // Mobile optimizations
+    if (isMobile) {
+      element.decoding = 'async';
+      element.style.willChange = 'transform';
+    }
+    
+    element.src = spriteUrl;
+  } else {
+    // No sprite available, go straight to official artwork
+    console.log(`📷 No sprite available, loading official artwork: ${altText}`);
+    loadOfficialArtwork();
+  }
+}
 
 /**
  * Configures artwork element with Android-specific error handling and fallback loading
