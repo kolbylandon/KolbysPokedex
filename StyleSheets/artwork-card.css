@@ -36,12 +36,6 @@
   background: var(--pokeball-white);
 }
 
-#root #artwork-card .image:hover {
-  transform: scale(1.02);
-  box-shadow: var(--shadow-pokeball);
-  border-color: rgba(229, 62, 62, 0.3);
-}
-
 /* ====================================
    ARTWORK TABLE STYLING
    ==================================== */
@@ -93,11 +87,6 @@
   user-select: none;
 }
 
-#root #artwork-card .artwork-table-td .image.artwork:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: none;
-}
-
 #root #artwork-card .artwork-table-td .image.artwork {
   animation: fadeInArtwork 0.4s ease-out;
 }
@@ -139,12 +128,6 @@
 
 @media screen and (max-width: 768px) and (orientation: portrait) {
   #root #artwork-card .artwork-table-td .image.artwork {
-    transition: opacity 0.2s ease;
     border-radius: var(--radius-md);
-  }
-  
-  #root #artwork-card .artwork-table-td .image.artwork:hover {
-    transform: none;
-    opacity: 0.9;
   }
 }

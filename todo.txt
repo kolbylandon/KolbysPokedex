@@ -54,6 +54,9 @@ TO DO
 131) Create a slideshow that includes the official artwork on the sprite-card.
 137) See about changing this to a typescript implementation.
 138) see about using SCSS modules for the CSS files.
+150) Add how the Pokémon evolves to the info card.
+151) Add a button to the info card to show the evolution chain of the Pokémon.
+153) Look into having hidden abilities show in their own list.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
@@ -63,6 +66,7 @@ IN PROGRESS
 143) Show the sprites unless they are null, then show the official artwork.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
 149) Double check all Pokémon names with special characters to ensure they are correct.
+152) Add back the ability to search by Pokémon name.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
