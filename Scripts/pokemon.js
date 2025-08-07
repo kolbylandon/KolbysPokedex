@@ -113,7 +113,7 @@ let pokemon = null;
 // SPRITE DISPLAY STATE
 // ====================================
 
-/** @type {string} Current sprite display state - 'default', 'female', or 'artwork' */
+/** @type {string} Current sprite display state - 'default', 'alternate', or 'artwork' */
 let currentSpriteState = 'artwork';
 
 // ====================================
@@ -306,10 +306,18 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     FrontDefaultOfficialArtwork: `${DefaultArtworkUrl}${speciesResponse.id}.png`,
     FrontShinyOfficialArtwork: `${ShinyArtworkUrl}${speciesResponse.id}.png`,
     
-    // Gender differences (for future implementation)
+    // Gender differences (for sprite cycling)
     hasGenderDifferences: speciesResponse.has_gender_differences,
+    defaultGender: null,     // Will be set by setGenderDifferenceSprites
+    alternateGender: null,   // Will be set by setGenderDifferenceSprites
     
-    // Gender-specific sprites (for future implementation)
+    // Male sprites (typically the default sprites)
+    frontMaleSprite: null,
+    backMaleSprite: null,
+    frontMaleShinySprite: null,
+    backMaleShinySprite: null,
+    
+    // Female sprites (alternate sprites)
     frontFemaleSprite: null,
     backFemaleSprite: null,
     frontFemaleShinySprite: null,
@@ -348,23 +356,48 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
 
 /**
  * Sets gender-specific sprite URLs for Pokemon with gender differences
- * Currently preserved for future implementation of gender selection feature
+ * Determines which gender the default sprite represents by comparing URLs
  * @param {Object} pokemonObj - Pokemon object to modify
  * @param {Object} pokemonResponse - Raw Pokemon response containing sprite data
  */
 function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
   // Only set female sprites if Pokemon has gender differences
   if (pokemonObj.hasGenderDifferences) {
+    // Get male and female sprite URLs
+    pokemonObj.frontMaleSprite = pokemonResponse.sprites.front_default; // Male is typically the default
+    pokemonObj.backMaleSprite = pokemonResponse.sprites.back_default;
+    pokemonObj.frontMaleShinySprite = pokemonResponse.sprites.front_shiny;
+    pokemonObj.backMaleShinySprite = pokemonResponse.sprites.back_shiny;
+    
     pokemonObj.frontFemaleSprite = pokemonResponse.sprites.front_female;
     pokemonObj.backFemaleSprite = pokemonResponse.sprites.back_female;
     pokemonObj.frontFemaleShinySprite = pokemonResponse.sprites.front_shiny_female;
     pokemonObj.backFemaleShinySprite = pokemonResponse.sprites.back_shiny_female;
     
+    // Determine if default sprite is male or female by comparing URLs
+    // If female sprites exist and are different from default, then default is male
+    const defaultIsMale = pokemonObj.frontFemaleSprite && 
+                         pokemonObj.frontFemaleSprite !== pokemonObj.FrontDefaultSprite;
+    
+    pokemonObj.defaultGender = defaultIsMale ? 'male' : 'female';
+    pokemonObj.alternateGender = defaultIsMale ? 'female' : 'male';
+    
+    const hasUsableAlternateSprites = defaultIsMale ? 
+      (pokemonObj.frontFemaleSprite || pokemonObj.frontFemaleShinySprite) :
+      (pokemonObj.frontMaleSprite || pokemonObj.frontMaleShinySprite);
+    
     console.log(`👫 [Gender Sprites] ${pokemonObj.name} has gender differences:`, {
+      defaultGender: pokemonObj.defaultGender,
+      alternateGender: pokemonObj.alternateGender,
+      frontMale: pokemonObj.frontMaleSprite ? 'available' : 'null',
+      backMale: pokemonObj.backMaleSprite ? 'available' : 'null',
+      frontShinyMale: pokemonObj.frontMaleShinySprite ? 'available' : 'null',
+      backShinyMale: pokemonObj.backMaleShinySprite ? 'available' : 'null',
       frontFemale: pokemonObj.frontFemaleSprite ? 'available' : 'null',
       backFemale: pokemonObj.backFemaleSprite ? 'available' : 'null',
       frontShinyFemale: pokemonObj.frontFemaleShinySprite ? 'available' : 'null',
-      backShinyFemale: pokemonObj.backFemaleShinySprite ? 'available' : 'null'
+      backShinyFemale: pokemonObj.backFemaleShinySprite ? 'available' : 'null',
+      cycleWillIncludeAlternate: hasUsableAlternateSprites
     });
   } else {
     console.log(`👤 [Gender Sprites] ${pokemonObj.name} has no gender differences`);
@@ -377,8 +410,8 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
 
 /**
  * Adds click event listeners to sprite images for cycling through display states
- * Cycles through artwork → default sprites → female sprites for Pokemon with gender differences
- * Cycles through artwork → default sprites for Pokemon without gender differences
+ * Cycles through artwork → default sprites → alternate gender sprites (for Pokemon with differences)
+ * Cycles through artwork → default sprites (for Pokemon without gender differences)
  */
 function addSpriteClickListeners() {
   // Remove any existing click listeners
@@ -396,10 +429,16 @@ function addSpriteClickListeners() {
   DefaultArtworkElement.addEventListener('click', cycleSpriteDisplay);
   ShinyArtworkElement.addEventListener('click', cycleSpriteDisplay);
   
-    // Add hover effects for better UX
-  if (pokemon.hasGenderDifferences) {
-    DefaultArtworkElement.title = 'Click to cycle: Artwork → Default → Female';
-    ShinyArtworkElement.title = 'Click to cycle: Artwork → Default → Female';
+  // Add hover effects for better UX - check if alternate gender sprites actually exist
+  const hasAlternateSprites = pokemon.hasGenderDifferences && pokemon.alternateGender && (
+    (pokemon.alternateGender === 'female' && (pokemon.frontFemaleSprite || pokemon.frontFemaleShinySprite)) ||
+    (pokemon.alternateGender === 'male' && (pokemon.frontMaleSprite || pokemon.frontMaleShinySprite))
+  );
+  
+  if (hasAlternateSprites) {
+    const alternateGenderLabel = pokemon.alternateGender === 'female' ? 'Female' : 'Male';
+    DefaultArtworkElement.title = `Click to cycle: Artwork → Default (${pokemon.defaultGender}) → ${alternateGenderLabel}`;
+    ShinyArtworkElement.title = `Click to cycle: Artwork → Default (${pokemon.defaultGender}) → ${alternateGenderLabel}`;
   } else {
     DefaultArtworkElement.title = 'Click to cycle: Artwork → Sprite';
     ShinyArtworkElement.title = 'Click to cycle: Artwork → Sprite';
@@ -407,8 +446,8 @@ function addSpriteClickListeners() {
 }
 
 /**
- * Cycles through sprite display states: artwork → default → female → artwork (repeat)
- * For Pokemon without gender differences: artwork → default → artwork (repeat)
+ * Cycles through sprite display states: artwork → default → alternate gender (if exists) → artwork (repeat)
+ * For Pokemon without gender differences or alternate sprites: artwork → default → artwork (repeat)
  */
 function cycleSpriteDisplay() {
   if (!pokemon) {
@@ -416,25 +455,31 @@ function cycleSpriteDisplay() {
     return;
   }
   
-  // Determine next state based on current state and gender differences
+  // Check if alternate gender sprites actually exist
+  const hasAlternateSprites = pokemon.hasGenderDifferences && pokemon.alternateGender && (
+    (pokemon.alternateGender === 'female' && (pokemon.frontFemaleSprite || pokemon.frontFemaleShinySprite)) ||
+    (pokemon.alternateGender === 'male' && (pokemon.frontMaleSprite || pokemon.frontMaleShinySprite))
+  );
+  
+  // Determine next state based on current state and available sprites
   let nextState;
-  if (pokemon.hasGenderDifferences) {
-    // Cycle: artwork → default → female → artwork
+  if (hasAlternateSprites) {
+    // Cycle: artwork → default → alternate → artwork
     switch (currentSpriteState) {
       case 'artwork':
         nextState = 'default';
         break;
       case 'default':
-        nextState = 'female';
+        nextState = 'alternate';
         break;
-      case 'female':
+      case 'alternate':
         nextState = 'artwork';
         break;
       default:
         nextState = 'artwork';
     }
   } else {
-    // Cycle: artwork → default → artwork
+    // Cycle: artwork → default → artwork (no alternate sprites available)
     switch (currentSpriteState) {
       case 'artwork':
         nextState = 'default';
@@ -455,10 +500,11 @@ function cycleSpriteDisplay() {
   let displayText;
   switch (currentSpriteState) {
     case 'default':
-      displayText = '🎮 Default sprites';
+      displayText = `🎮 Default sprites (${pokemon.defaultGender || 'default'})`;
       break;
-    case 'female':
-      displayText = '♀️ Female sprites';
+    case 'alternate':
+      const genderIcon = pokemon.alternateGender === 'female' ? '♀️' : '♂️';
+      displayText = `${genderIcon} ${pokemon.alternateGender || 'Alternate'} sprites`;
       break;
     case 'artwork':
       displayText = '🖼️ Official artwork';
@@ -477,15 +523,23 @@ function updateSpriteDisplay() {
     case 'default':
       defaultImage = pokemon.FrontDefaultSprite;
       shinyImage = pokemon.FrontShinySprite;
-      defaultAlt = 'Default Sprite';
-      shinyAlt = 'Shiny Default Sprite';
+      defaultAlt = `Default Sprite (${pokemon.defaultGender || 'default'})`;
+      shinyAlt = `Shiny Default Sprite (${pokemon.defaultGender || 'default'})`;
       break;
       
-    case 'female':
-      defaultImage = pokemon.frontFemaleSprite;
-      shinyImage = pokemon.frontFemaleShinySprite;
-      defaultAlt = 'Female Default Sprite';
-      shinyAlt = 'Female Shiny Sprite';
+    case 'alternate':
+      // Use alternate gender sprites based on what the alternate gender is
+      if (pokemon.alternateGender === 'female') {
+        defaultImage = pokemon.frontFemaleSprite;
+        shinyImage = pokemon.frontFemaleShinySprite;
+        defaultAlt = 'Female Default Sprite';
+        shinyAlt = 'Female Shiny Sprite';
+      } else if (pokemon.alternateGender === 'male') {
+        defaultImage = pokemon.frontMaleSprite;
+        shinyImage = pokemon.frontMaleShinySprite;
+        defaultAlt = 'Male Default Sprite';
+        shinyAlt = 'Male Shiny Sprite';
+      }
       break;
       
     case 'artwork':
