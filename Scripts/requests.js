@@ -138,16 +138,21 @@ function handleError(exception) {
 /**
  * Fetches complete Pokemon data including both basic info and species details
  * Uses parallel requests for optimal performance and passes data to page population
+ * Handles alternate forms by using species ID from Pokemon data for species requests
  * @param {number|string} id - Pokemon ID or name to fetch
  * @param {string} visibility - Visibility state for the loaded Pokemon display
  */
 async function requestPokemon(id, visibility) {
   try {
-    // Use Promise.all for parallel requests to improve performance
-    const [pokemonResponse, speciesResponse] = await Promise.all([
-      fetchJson(`${ApiAddress}/pokemon/${id}`),        // Basic Pokemon data
-      fetchJson(`${ApiAddress}/pokemon-species/${id}`) // Species and flavor text data
-    ]);
+    // First, fetch the basic Pokemon data
+    const pokemonResponse = await fetchJson(`${ApiAddress}/pokemon/${id}`);
+    
+    // Extract species ID from Pokemon data for alternate forms
+    // This handles cases where form ID ≠ species ID (e.g., Deoxys forms)
+    const speciesId = pokemonResponse.species.url.split('/').slice(-2, -1)[0];
+    
+    // Fetch species data using the correct species ID
+    const speciesResponse = await fetchJson(`${ApiAddress}/pokemon-species/${speciesId}`);
     
     // Pass both responses to page population function
     populatePage(pokemonResponse, speciesResponse, visibility);
