@@ -183,8 +183,8 @@ let id = null;
   // Add touch event for better mobile support
   CryButton.addEventListener('touchstart', (event) => {
     if (DEBUG) console.log('🔘 [Touch Start] Cry button touched');
-    event.preventDefault();
-  });
+    // Note: preventDefault removed to allow passive listener for better performance
+  }, { passive: true });
   
   CryButton.addEventListener('touchend', (event) => {
     if (DEBUG) console.log('🔘 [Touch End] Cry button touch ended');
@@ -202,8 +202,8 @@ let id = null;
   // Add touch event for better mobile support
   ReadEntryButton.addEventListener('touchstart', (event) => {
     if (DEBUG) console.log('🔘 [Touch Start] Read Entry button touched');
-    event.preventDefault();
-  });
+    // Note: preventDefault removed to allow passive listener for better performance
+  }, { passive: true });
   
   ReadEntryButton.addEventListener('touchend', (event) => {
     if (DEBUG) console.log('🔘 [Touch End] Read Entry button touch ended');
@@ -343,7 +343,7 @@ function getSystemInformation() {
   if (deviceType === 'mobile') {
     console.log('📱 [Mobile] Preparing audio context and speech synthesis for mobile device');
     // Add one-time unlock on any user interaction
-    document.addEventListener('touchstart', unlockAudioContext, { once: true });
+    document.addEventListener('touchstart', unlockAudioContext, { once: true, passive: true });
     document.addEventListener('click', unlockAudioContext, { once: true });
     
     // Android-specific speech synthesis preparation
@@ -382,7 +382,7 @@ function getSystemInformation() {
       };
       
       // Listen for various Android user interaction events
-      document.addEventListener('touchstart', androidSpeechInit, { once: true });
+      document.addEventListener('touchstart', androidSpeechInit, { once: true, passive: true });
       document.addEventListener('touchend', androidSpeechInit, { once: true });
       document.addEventListener('click', androidSpeechInit, { once: true });
       
@@ -664,7 +664,7 @@ const unlockAudioOnInteraction = () => {
 
 // Add listeners for various interaction types - these fire only once
 document.addEventListener('click', unlockAudioOnInteraction, { once: true });
-document.addEventListener('touchstart', unlockAudioOnInteraction, { once: true });
+document.addEventListener('touchstart', unlockAudioOnInteraction, { once: true, passive: true });
 document.addEventListener('keydown', unlockAudioOnInteraction, { once: true });
 
 // ====================================

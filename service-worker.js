@@ -32,26 +32,31 @@
 // CACHE CONFIGURATION AND VERSIONING
 // ====================================
 
-const CACHE_NAME = 'pokedex-cache-v23';
-const STATIC_CACHE = 'pokedex-static-v23';
-const DYNAMIC_CACHE = 'pokedex-dynamic-v23';
-const API_CACHE = 'pokedex-api-v23';
+const CACHE_NAME = 'pokedex-cache-v24';
+const STATIC_CACHE = 'pokedex-static-v24';
+const DYNAMIC_CACHE = 'pokedex-dynamic-v24';
+const API_CACHE = 'pokedex-api-v24';
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [
+  './',
+  './index.html',
   './Pages/pokedex.html',
-  './StyleSheets/style.css',
+  './StyleSheets/main.css',
   './Scripts/main.js',
   './Scripts/pokemon.js',
   './Scripts/requests.js',
   './Scripts/statsChart.js',
   './Scripts/performance.js',
+  './Scripts/sw-manager.js',
   './Scripts/utils/dom-utils.js',
   './Scripts/utils/audio-utils.js',
   './Scripts/utils/data-utils.js',
   './Scripts/utils/navigation-utils.js',
   './Scripts/utils/storage-utils.js',
   './Scripts/utils/color-utils.js',
+  './Scripts/utils/placeholder-utils.js',
+  './Scripts/utils/pokemon-names.js',
   './Images/pokeball.png',
   './Images/pokeball-bullet.png',
   './manifest.json'
