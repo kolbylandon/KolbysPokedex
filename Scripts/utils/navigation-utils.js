@@ -347,8 +347,6 @@ export function generatePokemon(id, visibility = 'visible', skipIdValidation = f
       if (textbox) textbox.style.color = ERROR_COLOR;
       return;
     }
-  const textbox = document.getElementById('textbox');
-  console.log(`🔍 [Generate Pokemon] Textbox element: ${textbox ? 'found' : 'not found'}`);
     
     // Handle validation based on skipIdValidation flag
     if (!skipIdValidation) {
