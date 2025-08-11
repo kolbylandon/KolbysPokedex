@@ -57,7 +57,8 @@ TO DO
 150) Add how the Pokémon evolves to the info card.
 151) Add a button to the info card to show the evolution chain of the Pokémon.
 153) Look into having hidden abilities show in their own list.
-154) Remove the dashes from the paradox Pokémonnames.
+154) Remove the dashes from the paradox Pokémon names.
+155) Incorporate the TGC API.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
@@ -66,6 +67,7 @@ IN PROGRESS
 140) Add a loading spinner when the Pokémon is being fetched.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
 149) Double check all Pokémon names with special characters to ensure they are correct.
+156) Move the speed stat to the bottom of the chart.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
