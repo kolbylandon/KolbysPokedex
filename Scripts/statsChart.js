@@ -130,7 +130,6 @@ let statsChart = null;
  * Dynamically loads Chart.js and displays a radar chart for Pokémon stats
  */
 async function displayStatsChart(backgroundColor, borderColor, stats, max, name) {
-  // Dynamically import Chart.js only when rendering stats
   // Dynamically import Chart.js ESM build only when rendering stats
   const ChartModule = await import('https://cdn.jsdelivr.net/npm/chart.js@3.3.0/dist/chart.esm.js');
   // Use registerables to register all chart components including controllers
