@@ -93,41 +93,15 @@ const CACHE_EXPIRY = {
  * Handles initial caching of static application resources
  */
 self.addEventListener('install', event => {
-  console.log('[ServiceWorker] Installing...');
-  
   event.waitUntil(
-    Promise.all([
-      // Cache static assets with better error handling
-      caches.open(STATIC_CACHE).then(cache => {
-        console.log('[ServiceWorker] Caching static assets');
-        return Promise.allSettled(
-          STATIC_ASSETS.map(url => 
-            cache.add(url).catch(err => {
-              console.warn('[ServiceWorker] Failed to cache:', url, err.message);
-              // Don't fail the entire installation for individual assets
-              return null;
-            })
-          )
-        ).then(results => {
-          const successful = results.filter(result => result.status === 'fulfilled').length;
-          const failed = results.filter(result => result.status === 'rejected').length;
-          console.log(`[ServiceWorker] Cached ${successful}/${STATIC_ASSETS.length} static assets (${failed} failed)`);
-          
-          // Continue installation even if some assets failed to cache
-          return true;
-        });
-      }),
-      // Initialize other caches
-      caches.open(DYNAMIC_CACHE),
-      caches.open(API_CACHE)
-    ]).then(() => {
-      console.log('[ServiceWorker] Installation complete');
-      return self.skipWaiting();
-    }).catch(err => {
-      console.error('[ServiceWorker] Installation failed:', err);
-      // Don't prevent installation completely - let it proceed
-      return self.skipWaiting();
-    })
+    caches.open(STATIC_CACHE)
+      .then(cache => cache.addAll(STATIC_ASSETS))
+      .catch(() => {})
+      .then(() => Promise.all([
+        caches.open(DYNAMIC_CACHE),
+        caches.open(API_CACHE)
+      ]))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -170,31 +144,9 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
-  
-  // Skip non-GET requests
-  if (request.method !== 'GET') {
-    return;
-  }
-  
-  // Skip chrome-extension and other non-http requests
-  if (!url.protocol.startsWith('http')) {
-    return;
-  }
-  
-  // Skip service worker bypass for development/debugging
-  if (url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) {
-    console.log('[ServiceWorker] Bypassing cache for:', request.url);
-    return;
-  }
-  
-  // Skip certain external resources that might cause issues
-  if (url.hostname.includes('fonts.googleapis.com') || 
-      url.hostname.includes('cdnjs.cloudflare.com') ||
-      url.hostname.includes('cdn.jsdelivr.net')) {
-    console.log('[ServiceWorker] Skipping external CDN:', request.url);
-    return;
-  }
-  
+  if (request.method !== 'GET' || !url.protocol.startsWith('http')) return;
+  if (url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) return;
+  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('cdnjs.cloudflare.com') || url.hostname.includes('cdn.jsdelivr.net')) return;
   event.respondWith(handleFetch(request));
 });
 
@@ -211,58 +163,19 @@ async function handleFetch(request) {
   const url = new URL(request.url);
   
   try {
-    // Static assets: Cache First strategy
     if (isStaticAsset(request)) {
-      return await cacheFirst(request, STATIC_CACHE);
+      return cacheFirst(request, STATIC_CACHE);
     }
-    
-    // API requests: Stale While Revalidate strategy
     if (isApiRequest(request)) {
-      return await staleWhileRevalidate(request, API_CACHE);
+      return staleWhileRevalidate(request, API_CACHE);
     }
-    
-    // HTML documents: Network First strategy
-    if (request.destination === 'document') {
-      return await networkFirst(request, DYNAMIC_CACHE);
-    }
-    
-    // Other requests: Network First strategy
-    return await networkFirst(request, DYNAMIC_CACHE);
-    
-  } catch (error) {
-    console.error('[ServiceWorker] Fetch failed:', error);
-    
-    // Try to find a fallback in any available cache
-    const cacheNames = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE];
-    for (const cacheName of cacheNames) {
-      try {
-        const cache = await caches.open(cacheName);
-        const fallback = await cache.match(request);
-        if (fallback) {
-          console.log(`[ServiceWorker] Found fallback in ${cacheName} for:`, request.url);
-          return fallback;
-        }
-      } catch (cacheError) {
-        console.warn(`[ServiceWorker] Cache lookup failed for ${cacheName}:`, cacheError);
-      }
-    }
-    
-    // Return offline fallback if available for HTML documents
+    // Default: network first for HTML
     if (request.destination === 'document' || request.url.includes('.html')) {
-      try {
-        const cache = await caches.open(STATIC_CACHE);
-        const fallback = await cache.match('./Pages/pokedex.html');
-        if (fallback) {
-          console.log('[ServiceWorker] Returning HTML fallback');
-          return fallback;
-        }
-      } catch (fallbackError) {
-        console.warn('[ServiceWorker] HTML fallback failed:', fallbackError);
-      }
+      return networkFirst(request, DYNAMIC_CACHE);
     }
-    
-    // Let the network handle the request naturally instead of returning 503
-    console.log('[ServiceWorker] No cache available, letting network handle request');
+    // Fallback: cache first for other assets
+    return cacheFirst(request, DYNAMIC_CACHE);
+  } catch (error) {
     return fetch(request);
   }
 }
@@ -279,43 +192,15 @@ async function handleFetch(request) {
  */
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(request);
-  
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-  
+  const cachedResponse = await cache.match(request, {ignoreSearch: true});
+  if (cachedResponse) return cachedResponse;
   try {
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      // Only cache successful responses
-      cache.put(request, networkResponse.clone());
-      await limitCacheSize(cacheName);
-      return networkResponse;
-    }
-    // For non-OK responses, just return them without caching
-    return networkResponse;
+    const response = await fetch(request);
+    cache.put(request, response.clone());
+    limitCacheSize(cacheName);
+    return response;
   } catch (error) {
-    console.warn('[ServiceWorker] Network failed for:', request.url, error.message);
-    
-    // Try to find the resource in other caches
-    const otherCaches = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE].filter(name => name !== cacheName);
-    for (const otherCacheName of otherCaches) {
-      try {
-        const otherCache = await caches.open(otherCacheName);
-        const fallback = await otherCache.match(request);
-        if (fallback) {
-          console.log(`[ServiceWorker] Found fallback in ${otherCacheName}`);
-          return fallback;
-        }
-      } catch (fallbackError) {
-        // Continue to next cache
-      }
-    }
-    
-    // If it's a critical resource, re-throw the error
-    // Otherwise, let the browser handle it naturally
-    throw error;
+    return cachedResponse || Response.error();
   }
 }
 
@@ -327,44 +212,14 @@ async function cacheFirst(request, cacheName) {
  */
 async function networkFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
-  
   try {
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      // Cache successful responses
-      cache.put(request, networkResponse.clone());
-      await limitCacheSize(cacheName);
-      return networkResponse;
-    }
-    // Return non-OK responses without caching
-    return networkResponse;
+    const response = await fetch(request);
+    cache.put(request, response.clone());
+    limitCacheSize(cacheName);
+    return response;
   } catch (error) {
-    console.warn('[ServiceWorker] Network failed for:', request.url, 'trying cache:', error.message);
-    
-    // Try the specified cache first
-    const cachedResponse = await cache.match(request);
-    if (cachedResponse) {
-      console.log(`[ServiceWorker] Found cached response in ${cacheName}`);
-      return cachedResponse;
-    }
-    
-    // Try other caches as fallback
-    const otherCaches = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE].filter(name => name !== cacheName);
-    for (const otherCacheName of otherCaches) {
-      try {
-        const otherCache = await caches.open(otherCacheName);
-        const fallback = await otherCache.match(request);
-        if (fallback) {
-          console.log(`[ServiceWorker] Found fallback in ${otherCacheName}`);
-          return fallback;
-        }
-      } catch (fallbackError) {
-        // Continue to next cache
-      }
-    }
-    
-    // Re-throw error if no cache available
-    throw error;
+    const cachedResponse = await cache.match(request, {ignoreSearch: true});
+    return cachedResponse || Response.error();
   }
 }
 
@@ -376,29 +231,28 @@ async function networkFirst(request, cacheName) {
  */
 async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(request);
-  
-  // Always try to update in background
-  const networkUpdate = fetch(request).then(response => {
-    if (response.ok) {
-      cache.put(request, response.clone());
-      limitCacheSize(cacheName);
-    }
-    return response;
-  }).catch(error => {
-    console.warn('[ServiceWorker] Background update failed:', error);
-  });
-  
-  // Return cache immediately if available
-  if (cachedResponse) {
+  const cachedResponse = await cache.match(request, {ignoreSearch: true});
+  const ttl = CACHE_EXPIRY.API || (30 * 60 * 1000);
+  if (isFresh(cachedResponse, ttl)) {
+    // Use microtask for background update
+    Promise.resolve().then(() => {
+      fetch(request).then(response => {
+        if (!response || response.status !== 200 || response.type !== 'basic') return;
+        if (!cachedResponse || cachedResponse.headers.get('ETag') !== response.headers.get('ETag')) {
+          cache.put(request, response.clone());
+          limitCacheSize(cacheName);
+        }
+      });
+    });
     return cachedResponse;
   }
-  
-  // If no cache, wait for network
   try {
-    return await networkUpdate;
+    const response = await fetch(request);
+    cache.put(request, response.clone());
+    limitCacheSize(cacheName);
+    return response;
   } catch (error) {
-    throw new Error('No cache available and network failed');
+    return cachedResponse || Response.error();
   }
 }
 
@@ -550,13 +404,13 @@ async function staleWhileRevalidateWithTTL(request, cacheName, ttl) {
   
   // If no cached response, wait for network
   try {
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      const responseWithTimestamp = new Response(networkResponse.body, {
-        status: networkResponse.status,
-        statusText: networkResponse.statusText,
+    const response = await fetch(request);
+    if (response.ok) {
+      const responseWithTimestamp = new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
         headers: {
-          ...Object.fromEntries(networkResponse.headers.entries()),
+          ...Object.fromEntries(response.headers.entries()),
           'sw-cache-date': new Date().toISOString()
         }
       });
@@ -564,7 +418,7 @@ async function staleWhileRevalidateWithTTL(request, cacheName, ttl) {
       cache.put(request, responseWithTimestamp.clone());
       return responseWithTimestamp;
     }
-    return networkResponse;
+    return response;
   } catch (error) {
     throw error;
   }
@@ -608,31 +462,26 @@ function isApiRequest(request) {
 async function limitCacheSize(cacheName) {
   const maxSize = MAX_CACHE_SIZE[cacheName];
   if (!maxSize) return;
-  
   const cache = await caches.open(cacheName);
   const keys = await cache.keys();
-  
   if (keys.length > maxSize) {
-    // Sort by last access time (LRU)
-    const keyDates = await Promise.all(
-      keys.map(async key => {
-        const response = await cache.match(key);
-        const date = response ? response.headers.get('sw-cache-date') || response.headers.get('date') : null;
-        return { key, date: new Date(date || 0) };
-      })
-    );
-    
-    // Sort oldest first
-    keyDates.sort((a, b) => a.date - b.date);
-    
-    const deleteCount = keys.length - maxSize;
-    const keysToDelete = keyDates.slice(0, deleteCount).map(item => item.key);
-    
-    await Promise.all(
-      keysToDelete.map(key => cache.delete(key))
-    );
-    
-    console.log(`[ServiceWorker] Cleaned ${deleteCount} entries from ${cacheName}`);
+    // Delete oldest entries in parallel
+    await Promise.all(keys.slice(0, keys.length - maxSize).map(key => cache.delete(key)));
+  }
+}
+
+function isFresh(response, ttl) {
+  if (!response) return false;
+  const dateHeader = response.headers.get('sw-cache-date') || response.headers.get('date');
+  if (!dateHeader) return false;
+  const age = Date.now() - new Date(dateHeader).getTime();
+  return age < ttl;
+}
+
+// Minimize logging in production
+function log(...args) {
+  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+    console.log(...args);
   }
 }
 
