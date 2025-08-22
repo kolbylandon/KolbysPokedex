@@ -151,11 +151,27 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
   max = Math.ceil(max / 25) * 25;
   
   // Pre-configure chart data structure for optimal performance
+  // Move Speed stat to the bottom by reordering labels and stats
+  // Switch Sp.Atk and Speed so Speed comes before Sp.Atk
+  const statLabels = ['HP', 'Attack', 'Defense', 'Speed', 'Sp.Atk', 'Sp.Def'];
+  let reorderedStats = stats;
+  if (statLabels.length === stats.length) {
+    // Original order: ['HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed']
+    // Desired order:  ['HP', 'Attack', 'Defense', 'Speed', 'Sp.Atk', 'Sp.Def']
+    const originalOrder = ['HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed'];
+    reorderedStats = [
+      stats[originalOrder.indexOf('HP')],
+      stats[originalOrder.indexOf('Attack')],
+      stats[originalOrder.indexOf('Defense')],
+      stats[originalOrder.indexOf('Speed')],
+      stats[originalOrder.indexOf('Sp.Def')],
+      stats[originalOrder.indexOf('Sp.Atk')],
+    ];
+  }
   const chartData = {
-    // Pokemon stat labels in standard order
-    labels: ['HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed'],
+    labels: ['HP', 'Attack', 'Defense', 'Speed', 'Sp.Def', 'Sp.Atk'],
     datasets: [{
-      data: stats,                 // Base stat values array
+      data: reorderedStats,                 // Base stat values array
       backgroundColor,             // Fill color based on Pokemon type
       borderColor,                 // Border color based on Pokemon type
     }],

@@ -66,8 +66,7 @@ IN PROGRESS
 134) Go button will be invisible when no active Pokémon or empty search.
 140) Add a loading spinner when the Pokémon is being fetched.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
-149) Double check all Pokémon names with special characters to ensure they are correct.
-156) Move the speed stat to the bottom of the chart.
+149) Check all Pokémon names with special characters to ensure they are correct.
 
 IMPLEMENTED
 -----------------------------------------------------------------------------------------
@@ -253,3 +252,5 @@ IMPLEMENTED
   and adjusted info-card margins for better spacing across all devices.
 152) Add back the ability to search by Pokémon name. //The user can now search by Pokémon name again by 
   clicking the info text in the header.
+156) Move the speed stat to the bottom of the chart. //The speed stat is now the last stat in the chart
+  and the Sp Attack and Sp Defense stats are now in the correct order as well.
