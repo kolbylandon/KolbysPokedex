@@ -29,6 +29,18 @@
   white-space: nowrap;
 }
 
+/* Make all buttons except search and random wider */
+
+
+
+.primary-btn:not([class*="search"]):not([class*="random"]),
+.secondary-btn:not([class*="search"]):not([class*="random"]),
+.action-btn:not([class*="search"]):not([class*="random"]) {
+  min-width: 75px;
+  width: auto;
+  box-sizing: border-box;
+}
+
 .primary-btn:hover {
   transform: translateY(-2px);
   box-shadow: 
@@ -230,4 +242,13 @@
   width: 100%;
   height: 100%;
   gap: 0.25rem;
+}
+
+/* Make all buttons except search and random even less wide on mobile */
+@media (max-width: 600px) {
+  .primary-btn:not([class*="search"]):not([class*="random"]),
+  .secondary-btn:not([class*="search"]):not([class*="random"]),
+  .action-btn:not([class*="search"]):not([class*="random"]) {
+    min-width: 60px;
+  }
 }
