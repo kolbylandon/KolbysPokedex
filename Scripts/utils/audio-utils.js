@@ -21,8 +21,6 @@
 
 'use strict';
 
-'use strict';
-
 // Import required dependencies
 import { 
   showToast 

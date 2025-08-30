@@ -10,6 +10,8 @@
   @since 2023
 */
 
+'use strict';
+
 // Fallback redirect in case meta refresh doesn't work
 setTimeout(() => {
   window.location.href = 'Pages/pokedex.html';

@@ -59,6 +59,7 @@ TO DO
 153) Look into having hidden abilities show in their own list.
 154) Remove the dashes from the paradox Pokémon names.
 155) Incorporate the TGC API.
+157) Fix the input when the Pokémon name has a special character.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------

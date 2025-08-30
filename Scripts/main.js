@@ -18,7 +18,8 @@
  * @updated 2025-08-02T02:00:00Z
  */
 
-('use strict');
+'use strict';
+
 // Performance: disable debug logs in production
 const DEBUG = false;
 // Debounce helper to limit rapid function calls
