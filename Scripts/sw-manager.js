@@ -193,17 +193,26 @@ function createUpdateNotification() {
   notification.className = 'sw-notification';
   notification.innerHTML = `
     <div class="sw-notification-content">
-      <span class="sw-notification-text">A new version is available!</span>
+      <span class="sw-notification-text">🔄 A new version of Kolby's Pokédex is available!</span>
+      <div class="sw-notification-details">
+        <span class="sw-notification-detail">Refresh to get the latest features and bug fixes.</span>
+      </div>
       <div class="sw-notification-buttons">
-        <button id="sw-update-button" class="sw-button sw-button-primary">Update</button>
-        <button id="sw-dismiss-button" class="sw-button sw-button-secondary">Dismiss</button>
+        <button id="sw-update-reload" class="sw-button sw-button-primary">Reload Now</button>
+        <button id="sw-dismiss-update" class="sw-button sw-button-secondary">Later</button>
       </div>
     </div>
   `;
 
   // Add event listeners
-  notification.querySelector('#sw-update-button').addEventListener('click', applyUpdate);
-  notification.querySelector('#sw-dismiss-button').addEventListener('click', dismissUpdate);
+  notification.querySelector('#sw-update-reload').addEventListener('click', function() {
+    applyUpdate();
+    notification.classList.remove('show');
+  });
+  notification.querySelector('#sw-dismiss-update').addEventListener('click', function() {
+    dismissUpdate();
+    notification.classList.remove('show');
+  });
 
   return notification;
 }

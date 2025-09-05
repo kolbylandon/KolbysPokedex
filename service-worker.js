@@ -61,7 +61,9 @@ const STATIC_ASSETS = [
   './Scripts/utils/pokemon-names.js',
   './Images/pokeball.png',
   './Images/pokeball-bullet.png',
-  './manifest.json'
+  './manifest.json',
+  './offline.html',
+  './Images/offline.png'
 ];
 
 // API patterns that should be cached
@@ -149,6 +151,34 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET' || !url.protocol.startsWith('http')) return;
   if (url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) return;
   if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('cdnjs.cloudflare.com') || url.hostname.includes('cdn.jsdelivr.net')) return;
+
+  // Offline fallback for navigation requests (HTML)
+  if (request.mode === 'navigate' || request.destination === 'document') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          // Cache the response for offline use
+          const responseClone = response.clone();
+          caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, responseClone));
+          return response;
+        })
+        .catch(() => {
+          // Try to serve from cache
+          return caches.match(request).then(cached => {
+            if (cached) return cached;
+            // Fallback to custom offline page if not found
+            return caches.match('./offline.html').then(offlinePage => {
+              if (offlinePage) return offlinePage;
+              // Fallback to main page if offline.html is missing
+              return caches.match('./index.html');
+            });
+          });
+        })
+    );
+    return;
+  }
+
+  // For other requests, use main handler
   event.respondWith(handleFetch(request));
 });
 
@@ -178,7 +208,16 @@ async function handleFetch(request) {
     // Fallback: cache first for other assets
     return cacheFirst(request, DYNAMIC_CACHE);
   } catch (error) {
-    return fetch(request);
+    // If offline, try to serve from cache
+    return caches.match(request).then(cached => {
+      if (cached) return cached;
+      // Fallback to main page for navigation requests
+      if (request.mode === 'navigate' || request.destination === 'document') {
+        return caches.match('./index.html');
+      }
+      // Fallback to a generic offline response for other assets
+      return new Response('Offline. Resource unavailable.', { status: 503, statusText: 'Offline', headers: { 'Content-Type': 'text/plain' } });
+    });
   }
 }
 
