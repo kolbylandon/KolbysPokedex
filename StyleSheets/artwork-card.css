@@ -33,7 +33,7 @@
   object-fit: contain;
   box-shadow: var(--shadow-md);
   border: 1px solid rgba(229, 62, 62, 0.1);
-  background: var(--pokeball-white);
+  background: transparent;
 }
 
 /* ====================================
@@ -43,14 +43,14 @@
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  background: var(--pokeball-white);
+  background: transparent;
   margin: 0 auto;
 }
 
 #root #artwork-card .artwork-table-td {
   padding: var(--spacing-xs);
   border: none;
-  background: var(--pokeball-white);
+  background: transparent;
   vertical-align: middle;
   text-align: center;
   position: relative;
