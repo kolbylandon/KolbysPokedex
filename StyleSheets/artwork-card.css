@@ -94,6 +94,7 @@
   border-radius: var(--radius-xl);
   box-shadow: 0 12px 40px rgba(229,62,62,0.18), 0 4px 16px rgba(0,0,0,0.12);
   border: 2px solid rgba(229,62,62,0.15);
+}
 
 @media (max-width: 900px) {
   #root #artwork-card .artwork-table-td .image.artwork {
