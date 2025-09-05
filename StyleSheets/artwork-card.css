@@ -43,14 +43,14 @@
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  background: transparent;
+  background: var(--pokeball-white);
   margin: 0 auto;
 }
 
 #root #artwork-card .artwork-table-td {
   padding: var(--spacing-xs);
   border: none;
-  background: transparent;
+  background: var(--pokeball-white);
   vertical-align: middle;
   text-align: center;
   position: relative;
@@ -70,7 +70,46 @@
 #root #artwork-card .artwork-table-td .image.artwork {
   margin: 0 auto;
   width: 100%;
-  max-width: 300px;
+  max-width: 700px;
+  height: auto;
+  border-radius: var(--radius-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  display: block;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  image-rendering: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* removed stray closing brace */
+
+/* Make default artwork much larger */
+#root #artwork-card .artwork-table-td .image.default-artwork {
+  max-width: 900px;
+/* removed stray closing brace */
+
+@media (max-width: 900px) {
+  #root #artwork-card .artwork-table-td .image.artwork {
+    max-width: 95vw;
+  }
+  #root #artwork-card .artwork-table-td .image.default-artwork {
+    max-width: 95vw;
+  }
+}
+
+@media (max-width: 600px) {
+  #root #artwork-card .artwork-table-td .image.artwork {
+    max-width: 90vw;
+  }
+  #root #artwork-card .artwork-table-td .image.default-artwork {
+    max-width: 98vw;
+  }
+}
   height: auto;
   border-radius: var(--radius-lg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

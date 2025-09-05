@@ -119,6 +119,15 @@
   cursor: url(../Images/pokeball-bullet.png), auto;
 }
 
+/* ====================================
+   MOBILE FIX FOR INFO CARD OVERLAP
+   ==================================== */
+@media (max-width: 600px) {
+  #root #info-card {
+  margin-top: 2rem !important;
+  }
+}
+
 .type-container {
   text-align: center;
   display: flex;
