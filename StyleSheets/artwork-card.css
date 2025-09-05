@@ -91,39 +91,30 @@
 /* Make default artwork much larger */
 #root #artwork-card .artwork-table-td .image.default-artwork {
   max-width: 900px;
-/* removed stray closing brace */
+  border-radius: var(--radius-xl);
+  box-shadow: 0 12px 40px rgba(229,62,62,0.18), 0 4px 16px rgba(0,0,0,0.12);
+  border: 2px solid rgba(229,62,62,0.15);
 
 @media (max-width: 900px) {
   #root #artwork-card .artwork-table-td .image.artwork {
     max-width: 95vw;
+    box-shadow: 0 4px 16px rgba(229,62,62,0.12);
   }
   #root #artwork-card .artwork-table-td .image.default-artwork {
     max-width: 95vw;
+    box-shadow: 0 4px 16px rgba(229,62,62,0.12);
   }
 }
 
 @media (max-width: 600px) {
   #root #artwork-card .artwork-table-td .image.artwork {
     max-width: 90vw;
+    box-shadow: 0 2px 8px rgba(229,62,62,0.10);
   }
   #root #artwork-card .artwork-table-td .image.default-artwork {
     max-width: 98vw;
+    box-shadow: 0 2px 8px rgba(229,62,62,0.10);
   }
-}
-  height: auto;
-  border-radius: var(--radius-lg);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: none;
-  border: none;
-  background: transparent;
-  display: block;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  image-rendering: auto;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 #root #artwork-card .artwork-table-td .image.artwork {
