@@ -164,7 +164,7 @@ header[id="header"],
    SEARCH INPUT
    ==================================== */
 #header form #pokemon-textbox {
-  border: 2px solid rgba(229, 62, 62, 0.2);
+  border: 2px solid var(--pokeball-red);
   background: var(--pokeball-white);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
