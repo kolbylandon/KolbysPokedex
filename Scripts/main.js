@@ -610,7 +610,7 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
     case 'Clear':
       // Reset application to initial state
       Textbox.value = '';
-      Body.style.background = convertHexToRgba('#ffffff', 1); // Reset background
+  Body.style.setProperty('--body-bg', 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%, #f8fafc 100%)'); // Reset background
       id = null;
       ToastCloseButton.click(); // Hide any active toasts
       console.log('Clearing elements, HiddenElementsArray length:', HiddenElementsArray.length);

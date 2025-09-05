@@ -40,14 +40,14 @@ body {
   scrollbar-width: none;
   line-height: 1.6;
   will-change: scroll-position;
-  background: linear-gradient(
+  background: var(--body-bg, linear-gradient(
     135deg, 
     #f8fafc 0%, 
     #f1f5f9 25%, 
     #e2e8f0 50%, 
     #f1f5f9 75%, 
     #f8fafc 100%
-  );
+  ));
   background-size: 400% 400%;
   animation: subtleShift 20s ease infinite;
   min-height: 100vh;
@@ -74,9 +74,9 @@ body::before {
   width: 100%;
   height: 100%;
   background-image: 
-    radial-gradient(circle at 20% 80%, rgba(229, 62, 62, 0.04) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(229, 62, 62, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(229, 62, 62, 0.02) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(229, 62, 62, 0.01) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(229, 62, 62, 0.01) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(229, 62, 62, 0.01) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
   animation: float 15s ease-in-out infinite;

@@ -452,7 +452,9 @@ export function getTypes(types) {
   }
   
   // Apply radial gradient background based on type colors
-  Body.style.background = `radial-gradient(circle, ${firstBackgroundColor} 0%, ${secondBackgroundColor} 100%)`;
+  const gradient = `radial-gradient(circle, ${firstBackgroundColor} 0%, ${secondBackgroundColor} 100%)`;
+  Body.style.setProperty('--body-bg', gradient);
+  console.log('[Pokédex] Set --body-bg:', gradient);
   
   return [firstColor, secondColor];
 }
