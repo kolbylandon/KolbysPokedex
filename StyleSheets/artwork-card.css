@@ -31,7 +31,7 @@
   transition: all 0.3s ease;
   max-width: 100%;
   object-fit: contain;
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
   border: 1px solid rgba(229, 62, 62, 0.1);
   background: transparent;
 }
@@ -92,29 +92,29 @@
 #root #artwork-card .artwork-table-td .image.default-artwork {
   max-width: 900px;
   border-radius: var(--radius-xl);
-  box-shadow: 0 12px 40px rgba(229,62,62,0.18), 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: none;
   border: 2px solid rgba(229,62,62,0.15);
 }
 
 @media (max-width: 900px) {
   #root #artwork-card .artwork-table-td .image.artwork {
     max-width: 95vw;
-    box-shadow: 0 4px 16px rgba(229,62,62,0.12);
+    box-shadow: none;
   }
   #root #artwork-card .artwork-table-td .image.default-artwork {
     max-width: 95vw;
-    box-shadow: 0 4px 16px rgba(229,62,62,0.12);
+    box-shadow: none;
   }
 }
 
 @media (max-width: 600px) {
   #root #artwork-card .artwork-table-td .image.artwork {
     max-width: 90vw;
-    box-shadow: 0 2px 8px rgba(229,62,62,0.10);
+    box-shadow: none;
   }
   #root #artwork-card .artwork-table-td .image.default-artwork {
     max-width: 98vw;
-    box-shadow: 0 2px 8px rgba(229,62,62,0.10);
+    box-shadow: none;
   }
 }
 
