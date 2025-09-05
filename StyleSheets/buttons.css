@@ -251,4 +251,15 @@
   .action-btn:not([class*="search"]):not([class*="random"]) {
     min-width: 60px;
   }
+
+  /* Make search and random buttons as tall as others on mobile */
+  .primary-btn[class*="search"],
+  .primary-btn[class*="random"],
+  .secondary-btn[class*="search"],
+  .secondary-btn[class*="random"],
+  .action-btn[class*="search"],
+  .action-btn[class*="random"] {
+    height: 36px;
+    min-width: 60px;
+  }
 }

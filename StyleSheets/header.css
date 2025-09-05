@@ -205,4 +205,5 @@ header[id="header"],
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   font-size: var(--font-sm);
+    height: 40px;
 }
