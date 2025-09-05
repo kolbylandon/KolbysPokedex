@@ -236,8 +236,114 @@ function displayAttributes() {
     'Shiny Official Artwork'
   );
   
-  // Add click event listeners for sprite toggling if Pokemon has gender differences
-  addSpriteClickListeners();
+  // Sprite display logic: show default sprite, toggle to shiny on click, fallback to artwork ONLY if both sprites are missing
+  let hasDefaultSprite = !!pokemon.FrontDefaultSprite;
+  let hasShinySprite = !!pokemon.FrontShinySprite;
+  let hasArtwork = !!pokemon.FrontDefaultOfficialArtwork;
+  let hasShinyArtwork = !!pokemon.FrontShinyOfficialArtwork;
+
+  // Remove any previous click handler and event listener
+  DefaultArtworkElement.onclick = null;
+  DefaultArtworkElement.removeEventListener('click', DefaultArtworkElement._toggleHandler);
+
+  // Store toggle state and handler as properties on the element
+  DefaultArtworkElement._showingShiny = false;
+  DefaultArtworkElement._toggleHandler = null;
+
+  if (hasDefaultSprite && hasShinySprite) {
+    currentSpriteState = 'default';
+    configureArtworkElement(
+      DefaultArtworkElement,
+      pokemon.FrontDefaultSprite,
+      'Default Sprite'
+    );
+    DefaultArtworkElement.style.display = '';
+    DefaultArtworkElement.style.cursor = 'pointer';
+    DefaultArtworkElement.title = 'Click to show shiny sprite';
+    DefaultArtworkElement._toggleHandler = function () {
+      DefaultArtworkElement._showingShiny = !DefaultArtworkElement._showingShiny;
+      if (DefaultArtworkElement._showingShiny) {
+        configureArtworkElement(
+          DefaultArtworkElement,
+          pokemon.FrontShinySprite,
+          'Shiny Default Sprite'
+        );
+        DefaultArtworkElement.title = 'Click to show default sprite';
+      } else {
+        configureArtworkElement(
+          DefaultArtworkElement,
+          pokemon.FrontDefaultSprite,
+          'Default Sprite'
+        );
+        DefaultArtworkElement.title = 'Click to show shiny sprite';
+      }
+    };
+    DefaultArtworkElement.addEventListener('click', DefaultArtworkElement._toggleHandler);
+  } else if (hasDefaultSprite) {
+    currentSpriteState = 'default';
+    configureArtworkElement(
+      DefaultArtworkElement,
+      pokemon.FrontDefaultSprite,
+      'Default Sprite'
+    );
+    DefaultArtworkElement.style.display = '';
+    DefaultArtworkElement.style.cursor = 'default';
+    DefaultArtworkElement.title = 'Default Sprite';
+    DefaultArtworkElement._showingShiny = false;
+    DefaultArtworkElement._toggleHandler = null;
+  } else if (hasArtwork && hasShinyArtwork) {
+    currentSpriteState = 'artwork';
+    configureArtworkElement(
+      DefaultArtworkElement,
+      pokemon.FrontDefaultOfficialArtwork,
+      'Default Official Artwork'
+    );
+    DefaultArtworkElement.style.display = '';
+    DefaultArtworkElement.style.cursor = 'pointer';
+    DefaultArtworkElement.title = 'Click to show shiny artwork';
+    DefaultArtworkElement._showingShiny = false;
+    DefaultArtworkElement._toggleHandler = function () {
+      DefaultArtworkElement._showingShiny = !DefaultArtworkElement._showingShiny;
+      if (DefaultArtworkElement._showingShiny) {
+        configureArtworkElement(
+          DefaultArtworkElement,
+          pokemon.FrontShinyOfficialArtwork,
+          'Shiny Official Artwork'
+        );
+        DefaultArtworkElement.title = 'Click to show default artwork';
+      } else {
+        configureArtworkElement(
+          DefaultArtworkElement,
+          pokemon.FrontDefaultOfficialArtwork,
+          'Default Official Artwork'
+        );
+        DefaultArtworkElement.title = 'Click to show shiny artwork';
+      }
+    };
+    DefaultArtworkElement.addEventListener('click', DefaultArtworkElement._toggleHandler);
+  } else if (hasArtwork) {
+    currentSpriteState = 'artwork';
+    configureArtworkElement(
+      DefaultArtworkElement,
+      pokemon.FrontDefaultOfficialArtwork,
+      'Default Official Artwork'
+    );
+    DefaultArtworkElement.style.display = '';
+    DefaultArtworkElement.style.cursor = 'default';
+    DefaultArtworkElement.title = 'Default Official Artwork';
+    DefaultArtworkElement._showingShiny = false;
+    DefaultArtworkElement._toggleHandler = null;
+  }
+  // Always hide the shiny artwork image element
+  if (ShinyArtworkElement) {
+    ShinyArtworkElement.style.display = 'none';
+    ShinyArtworkElement.src = '';
+  }
+  
+  // Remove sprite click listeners and interaction (only show default sprite)
+  DefaultArtworkElement.removeEventListener('click', cycleSpriteDisplay);
+  DefaultArtworkElement.style.cursor = 'default';
+  DefaultArtworkElement.title = 'Default Sprite';
 } //displayAttributes
 
 // ====================================
@@ -414,39 +520,14 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
  * Cycles through artwork → default sprites (for Pokemon without gender differences)
  */
 function addSpriteClickListeners() {
-  // Remove any existing click listeners
+  // Remove sprite click listeners and interaction (only show default sprite)
   DefaultArtworkElement.removeEventListener('click', cycleSpriteDisplay);
-  ShinyArtworkElement.removeEventListener('click', cycleSpriteDisplay);
-  
-  // Add click listeners for all Pokemon (both with and without gender differences)
-  console.log(`�️ [Sprite Cycle] Adding click listeners for ${pokemon.name}`);
-  
-  // Add visual indicator that sprites are clickable
-  DefaultArtworkElement.style.cursor = 'pointer';
-  ShinyArtworkElement.style.cursor = 'pointer';
-  
-  // Add click event listeners
-  DefaultArtworkElement.addEventListener('click', cycleSpriteDisplay);
-  ShinyArtworkElement.addEventListener('click', cycleSpriteDisplay);
-  
-  // Add hover effects for better UX - check if alternate gender sprites actually exist
-  const hasAlternateSprites = pokemon.hasGenderDifferences && pokemon.alternateGender && (
-    (pokemon.alternateGender === 'female' && (pokemon.frontFemaleSprite || pokemon.frontFemaleShinySprite)) ||
-    (pokemon.alternateGender === 'male' && (pokemon.frontMaleSprite || pokemon.frontMaleShinySprite))
-  );
-  
-  if (hasAlternateSprites) {
-    const alternateGenderLabel = pokemon.alternateGender === 'female' ? 'Female' : 'Male';
-    DefaultArtworkElement.title = `Click to cycle: Artwork → Default (${pokemon.defaultGender}) → ${alternateGenderLabel}`;
-    ShinyArtworkElement.title = `Click to cycle: Artwork → Default (${pokemon.defaultGender}) → ${alternateGenderLabel}`;
-  } else {
-    DefaultArtworkElement.title = 'Click to cycle: Artwork → Sprite';
-    ShinyArtworkElement.title = 'Click to cycle: Artwork → Sprite';
-  }
+  DefaultArtworkElement.style.cursor = 'default';
+  DefaultArtworkElement.title = 'Default Sprite';
 }
 
 /**
- * Cycles through sprite display states: artwork → default → alternate gender (if exists) → artwork (repeat)
+ * Cycles through sprite display states: artwork → default → alternate → artwork
  * For Pokemon without gender differences or alternate sprites: artwork → default → artwork (repeat)
  */
 function cycleSpriteDisplay() {
