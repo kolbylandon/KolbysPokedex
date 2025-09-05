@@ -833,8 +833,12 @@ function configureArtworkElement(element, imageUrl, altText) {
     };
     
     element.onerror = function() {
-      console.warn(`❌ Artwork load failed: ${element.alt}`);
-      element.style.opacity = '0.5';
+  console.warn(`❌ Artwork load failed: ${element.alt}`);
+  element.style.opacity = '1';
+  element.style.filter = '';
+  // Set Pokeball placeholder image
+  element.src = '/Images/pokeball.png';
+  element.alt = 'Pokeball Placeholder';
     };
     
     // Set the source
