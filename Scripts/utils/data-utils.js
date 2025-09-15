@@ -553,6 +553,10 @@ export function punctuationNameCheck(name) {
     name.toLowerCase().includes('nidoran-f') ? 'Nidoran♀' :                   // Nidoran♀ (29)
     name.toLowerCase().includes('nidoran-m') ? 'Nidoran♂' :                   // Nidoran♂ (32)
     name.toLowerCase().includes('flabebe') ? 'Flabébé' :                       // Flabébé (669)
+    name.toLowerCase().includes('wo-chien') ? 'Wo-Chien' :                    // Wo-Chien (1001)
+    name.toLowerCase().includes('chien-pao') ? 'Chien-Pao' :                  // Chien-Pao (1002)
+    name.toLowerCase().includes('ting-lu') ? 'Ting-Lu' :                      // Ting-Lu (1003)
+    name.toLowerCase().includes('chi-yu') ? 'Chi-Yu' :                        // Chi-Yu (1004)
     name.toLowerCase().includes('-') ? name.replace('-', ' ') :               // Handle other hyphenated names
     name;
 }
