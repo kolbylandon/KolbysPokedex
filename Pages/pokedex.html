@@ -54,18 +54,21 @@
   
   <!-- Progressive Web App manifest -->
   <link rel="manifest" href="../manifest.json">
-  
-  <!-- ====================================
-       TITLE AND FAVICON
-       ==================================== -->
+
+  <!-- Preload critical CSS for faster rendering -->
+  <link rel="preload" href="../StyleSheets/base.css" as="style">
+  <link rel="preload" href="../StyleSheets/main.css" as="style">
+  <link rel="preload" href="../StyleSheets/index.css" as="style">
+
+  <!-- TITLE AND FAVICON -->
   <title>Kolby's Pokédex</title>
-  
+
   <!-- Enhanced favicon configuration for better display -->
-    <link rel="icon" type="image/png" sizes="16x16" href="../Images/pokeball.png" fetchpriority="high">
-    <link rel="icon" type="image/png" sizes="32x32" href="../Images/pokeball.png" fetchpriority="high">
-    <link rel="icon" type="image/png" sizes="48x48" href="../Images/pokeball.png" fetchpriority="high">
-    <link rel="shortcut icon" href="../Images/pokeball.png" type="image/png" fetchpriority="high">
-  
+  <link rel="icon" type="image/png" sizes="16x16" href="../Images/pokeball.png" fetchpriority="high">
+  <link rel="icon" type="image/png" sizes="32x32" href="../Images/pokeball.png" fetchpriority="high">
+  <link rel="icon" type="image/png" sizes="48x48" href="../Images/pokeball.png" fetchpriority="high">
+  <link rel="shortcut icon" href="../Images/pokeball.png" type="image/png" fetchpriority="high">
+
   <!-- Apple Touch Icon for iOS devices -->
   <link rel="apple-touch-icon" sizes="180x180" href="../Images/pokeball.png">
   <link rel="apple-touch-icon" sizes="152x152" href="../Images/pokeball.png">
@@ -76,7 +79,7 @@
   <link rel="apple-touch-icon" sizes="72x72" href="../Images/pokeball.png">
   <link rel="apple-touch-icon" sizes="60x60" href="../Images/pokeball.png">
   <link rel="apple-touch-icon" sizes="57x57" href="../Images/pokeball.png">
-  
+
   <!-- Microsoft application tiles -->
   <meta name="msapplication-TileImage" content="../Images/pokeball.png">
   <meta name="msapplication-TileColor" content="#e53e3e">
@@ -253,6 +256,9 @@
       <script type="module" src="../Scripts/main.js" defer></script>
       <!-- Matrix background script -->
       <script type="module" src="../Scripts/matrix-bg.js" defer></script>
+  <!-- Defer non-critical scripts for faster initial paint -->
+  <script type="module" src="../Scripts/statsChart.js" defer></script>
+  <script type="module" src="../Scripts/particles.js" defer></script>
       <!-- Inline script for Service Worker initialization -->
       <script>
         // Service Worker registration is now handled by sw-manager.js
