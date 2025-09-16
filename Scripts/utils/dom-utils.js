@@ -114,10 +114,22 @@ export const CryButton = DOM_CACHE.cryButton;
  */
 export function createArray(elements) {
   const array = Array.from(elements);
-  console.log(`createArray: converted ${elements.length} elements to array of ${array.length} items`);
-  array.forEach((element, index) => {
-    console.log(`Element ${index}: ${element.id || element.tagName} with classes: ${element.className}`);
-  });
+  if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+    window.requestAnimationFrame(() => {
+      array.forEach((element, index) => {
+        // Only log in development
+        if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+          console.log(`Element ${index}: ${element.id || element.tagName} with classes: ${element.className}`);
+        }
+      });
+    });
+  } else {
+    array.forEach((element, index) => {
+      if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+        console.log(`Element ${index}: ${element.id || element.tagName} with classes: ${element.className}`);
+      }
+    });
+  }
   return array;
 }
 
@@ -135,28 +147,38 @@ export function createArray(elements) {
  */
 export function getElementVisibility(elements, visibility) {
   if (!Array.isArray(elements)) {
-    console.warn('getElementVisibility: elements should be an array');
+    if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+      console.warn('getElementVisibility: elements should be an array');
+    }
     return;
   }
-  
-  console.log(`getElementVisibility called with ${elements.length} elements, visibility: ${visibility}`);
-  
-  elements.forEach((element, index) => {
-    if (element) {
-      console.log(`Processing element ${index}: ${element.id || element.className}`);
-      if (visibility === 'visible') {
-        element.classList.remove('hidden-element');
-        element.classList.add('visible-element');
-        console.log(`Made element ${element.id || element.className} visible`);
-      } else if (visibility === 'hidden') {
-        element.classList.remove('visible-element');
-        element.classList.add('hidden-element');
-        console.log(`Made element ${element.id || element.className} hidden`);
+  if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+    window.requestAnimationFrame(() => {
+      elements.forEach((element, index) => {
+        if (element) {
+          if (visibility === 'visible') {
+            element.classList.remove('hidden-element');
+            element.classList.add('visible-element');
+          } else if (visibility === 'hidden') {
+            element.classList.remove('visible-element');
+            element.classList.add('hidden-element');
+          }
+        }
+      });
+    });
+  } else {
+    elements.forEach((element, index) => {
+      if (element) {
+        if (visibility === 'visible') {
+          element.classList.remove('hidden-element');
+          element.classList.add('visible-element');
+        } else if (visibility === 'hidden') {
+          element.classList.remove('visible-element');
+          element.classList.add('hidden-element');
+        }
       }
-    } else {
-      console.warn('getElementVisibility: null element encountered at index', index);
-    }
-  });
+    });
+  }
 }
 
 /**

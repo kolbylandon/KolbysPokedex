@@ -83,35 +83,24 @@ export function getAbilityList(abilities) {
     console.warn('getAbilityList: Invalid abilities array provided');
     return;
   }
-
-  // Set appropriate header text based on number of abilities
   AbilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';
   AbilitiesUnorderedList.innerHTML = `<ul id='abilities-unordered-list' class='list-bulleted'></ul>`;
-  
-  // Use DocumentFragment for better DOM performance
   const fragment = document.createDocumentFragment();
-  
-  abilities.forEach((ability, index) => {
-    const ListItem = document.createElement('li');
-    ListItem.id = `flavor-text-${index + 1}`;
-    ListItem.classList.add('flavor-text');
-    
-    // Format ability name with proper capitalization
-    let name = capitalizeAfterHyphen(capitalizeFirstLetter(ability.ability.name));
-    if (ability.is_hidden) {
-      name += ' (Hidden)'; // Mark hidden abilities
-    }
-    
-    // Request and display ability effect description
-    requestAbilityEffect(ability.ability.url, ListItem, name);
-    
-    // Apply different colors for hidden vs normal abilities
-    ListItem.style.color = ability.is_hidden === false ? TextColor : HiddenAbilityTextColor;
-    fragment.appendChild(ListItem);
+  window.requestAnimationFrame(() => {
+    abilities.forEach((ability, index) => {
+      const ListItem = document.createElement('li');
+      ListItem.id = `flavor-text-${index + 1}`;
+      ListItem.classList.add('flavor-text');
+      let name = capitalizeAfterHyphen(capitalizeFirstLetter(ability.ability.name));
+      if (ability.is_hidden) {
+        name += ' (Hidden)';
+      }
+      requestAbilityEffect(ability.ability.url, ListItem, name);
+      ListItem.style.color = ability.is_hidden === false ? TextColor : HiddenAbilityTextColor;
+      fragment.appendChild(ListItem);
+    });
+    AbilitiesUnorderedList.appendChild(fragment);
   });
-  
-  // Add all ability items to DOM at once for better performance
-  AbilitiesUnorderedList.appendChild(fragment);
 }
 
 // ====================================
@@ -133,36 +122,27 @@ export function getHeldItemList(heldItems) {
     console.warn('getHeldItemList: Invalid held items array provided');
     return;
   }
-
-  // Hide section if no held items exist
   if (heldItems.length === 0) {
     HeldItemsHeader.style.display = 'none';
     HeldItemsUnorderedList.style.display = 'none';
     return;
   }
-  
-  // Show section and set appropriate header text
   HeldItemsHeader.innerText = heldItems.length === 1 ? 'Held Item:' : 'Held Items:';
   HeldItemsUnorderedList.innerHTML = `<ul id='held-items-unordered-list' class='list-bulleted'></ul>`;
   HeldItemsHeader.style.display = 'block';
   HeldItemsUnorderedList.style.display = 'block';
-  
-  // Use DocumentFragment for better DOM performance
   const fragment = document.createDocumentFragment();
-  
-  heldItems.forEach((heldItem, index) => {
-    const ListItem = document.createElement('li');
-    ListItem.id = `held-item-text-${index + 1}`;
-    ListItem.classList.add('held-item-text');
-    
-    // Format item name and request details from API
-    requestHeldItem(heldItem.item.url, ListItem, capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name)));
-    ListItem.style.color = TextColor;
-    fragment.appendChild(ListItem);
+  window.requestAnimationFrame(() => {
+    heldItems.forEach((heldItem, index) => {
+      const ListItem = document.createElement('li');
+      ListItem.id = `held-item-text-${index + 1}`;
+      ListItem.classList.add('held-item-text');
+      requestHeldItem(heldItem.item.url, ListItem, capitalizeAfterHyphen(capitalizeFirstLetter(heldItem.item.name)));
+      ListItem.style.color = TextColor;
+      fragment.appendChild(ListItem);
+    });
+    HeldItemsUnorderedList.appendChild(fragment);
   });
-  
-  // Add all held item elements to DOM at once
-  HeldItemsUnorderedList.appendChild(fragment);
 }
 
 // ====================================
@@ -185,45 +165,32 @@ export function getFormList(forms) {
     console.warn('getFormList: Invalid forms array provided');
     return;
   }
-
-  // Hide section if only default form exists
   if (forms.length === 1) {
     FormsHeader.style.display = 'none';
     FormsUnorderedList.style.display = 'none';
     return;
   }
-  
-  // Show section and prepare for form display
   FormsHeader.style.display = 'block';
   FormsUnorderedList.style.display = 'block';
   FormsUnorderedList.innerHTML = `<ul id='forms-unordered-list' class='list-bulleted'></ul>`;
-  
-  // Use DocumentFragment for better DOM performance
   const fragment = document.createDocumentFragment();
-  
-  forms.forEach((form, index) => {
-    const ListItem = document.createElement('li');
-    ListItem.id = `forms-text-${index + 1}`;
-    ListItem.classList.add('form-text');
-    
-    // Request form details and make clickable
-    requestForm(form.pokemon.url, ListItem);
-    ListItem.style.color = TextColor;
-    
-    // Add click event with optimized URL parsing for Pokemon ID extraction
-    ListItem.addEventListener('click', () => {
-      const pokemonId = form.pokemon.url.split('/').slice(-2, -1)[0];
-      // Use dynamic import to avoid circular dependency
-      import('./navigation-utils.js?v=20250801i').then(({ generatePokemon }) => {
-        generatePokemon(pokemonId, 'visible', true);
+  window.requestAnimationFrame(() => {
+    forms.forEach((form, index) => {
+      const ListItem = document.createElement('li');
+      ListItem.id = `forms-text-${index + 1}`;
+      ListItem.classList.add('form-text');
+      requestForm(form.pokemon.url, ListItem);
+      ListItem.style.color = TextColor;
+      ListItem.addEventListener('click', () => {
+        const pokemonId = form.pokemon.url.split('/').slice(-2, -1)[0];
+        import('./navigation-utils.js?v=20250801i').then(({ generatePokemon }) => {
+          generatePokemon(pokemonId, 'visible', true);
+        });
       });
+      fragment.appendChild(ListItem);
     });
-    
-    fragment.appendChild(ListItem);
+    FormsUnorderedList.appendChild(fragment);
   });
-  
-  // Add all form elements to DOM at once
-  FormsUnorderedList.appendChild(fragment);
 }
 
 // ====================================
