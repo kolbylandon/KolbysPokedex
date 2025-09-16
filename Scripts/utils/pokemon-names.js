@@ -83,7 +83,6 @@ export const NAME_VARIATIONS = {
   'flabebe': 'flabébé',
   'flabébe': 'flabébé',
   'flabébé': 'flabébé',
-  'flabébé': 'flabébé',
 };
 
 /**

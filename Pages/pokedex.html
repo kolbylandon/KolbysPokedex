@@ -103,7 +103,7 @@
     <link href="../StyleSheets/matrix-bg.css" rel="stylesheet">
 </head>
 <body>
-  <script type="module" src="../Scripts/matrix-bg.js"></script>
+  <script type="module" src="../dist/matrix-bg.js"></script>
   <!-- Matrix background canvas (hidden by default, shown for Porygon family) -->
   <div id="matrix-bg" class="matrix-bg" style="display:none;">
     <canvas id="matrix-canvas" class="matrix-canvas"></canvas>
@@ -249,16 +249,16 @@
          EXTERNAL SCRIPTS AND MODULES
          ==================================== -->
       <!-- Performance monitoring module -->
-      <script type="module" src="../Scripts/performance.js" defer></script>
-      <!-- Service Worker manager for PWA functionality -->
-      <script src="../Scripts/sw-manager.js" defer></script>
-      <!-- Main application entry point -->
-      <script type="module" src="../Scripts/main.js" defer></script>
-      <!-- Matrix background script -->
-      <script type="module" src="../Scripts/matrix-bg.js" defer></script>
+    <script type="module" src="../dist/performance.js" defer></script>
+    <!-- Service Worker manager for PWA functionality -->
+    <script src="../dist/sw-manager.js" defer></script>
+    <!-- Main application entry point -->
+    <script type="module" src="../dist/main.js" defer></script>
+    <!-- Matrix background script -->
+    <script type="module" src="../dist/matrix-bg.js" defer></script>
   <!-- Defer non-critical scripts for faster initial paint -->
-  <script type="module" src="../Scripts/statsChart.js" defer></script>
-  <script type="module" src="../Scripts/particles.js" defer></script>
+  <script type="module" src="../dist/statsChart.js" defer></script>
+  <script type="module" src="../dist/particles.js" defer></script>
       <!-- Inline script for Service Worker initialization -->
       <script>
         // Service Worker registration is now handled by sw-manager.js
