@@ -8,7 +8,7 @@ export function showSnowIfBabyOrIce(pokemonObject) {
   });
   const isLegendary = pokemonObject.isLegendary || pokemonObject.is_legendary;
   const isMythical = pokemonObject.isMythical || pokemonObject.is_mythical;
-  console.log('[Particles.js] isIceType:', isIceType, 'isLegendary:', isLegendary, 'isMythical:', isMythical);
+    console.log('[Particles.js] isIceType:', isIceType, 'isLegendary:', isLegendary, 'isMythical:', isMythical);
 
   if ((isIceType && (isLegendary || isMythical))) {
     // Ice AND legendary/mythical: show legendary/mythical background
@@ -56,28 +56,35 @@ function initSnowParticles() {
     snowDiv.style.left = '0';
     snowDiv.style.width = '100vw';
     snowDiv.style.height = '100vh';
-    snowDiv.style.zIndex = '-10'; // ensure it's always behind everything
-    snowDiv.style.pointerEvents = 'none';
-    document.body.insertBefore(snowDiv, document.body.firstChild); // move to top of body
-  } else {
     snowDiv.style.zIndex = '-10';
-    document.body.insertBefore(snowDiv, document.body.firstChild);
+    snowDiv.style.pointerEvents = 'none';
+    // Make the background more visible for snow
+    snowDiv.style.background = 'linear-gradient(rgba(200,220,255,0.5), rgba(255,255,255,0.2))';
+    document.body.appendChild(snowDiv);
+  } else {
+    snowDiv.style.display = 'block';
+    snowDiv.style.background = 'linear-gradient(rgba(200,220,255,0.5), rgba(255,255,255,0.2))';
   }
-  snowDiv.style.display = 'block';
+  snowDiv.style.width = '100vw';
+  snowDiv.style.height = '100vh';
+  snowDiv.style.zIndex = '-10';
+  snowDiv.style.pointerEvents = 'none';
+  document.body.insertBefore(snowDiv, document.body.firstChild);
 
   window.particlesJS('snow-bg', {
     particles: {
-      number: { value: 220, density: { enable: true, value_area: 800 } }, // more snowflakes
+      number: { value: 400, density: { enable: true, value_area: 800 } }, // more snowflakes
       color: { value: '#fff' },
       shape: { type: 'circle' },
-      opacity: { value: 0.85, random: true, anim: { enable: true, speed: 0.7, opacity_min: 0.4, sync: false } }, // brighter
-      size: { value: 4.5, random: true, anim: { enable: true, speed: 2.5, size_min: 1.5, sync: false } }, // larger
-      move: { direction: 'bottom', speed: 1.5, straight: false, out_mode: 'out' } // slightly faster
+      opacity: { value: 0.95, random: true, anim: { enable: true, speed: 1.2, opacity_min: 0.7, sync: false } }, // brighter
+      size: { value: 7, random: true, anim: { enable: true, speed: 3, size_min: 2, sync: false } }, // larger
+      move: { direction: 'bottom', speed: 2.5, straight: false, out_mode: 'out' } // faster
     },
     interactivity: { detect_on: 'canvas', events: { onhover: { enable: false } } },
     retina_detect: true
   });
 }
+window.initSnowParticles = initSnowParticles;
 
 function initLegendaryParticles() {
   let snowDiv = document.getElementById('snow-bg');
@@ -111,3 +118,4 @@ function initLegendaryParticles() {
     retina_detect: true
   });
 }
+window.initLegendaryParticles = initLegendaryParticles;
