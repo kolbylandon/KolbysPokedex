@@ -41,6 +41,7 @@ import { updateNavigationButtons as makeButtonsDisappear, getDeviceType } from '
 import { 
   displayStatsChart, 
 } from './statsChart.js';
+  import { startMatrixEffect, stopMatrixEffect } from './matrix-bg.js';
 
 // ====================================
 // DOM ELEMENT REFERENCES
@@ -131,6 +132,14 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   // Reset sprite display state for new Pokemon
   currentSpriteState = 'artwork';
   console.log('🔄 [Sprite State] Reset to artwork for new Pokemon');
+
+    // Matrix background for Porygon family
+    const porygonNames = ['porygon', 'porygon2', 'porygon-z'];
+    if (porygonNames.includes(pokemonResponse.name.toLowerCase())) {
+      startMatrixEffect();
+    } else {
+      stopMatrixEffect();
+    }
   
   // Process raw API data into usable formats
   const statTotal = getStatTotal(pokemonResponse.stats);

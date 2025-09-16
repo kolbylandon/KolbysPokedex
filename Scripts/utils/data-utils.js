@@ -557,6 +557,7 @@ export function punctuationNameCheck(name) {
     name.toLowerCase().includes('chien-pao') ? 'Chien-Pao' :                  // Chien-Pao (1002)
     name.toLowerCase().includes('ting-lu') ? 'Ting-Lu' :                      // Ting-Lu (1003)
     name.toLowerCase().includes('chi-yu') ? 'Chi-Yu' :                        // Chi-Yu (1004)
+    name.toLowerCase().includes('porygon-z') ? 'Porygon-Z' :                  // Porygon-Z (474)
     name.toLowerCase().includes('-') ? name.replace('-', ' ') :               // Handle other hyphenated names
     name;
 }

@@ -1,0 +1,39 @@
+/* matrix-bg.css: Matrix background effect for Porygon family */
+
+
+.matrix-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background: black;
+  overflow: hidden;
+}
+
+.matrix-canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 600px) {
+  .matrix-bg, .matrix-canvas {
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .matrix-bg, .matrix-canvas {
+    width: 100vw;
+    height: 100vh;
+  }
+}

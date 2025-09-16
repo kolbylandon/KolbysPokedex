@@ -96,8 +96,15 @@
   <!-- Note: pokemon.js is not preloaded as it's only used as an ES6 module import -->
   <!-- Main modular stylesheet system -->
   <link href="../StyleSheets/main.css" rel="stylesheet">
+    <!-- Matrix background stylesheet -->
+    <link href="../StyleSheets/matrix-bg.css" rel="stylesheet">
 </head>
 <body>
+  <script type="module" src="../Scripts/matrix-bg.js"></script>
+  <!-- Matrix background canvas (hidden by default, shown for Porygon family) -->
+  <div id="matrix-bg" class="matrix-bg" style="display:none;">
+    <canvas id="matrix-canvas" class="matrix-canvas"></canvas>
+  </div>
   <!-- ====================================
        MAIN HEADER WITH NAVIGATION
        ==================================== -->

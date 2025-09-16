@@ -2,8 +2,6 @@ TO DO
 -----------------------------------------------------------------------------------------
 006) Show move sets in a grid including other information about the attack.
 011) Explore https://pokeapi.co/api/v2/ for new items to add to the info screen.
-015) Allow generatePreviousPokedexEntry when user has searched by Pokémon name.
-016) Allow generateNextPokedexEntry when user has searched by Pokémon name.
 017) If the Pokémon is legendary or mythical, have particles.js in the background.
 018) Use the glass instead of the screen or info-screen.
 022) Rewrite javascript files in typescript.
@@ -13,7 +11,6 @@ TO DO
 037) Hover over the abilities and see what the ability does.
 039) Hover over the types and get the strengths and weaknesses of the type.
 042) Host this site so others can see it.
-044) Make this site into a Progressive Web Application.
 047) Click the Info header text to switch to old css.
 057) Create two functions for front and back sprites to create less text.
 058) Hover over the held items and create a tooltip to see what they item does.
@@ -22,12 +19,10 @@ TO DO
 073) Create a getFunctions.js file for all of the functions getting information.
 075) Create html elements for other screen sizes from the media queries.
 076) Create a custom stylized scrollbar.
-081) Have a matrix background when a member of the Porygon line is selected.
 083) Have the id as a parameter the URL and pass use that to fetch the requests.
 086) Add a tooltip for the short description of the ability on hover.
 087) Add animations to buttons and root when the elements appear and disappear. 
 088) Break up the helpers.js file into smaller modules.
-089) Change "Read Entry" to "Stop Reading" while synth.speak is active.
 090) Switch to searching by Pokémon name by clicking the info text in the header.
 092) Use the images from the held items as the bullets for the items list.
 093) Use Service Worker to get fetch the other forms' information.
@@ -64,7 +59,6 @@ TO DO
 IN PROGRESS
 -----------------------------------------------------------------------------------------
 126) Click on the Types and pull up a list of all Pokémon with that type.
-134) Go button will be invisible when no active Pokémon or empty search.
 140) Add a loading spinner when the Pokémon is being fetched.
 146) Add a tooltip to the secondary buttons in the header to show what they do.
 149) Check all Pokémon names with special characters to ensure they are correct.
@@ -95,6 +89,10 @@ IMPLEMENTED
   the getPokedexEntry function.
 014) Change to fetch instead of ajax. //API calls are now using fetch requests instead of
   ajax requests with the fetchPokemon functions.
+015) Allow generatePreviousPokedexEntry when user has searched by Pokémon name. //The user
+  can search by Pokémon name and use the previous button
+016) Allow generateNextPokedexEntry when user has searched by Pokémon name. //The user
+  can search by Pokémon name and use the next button
 018) Use the glass instead of the screen or info-screen. //The application is now using 
   Glassmorphism for the background of the cards.
 019) Hover over abilities to get the explanation of what it does. // Created a list
@@ -131,6 +129,8 @@ IMPLEMENTED
   website on GitHub.
 043) Add media queries for mobile devices. //Media queries have been added for five different
   sizes including mobile devices.
+044) Make this site into a Progressive Web Application. //This site is now a Progressive Web 
+  Application with a manifest.json file and a service worker.
 045) Move Pokédex Entry above Base Stats. //Adjusted the order of the displayed information
   in pokedex.html.
 046) Add animation for the buttons and the different screens when showing and hiding. //Used
@@ -187,12 +187,16 @@ IMPLEMENTED
   locally and calls the generatePokemon method.
 080) Look into how to monitor if the width has changed. //Using window.onresize, I call
   getSystemInformation() and change elements based on the width.
+081) Have a matrix background when a member of the Porygon line is selected. //The matrix background
+  is now shown when a member of the Porygon line is selected.
 082) Have gradients instead of a solid border color. //If the Pokémon has multiple types, the border
   will be a gradient instead of a solid color.
 084) Only allow numbers in the search textbox. //This is check by RegEx in the inputCheck
   function.
 085) Switch between forms if the Pokémon has multiple. //Creates a list of forms and allows the user
   to switch between the forms.
+089) Change "Read Entry" to "Stop Reading" while synth.speak is active. //I am using icons instead of
+  text to show the user what the button does.
 091) Fix the header in mobile to stick to the bottom of the screen. //The header is now fixed to the
   bottom of the screen for mobile.
 095) Animate the gradient border. //Decided not to do this and have a shadow of the 
@@ -233,6 +237,8 @@ IMPLEMENTED
   storage logic that explicitly prevents same values by clearing LAST_POKEMON when they would be equal.
 133) Change the mouse to a pokéball when hovering over the types divs. //Used pokeball-bullet.png as the 
   image when hovering.
+134) Go button will be invisible when no active Pokémon or empty search. //Decided to leave the Go button 
+  visible at all times.
 135) Include Cries from pokemon API call. //I have added the a button that allows the user to play the 
   Pokémon's cry with the playPokemonCry function in the helpers file.
 136) Change official artwork instead of the sprites. //Now displays 1 default and 1 shiny official artwork 

@@ -61,11 +61,29 @@ export const NAME_VARIATIONS = {
   'mimejr': 'mime-jr',
   'mime jr': 'mime-jr',
   'mime-junior': 'mime-jr',
-  
-  // Other common variations
+  'mimejunior': 'mime-jr',
+  'mime junior': 'mime-jr',
+
+  // Ho-Oh variations
   'ho-oh': 'ho-oh',
   'hooh': 'ho-oh',
-  'ho oh': 'ho-oh'
+  'ho oh': 'ho-oh',
+
+  // Porygon2 variations
+  'porygon2': 'porygon2',
+  'porygon-2': 'porygon2',
+  'porygon 2': 'porygon2',
+  
+  // Porygon-Z variations
+  'porygon-z': 'porygon-z',
+  'porygonz': 'porygon-z',
+  'porygon z': 'porygon-z',
+  
+  // Flabébé variations
+  'flabebe': 'flabébé',
+  'flabébe': 'flabébé',
+  'flabébé': 'flabébé',
+  'flabébé': 'flabébé',
 };
 
 /**
