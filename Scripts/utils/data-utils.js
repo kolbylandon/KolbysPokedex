@@ -79,8 +79,12 @@ let MaximumId = 1025;
  * getAbilityList(abilities);
  */
 export function getAbilityList(abilities) {
+  function isDev() {
+    return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+  }
+
   if (!abilities || !Array.isArray(abilities)) {
-    console.warn('getAbilityList: Invalid abilities array provided');
+    if (isDev()) console.warn('getAbilityList: Invalid abilities array provided');
     return;
   }
   AbilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';
@@ -118,8 +122,12 @@ export function getAbilityList(abilities) {
  * getHeldItemList(heldItems);
  */
 export function getHeldItemList(heldItems) {
+  function isDev() {
+    return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+  }
+
   if (!heldItems || !Array.isArray(heldItems)) {
-    console.warn('getHeldItemList: Invalid held items array provided');
+    if (isDev()) console.warn('getHeldItemList: Invalid held items array provided');
     return;
   }
   if (heldItems.length === 0) {
@@ -161,8 +169,12 @@ export function getHeldItemList(heldItems) {
  * getFormList(forms);
  */
 export function getFormList(forms) {
+  function isDev() {
+    return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+  }
+
   if (!forms || !Array.isArray(forms)) {
-    console.warn('getFormList: Invalid forms array provided');
+    if (isDev()) console.warn('getFormList: Invalid forms array provided');
     return;
   }
   if (forms.length === 1) {
@@ -210,8 +222,12 @@ export function getFormList(forms) {
  * const total = getStatTotal(stats); // Returns 94
  */
 export function getStatTotal(stats) {
+  function isDev() {
+    return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+  }
+
   if (!stats || !Array.isArray(stats)) {
-    console.warn('getStatTotal: Invalid stats array provided');
+    if (isDev()) console.warn('getStatTotal: Invalid stats array provided');
     return 0;
   }
 
@@ -237,8 +253,12 @@ export function getStatTotal(stats) {
  * const highest = getLargestStat(statValues); // Returns 65
  */
 export function getLargestStat(statsArray) {
+  function isDev() {
+    return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+  }
+
   if (!statsArray || !Array.isArray(statsArray)) {
-    console.warn('getLargestStat: Invalid stats array provided');
+    if (isDev()) console.warn('getLargestStat: Invalid stats array provided');
     return 0;
   }
 
@@ -261,8 +281,12 @@ export function getLargestStat(statsArray) {
  * const entry = getPokedexEntry(entries);
  */
 export function getPokedexEntry(flavorTextEntries) {
+  function isDev() {
+    return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+  }
+
   if (!flavorTextEntries || !Array.isArray(flavorTextEntries)) {
-    console.warn('getPokedexEntry: Invalid flavor text entries provided');
+    if (isDev()) console.warn('getPokedexEntry: Invalid flavor text entries provided');
     return 'No Pokédex entry available.';
   }
 
@@ -305,8 +329,12 @@ export function getPokedexEntry(flavorTextEntries) {
  * const genus = getGenus(genera); // Returns "Seed Pokémon"
  */
 export function getGenus(genera) {
+  function isDev() {
+    return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+  }
+
   if (!genera || !Array.isArray(genera)) {
-    console.warn('getGenus: Invalid genera array provided');
+    if (isDev()) console.warn('getGenus: Invalid genera array provided');
     return 'Unknown Pokémon';
   }
 
@@ -335,7 +363,11 @@ export function getGenus(genera) {
  */
 export function getHeight(height) {
   if (typeof height !== 'number' || height < 0) {
-    console.warn('getHeight: Invalid height value provided');
+    function isDev() {
+      return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+    }
+
+    if (isDev()) console.warn('getHeight: Invalid height value provided');
     return '0"';
   }
 
@@ -357,7 +389,11 @@ export function getHeight(height) {
  */
 export function getWeight(weight) {
   if (typeof weight !== 'number' || weight < 0) {
-    console.warn('getWeight: Invalid weight value provided');
+    function isDev() {
+      return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+    }
+
+    if (isDev()) console.warn('getWeight: Invalid weight value provided');
     return '0.0';
   }
 
@@ -382,8 +418,12 @@ export function getWeight(weight) {
  * const colors = getTypes(types); // Returns ['#78C850', '#A040A0']
  */
 export function getTypes(types) {
+  function isDev() {
+    return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+  }
+
   if (!types || !Array.isArray(types) || types.length === 0) {
-    console.warn('getTypes: Invalid types array provided');
+    if (isDev()) console.warn('getTypes: Invalid types array provided');
     return ['#000000', '#000000'];
   }
 

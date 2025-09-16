@@ -70,4 +70,13 @@ function stopMatrixEffect() {
   }
 }
 
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
+// Example usage:
+// if (isDev()) console.log('message');
+// if (isDev()) console.warn('message');
+// if (isDev()) console.error('message');
+
 export { startMatrixEffect, stopMatrixEffect };

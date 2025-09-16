@@ -894,4 +894,12 @@ async function enhancedFetch(request, options = {}) {
   }
 }
 
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
 console.log('[ServiceWorker] Service Worker script loaded - Enhanced version with TTL caching, performance monitoring, and error handling');
+// Example usage:
+// if (isDev()) console.log('message');
+// if (isDev()) console.warn('message');
+// if (isDev()) console.error('message');

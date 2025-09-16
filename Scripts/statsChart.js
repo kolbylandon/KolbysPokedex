@@ -335,6 +335,23 @@ function cleanupStatsChart() {
 }
 
 // ====================================
+// DEV UTILITY FUNCTIONS
+// ====================================
+
+/**
+ * Development utility function to enable/disable debug logging
+ * @returns {boolean} True if in development mode, false otherwise
+ */
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
+// Example usage:
+// if (isDev()) console.log('message');
+// if (isDev()) console.warn('message');
+// if (isDev()) console.error('message');
+
+// ====================================
 // MODULE EXPORTS
 // ====================================
 

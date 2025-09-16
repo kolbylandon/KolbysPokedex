@@ -298,3 +298,16 @@ export async function refreshUserIP() {
   // Fetch fresh IP
   await getUserIP();
 }
+
+/**
+ * Development-only logging utilities
+ * Enables verbose logging in non-production environments
+ */
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
+// Example usage:
+// if (isDev()) console.log('message');
+// if (isDev()) console.warn('message');
+// if (isDev()) console.error('message');

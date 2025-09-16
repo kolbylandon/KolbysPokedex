@@ -163,3 +163,16 @@ export function suggestPokemonNames(input, maxSuggestions = 5) {
   
   return suggestions.slice(0, maxSuggestions);
 }
+
+/**
+ * Development utility function
+ * @returns {boolean} True if in development mode, false otherwise
+ */
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
+// Example usage:
+// if (isDev()) console.log('message');
+// if (isDev()) console.warn('message');
+// if (isDev()) console.error('message');

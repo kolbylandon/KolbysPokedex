@@ -124,12 +124,14 @@ function handleError(exception) {
   showToast(userMessage);
   
   // Log detailed error information for debugging
-  console.error('API Request Error:', {
-    status: exception.status || 'Unknown',
-    message: exception.message || exception.statusText || 'Unknown error',
-    url: exception.url || 'Unknown URL',
-    stack: exception.stack || 'No stack trace'
-  });
+  if (isDev()) {
+    console.error('API Request Error:', {
+      status: exception.status || 'Unknown',
+      message: exception.message || exception.statusText || 'Unknown error',
+      url: exception.url || 'Unknown URL',
+      stack: exception.stack || 'No stack trace'
+    });
+  }
 } //fetchJson
 
 // ====================================
@@ -284,6 +286,20 @@ async function requestType(type) {
     console.clear(); // Clear console on error
   }
 } //requestType
+
+/**
+ * Development utility function
+ * Enables or disables logging based on the environment
+ * @returns {boolean} True if in development mode, false otherwise
+ */
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
+// Example usage:
+// if (isDev()) console.log('message');
+// if (isDev()) console.warn('message');
+// if (isDev()) console.error('message');
 
 export {
   requestPokemon, requestAbilityEffect, requestHeldItem, requestForm, requestType

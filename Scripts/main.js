@@ -703,3 +703,13 @@ window.pokemonApp = {
   // Application State
   deviceType
 };
+
+// Utility function for development-only logging
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
+// Example usage:
+// if (isDev()) console.log('message');
+// if (isDev()) console.warn('message');
+// if (isDev()) console.error('message');

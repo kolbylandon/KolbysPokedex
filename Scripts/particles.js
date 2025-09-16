@@ -8,7 +8,7 @@ export function showSnowIfBabyOrIce(pokemonObject) {
   });
   const isLegendary = pokemonObject.isLegendary || pokemonObject.is_legendary;
   const isMythical = pokemonObject.isMythical || pokemonObject.is_mythical;
-    console.log('[Particles.js] isIceType:', isIceType, 'isLegendary:', isLegendary, 'isMythical:', isMythical);
+    if (isDev()) console.log('[Particles.js] isIceType:', isIceType, 'isLegendary:', isLegendary, 'isMythical:', isMythical);
 
   if ((isIceType && (isLegendary || isMythical))) {
     // Ice AND legendary/mythical: show legendary/mythical background
@@ -119,3 +119,7 @@ function initLegendaryParticles() {
   });
 }
 window.initLegendaryParticles = initLegendaryParticles;
+
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}

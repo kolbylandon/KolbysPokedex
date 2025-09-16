@@ -419,6 +419,13 @@ function getServiceWorkerStatus() {
   };
 }
 
+/**
+ * Development utility to enable dev-only logging
+ */
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
 // Auto-initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   initializeServiceWorker();
@@ -436,3 +443,8 @@ window.ServiceWorkerManager = {
   getStatus: getServiceWorkerStatus,
   showToast: showToast
 };
+
+// Example usage:
+// if (isDev()) console.log('message');
+// if (isDev()) console.warn('message');
+// if (isDev()) console.error('message');

@@ -132,7 +132,7 @@ let currentSpriteState = 'artwork';
 function populatePage(pokemonResponse, speciesResponse, visibility) {
   // Reset sprite display state for new Pokemon
   currentSpriteState = 'artwork';
-  console.log('🔄 [Sprite State] Reset to artwork for new Pokemon');
+  if (isDev()) console.log('🔄 [Sprite State] Reset to artwork for new Pokemon');
 
     // Matrix background for Porygon family
     const porygonNames = ['porygon', 'porygon2', 'porygon-z'];
@@ -509,7 +509,7 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
       (pokemonObj.frontFemaleSprite || pokemonObj.frontFemaleShinySprite) :
       (pokemonObj.frontMaleSprite || pokemonObj.frontMaleShinySprite);
     
-    console.log(`👫 [Gender Sprites] ${pokemonObj.name} has gender differences:`, {
+    if (isDev()) console.log(`👫 [Gender Sprites] ${pokemonObj.name} has gender differences:`, {
       defaultGender: pokemonObj.defaultGender,
       alternateGender: pokemonObj.alternateGender,
       frontMale: pokemonObj.frontMaleSprite ? 'available' : 'null',
@@ -523,7 +523,7 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
       cycleWillIncludeAlternate: hasUsableAlternateSprites
     });
   } else {
-    console.log(`👤 [Gender Sprites] ${pokemonObj.name} has no gender differences`);
+    if (isDev()) console.log(`👤 [Gender Sprites] ${pokemonObj.name} has no gender differences`);
   }
 } //setGenderDifferenceSprites
 
@@ -589,7 +589,7 @@ function cycleSpriteDisplay() {
         nextState = 'artwork';
     }
   }  currentSpriteState = nextState;
-  console.log(`🔄 [Sprite Cycle] Switching to ${currentSpriteState} display for ${pokemon.name}`);
+  if (isDev()) console.log(`🔄 [Sprite Cycle] Switching to ${currentSpriteState} display for ${pokemon.name}`);
   
   // Update sprites based on new state
   updateSpriteDisplay();
@@ -656,14 +656,14 @@ function updateSpriteDisplay() {
   
   // Update default image
   if (currentSpriteState === 'artwork' || !defaultImage) {
-    console.log(`🖼️ [Sprite Update] Loading default artwork`);
+    if (isDev()) console.log(`🖼️ [Sprite Update] Loading default artwork`);
     configureArtworkElement(
       DefaultArtworkElement,
       pokemon.FrontDefaultOfficialArtwork,
       defaultAlt
     );
   } else {
-    console.log(`🎮 [Sprite Update] Loading ${currentSpriteState} default sprite`);
+    if (isDev()) console.log(`🎮 [Sprite Update] Loading ${currentSpriteState} default sprite`);
     configurePriorityArtworkElement(
       DefaultArtworkElement,
       defaultImage,
@@ -674,14 +674,14 @@ function updateSpriteDisplay() {
   
   // Update shiny image
   if (currentSpriteState === 'artwork' || !shinyImage) {
-    console.log(`✨ [Sprite Update] Loading shiny artwork`);
+    if (isDev()) console.log(`✨ [Sprite Update] Loading shiny artwork`);
     configureArtworkElement(
       ShinyArtworkElement,
       pokemon.FrontShinyOfficialArtwork,
       shinyAlt
     );
   } else {
-    console.log(`✨ [Sprite Update] Loading ${currentSpriteState} shiny sprite`);
+    if (isDev()) console.log(`✨ [Sprite Update] Loading ${currentSpriteState} shiny sprite`);
     configurePriorityArtworkElement(
       ShinyArtworkElement,
       shinyImage,
@@ -721,10 +721,10 @@ function configurePriorityArtworkElement(element, spriteUrl, artworkUrl, altText
   
   // Function to attempt loading official artwork as fallback
   const loadOfficialArtwork = () => {
-    console.log(`🖼️ Loading official artwork fallback: ${altText}`);
+    if (isDev()) console.log(`🖼️ Loading official artwork fallback: ${altText}`);
     
     element.onload = function() {
-      console.log(`✅ Official artwork loaded: ${altText}`);
+      if (isDev()) console.log(`✅ Official artwork loaded: ${altText}`);
     };
     
     element.onerror = function() {
@@ -738,10 +738,10 @@ function configurePriorityArtworkElement(element, spriteUrl, artworkUrl, altText
   
   // Try sprite first, fallback to artwork on failure
   if (spriteUrl && spriteUrl !== null) {
-    console.log(`🎮 Attempting sprite load: ${altText}`);
+    if (isDev()) console.log(`🎮 Attempting sprite load: ${altText}`);
     
     element.onload = function() {
-      console.log(`✅ Sprite loaded successfully: ${altText}`);
+      if (isDev()) console.log(`✅ Sprite loaded successfully: ${altText}`);
     };
     
     element.onerror = function() {
@@ -792,7 +792,7 @@ function configureArtworkElement(element, imageUrl, altText) {
   const isMobile = window.deviceType === 'mobile';
   
   if (isAndroid) {
-    console.log('🤖 [Android] Configuring artwork with Android-specific loading strategy');
+    if (isDev()) console.log('🤖 [Android] Configuring artwork with Android-specific loading strategy');
     
     // Android-specific: Set longer timeout and add crossorigin
     element.crossOrigin = 'anonymous';
@@ -807,7 +807,7 @@ function configureArtworkElement(element, imageUrl, altText) {
       const urlToLoad = retryCount > 0 ? `${imageUrl}?retry=${retryCount}&t=${Date.now()}` : imageUrl;
       
       element.onload = function() {
-        console.log(`✅ [Android] Artwork loaded successfully: ${element.alt}`);
+        if (isDev()) console.log(`✅ [Android] Artwork loaded successfully: ${element.alt}`);
         // Android-specific: Force a repaint to ensure visibility
         element.style.display = 'none';
         element.offsetHeight; // Trigger reflow
@@ -846,7 +846,7 @@ function configureArtworkElement(element, imageUrl, altText) {
   } else {
     // Non-Android devices: Standard loading
     element.onload = function() {
-      console.log(`✅ Artwork loaded: ${element.alt}`);
+      if (isDev()) console.log(`✅ Artwork loaded: ${element.alt}`);
     };
     
     element.onerror = function() {
@@ -868,6 +868,18 @@ function configureArtworkElement(element, imageUrl, altText) {
     element.decoding = 'async';
     element.style.willChange = 'transform';
   }
+}
+
+// ====================================
+// DEV UTILITY
+// ====================================
+
+/**
+ * Development utility function for enabling/disabling dev-only logging
+ * @returns {boolean} True if in development mode, false otherwise
+ */
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
 }
 
 // ====================================

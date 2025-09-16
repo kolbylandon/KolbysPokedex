@@ -117,7 +117,6 @@ export function createArray(elements) {
   if (typeof window !== 'undefined' && window.requestAnimationFrame) {
     window.requestAnimationFrame(() => {
       array.forEach((element, index) => {
-        // Only log in development
         if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
           console.log(`Element ${index}: ${element.id || element.tagName} with classes: ${element.className}`);
         }
@@ -226,30 +225,35 @@ export function makeButtonsDisappear(id, hasGenderDifferences) {
  * showToast('Error: Pokemon not found');
  */
 export function showToast(text) {
-  console.log(`🍞 [Toast] Displaying message: "${text}"`);
-  
+  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+    console.log(`🍞 [Toast] Displaying message: "${text}"`);
+  }
   if (!text || typeof text !== 'string') {
-    console.warn('⚠️ [Toast] Invalid text provided:', text);
+    if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+      console.warn('⚠️ [Toast] Invalid text provided:', text);
+    }
     return;
   }
-  
-  // Set toast message text
   ToastText.textContent = text;
-  console.log(`📝 [Toast] Text content set`);
-  
-  // Show toast with animation
+  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+    console.log(`📝 [Toast] Text content set`);
+  }
   Toast.classList.remove('hidden');
   Toast.classList.add('show');
-  console.log(`✅ [Toast] Toast displayed`);
-  
-  // Auto-hide toast after 3 seconds
+  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+    console.log(`✅ [Toast] Toast displayed`);
+  }
   setTimeout(() => {
-    console.log(`⏰ [Toast] Auto-hiding toast after 3 seconds`);
+    if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+      console.log(`⏰ [Toast] Auto-hiding toast after 3 seconds`);
+    }
     Toast.classList.remove('show');
     setTimeout(() => {
       Toast.classList.add('hidden');
-      console.log(`🔇 [Toast] Toast hidden completely`);
-    }, 300); // Wait for fade-out animation
+      if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+        console.log(`🔇 [Toast] Toast hidden completely`);
+      }
+    }, 300);
   }, 3000);
 }
 
@@ -358,7 +362,9 @@ export function initializeDOMUtils() {
   // Update layout on window resize
   window.addEventListener('resize', updateLayout);
   
-  console.log('DOM utilities module initialized');
+  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+    console.log('DOM utilities module initialized');
+  }
 }
 
 // Auto-initialize on module load

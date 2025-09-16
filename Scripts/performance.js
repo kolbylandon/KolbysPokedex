@@ -73,7 +73,7 @@ class PerformanceMonitor {
     if (startTime) {
       const endTime = performance.now();
       const duration = endTime - startTime;
-      console.log(`⚡ ${label}: ${duration.toFixed(2)}ms`);
+      if (isDev()) console.log(`⚡ ${label}: ${duration.toFixed(2)}ms`);
       this.metrics.delete(label);
       return duration;
     }
@@ -158,7 +158,7 @@ class PerformanceMonitor {
           const entries = list.getEntries();
           entries.forEach(entry => {
             if (entry.entryType === 'measure') {
-              console.log(`📊 ${entry.name}: ${entry.duration.toFixed(2)}ms`);
+              if (isDev()) console.log(`📊 ${entry.name}: ${entry.duration.toFixed(2)}ms`);
             }
           });
         });
@@ -317,3 +317,15 @@ window.PerformanceMonitor = PerformanceMonitor;
 document.addEventListener('DOMContentLoaded', () => {
   performanceMonitor.init();
 });
+
+/**
+ * Check if the application is in development mode
+ * @returns {boolean} True if in development mode, false if in production
+ * @example
+ * if (isDev()) {
+ *   console.log('Development mode active');
+ * }
+ */
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}

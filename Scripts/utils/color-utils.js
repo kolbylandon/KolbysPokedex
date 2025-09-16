@@ -68,154 +68,82 @@ const POKEMON_TYPE_COLORS = {
 // TYPE COLOR FUNCTIONS
 // ====================================
 
-/**
- * Returns the official color for a specific Pokemon type
- * Provides consistent theming across type badges and backgrounds
- * @param {string} type - Pokemon type name (e.g., "fire", "water", "grass")
- * @returns {string} Hexadecimal color value for the specified type
- * @example
- * const fireColor = getTypeColor('fire');     // Returns '#F07D33'
- * const waterColor = getTypeColor('water');   // Returns '#6D88F8'
- * const invalidColor = getTypeColor('invalid'); // Returns default color
- */
+function isDev() {
+  return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+}
+
 export function getTypeColor(type) {
-  // Validate input parameter
   if (!type || typeof type !== 'string') {
-    console.warn('getTypeColor: Invalid type parameter provided');
+    if (isDev()) console.warn('getTypeColor: Invalid type parameter provided');
     return DEFAULT_TYPE_COLOR;
   }
-  
-  // Normalize type name (lowercase, trim whitespace)
   const normalizedType = type.toLowerCase().trim();
-  
-  // Return type color or default if type not found
   const color = POKEMON_TYPE_COLORS[normalizedType];
-  
   if (!color) {
-    console.warn(`getTypeColor: Unknown Pokemon type '${type}', using default color`);
+    if (isDev()) console.warn(`getTypeColor: Unknown Pokemon type '${type}', using default color`);
     return DEFAULT_TYPE_COLOR;
   }
-  
   return color;
 }
 
-/**
- * Gets all available Pokemon type colors as an object
- * Useful for building color palettes or validation
- * @returns {Object} Complete mapping of type names to hex colors
- * @example
- * const allColors = getAllTypeColors();
- * console.log(allColors.fire); // '#F07D33'
- */
 export function getAllTypeColors() {
   // Return a copy to prevent external modification
   return { ...POKEMON_TYPE_COLORS };
 }
 
-/**
- * Validates if a given string is a valid Pokemon type
- * @param {string} type - Type name to validate
- * @returns {boolean} True if the type exists in the color system
- * @example
- * const isValid = isValidPokemonType('fire');    // Returns true
- * const isInvalid = isValidPokemonType('light'); // Returns false
- */
 export function isValidPokemonType(type) {
   if (!type || typeof type !== 'string') {
     return false;
   }
-  
   return type.toLowerCase().trim() in POKEMON_TYPE_COLORS;
 }
 
-// ====================================
-// COLOR CONVERSION FUNCTIONS
-// ====================================
-
-/**
- * Converts hexadecimal color values to RGBA format with specified alpha transparency
- * Uses bitwise operations for optimal performance and supports both 3 and 6 digit hex
- * @param {string} hexColor - Hexadecimal color value (e.g., "#FF0000" or "#F00")
- * @param {number} alpha - Alpha transparency value (0.0 to 1.0)
- * @returns {string} RGBA color string (e.g., "rgba(255, 0, 0, 0.5)")
- * @example
- * const fireRGBA = convertHexToRgba('#F07D33', 0.3);  // Semi-transparent fire color
- * const waterRGBA = convertHexToRgba('#6D88F8', 0.6); // More opaque water color
- */
 export function convertHexToRgba(hexColor, alpha) {
-  // Validate hex color input
   if (!hexColor || typeof hexColor !== 'string') {
-    console.warn('convertHexToRgba: Invalid hex color provided');
+    if (isDev()) console.warn('convertHexToRgba: Invalid hex color provided');
     return TRANSPARENT_COLOR;
   }
-  
-  // Validate alpha value
   if (typeof alpha !== 'number' || alpha < 0 || alpha > 1) {
-    console.warn('convertHexToRgba: Invalid alpha value, must be between 0 and 1');
-    alpha = 1; // Default to fully opaque
+    if (isDev()) console.warn('convertHexToRgba: Invalid alpha value, must be between 0 and 1');
+    alpha = 1;
   }
-  
-  // Remove hash symbol if present
   let cleanHex = hexColor.replace('#', '');
-  
-  // Handle 3-digit hex shorthand (e.g., "#F00" -> "#FF0000")
   if (cleanHex.length === 3) {
     cleanHex = cleanHex.split('').map(char => char + char).join('');
   }
-  
-  // Validate hex format (must be 6 characters after expansion)
   if (cleanHex.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(cleanHex)) {
-    console.warn('convertHexToRgba: Invalid hex color format');
+    if (isDev()) console.warn('convertHexToRgba: Invalid hex color format');
     return TRANSPARENT_COLOR;
   }
-  
   try {
-    // Extract RGB components using bitwise operations for performance
     const hexValue = parseInt(cleanHex, 16);
-    const r = (hexValue >> 16) & 255;  // Extract red component
-    const g = (hexValue >> 8) & 255;   // Extract green component  
-    const b = hexValue & 255;          // Extract blue component
-    
+    const r = (hexValue >> 16) & 255;
+    const g = (hexValue >> 8) & 255;
+    const b = hexValue & 255;
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   } catch (error) {
-    console.error('convertHexToRgba: Error converting hex to RGBA:', error);
+    if (isDev()) console.error('convertHexToRgba: Error converting hex to RGBA:', error);
     return TRANSPARENT_COLOR;
   }
 }
 
-/**
- * Converts RGBA color string back to hexadecimal format
- * Useful for storage or systems that require hex colors
- * @param {string} rgbaColor - RGBA color string (e.g., "rgba(255, 0, 0, 0.5)")
- * @returns {string} Hexadecimal color value without alpha information
- * @example
- * const hexColor = convertRgbaToHex('rgba(240, 125, 51, 0.3)'); // Returns '#F07D33'
- */
 export function convertRgbaToHex(rgbaColor) {
   if (!rgbaColor || typeof rgbaColor !== 'string') {
-    console.warn('convertRgbaToHex: Invalid RGBA color provided');
+    if (isDev()) console.warn('convertRgbaToHex: Invalid RGBA color provided');
     return '#000000';
   }
-  
-  // Extract RGB values using regex
   const rgbaMatch = rgbaColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
-  
   if (!rgbaMatch) {
-    console.warn('convertRgbaToHex: Invalid RGBA format');
+    if (isDev()) console.warn('convertRgbaToHex: Invalid RGBA format');
     return '#000000';
   }
-  
   const r = parseInt(rgbaMatch[1], 10);
   const g = parseInt(rgbaMatch[2], 10);
   const b = parseInt(rgbaMatch[3], 10);
-  
-  // Validate RGB values
   if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-    console.warn('convertRgbaToHex: Invalid RGB values');
+    if (isDev()) console.warn('convertRgbaToHex: Invalid RGB values');
     return '#000000';
   }
-  
-  // Convert to hex with padding
   const hex = ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
   return `#${hex.toUpperCase()}`;
 }
