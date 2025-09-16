@@ -62,8 +62,7 @@ const STATIC_ASSETS = [
   './Images/pokeball.png',
   './Images/pokeball-bullet.png',
   './manifest.json',
-  './offline.html',
-  './Images/offline.png'
+  './offline.html'
 ];
 
 // API patterns that should be cached
