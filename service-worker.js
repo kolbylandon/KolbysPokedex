@@ -88,99 +88,86 @@ const CACHE_EXPIRY = {
   API: 30 * 60 * 1000           // 30 minutes
 };
 
-// ====================================
-// SERVICE WORKER EVENT HANDLERS
-// ====================================
 
-/**
- * Install event: cache static assets
- * Handles initial caching of static application resources
- */
+// Modular event handlers
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .catch(() => {})
-      .then(() => Promise.all([
-        caches.open(DYNAMIC_CACHE),
-        caches.open(API_CACHE)
-      ]))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil(handleInstall());
 });
 
-/**
- * Activate event: clean up old caches and claim clients
- * Handles cache cleanup and client claiming for immediate control
- */
 self.addEventListener('activate', event => {
-  console.log('[ServiceWorker] Activating...');
-  
-  const expectedCaches = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE];
-  
-  event.waitUntil(
-    Promise.all([
-      // Clean up old caches
-      caches.keys().then(cacheNames => {
-        return Promise.all(
-          cacheNames
-            .filter(cacheName => !expectedCaches.includes(cacheName))
-            .map(cacheName => {
-              console.log('[ServiceWorker] Deleting old cache:', cacheName);
-              return caches.delete(cacheName);
-            })
-        );
-      }),
-      // Claim all clients
-      self.clients.claim()
-    ]).then(() => {
-      console.log('[ServiceWorker] Activation complete');
-    }).catch(err => {
-      console.error('[ServiceWorker] Activation failed:', err);
-    })
-  );
+  event.waitUntil(handleActivate());
 });
 
-/**
- * Fetch event: implement different caching strategies
- * Main request interceptor that applies appropriate caching strategies
- */
 self.addEventListener('fetch', event => {
+  event.respondWith(handleFetchEvent(event));
+});
+
+// Modularized install logic
+async function handleInstall() {
+  try {
+    const staticCache = await caches.open(STATIC_CACHE);
+    await staticCache.addAll(STATIC_ASSETS);
+    await Promise.all([
+      caches.open(DYNAMIC_CACHE),
+      caches.open(API_CACHE)
+    ]);
+    await self.skipWaiting();
+    log('info', 'ServiceWorker installed and static assets cached');
+  } catch (err) {
+    log('error', 'Install failed:', err);
+  }
+}
+
+// Modularized activate logic
+async function handleActivate() {
+  log('info', 'Activating...');
+  const expectedCaches = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE];
+  try {
+    const cacheNames = await caches.keys();
+    await Promise.all(
+      cacheNames
+        .filter(cacheName => !expectedCaches.includes(cacheName))
+        .map(cacheName => {
+          log('info', 'Deleting old cache:', cacheName);
+          return caches.delete(cacheName);
+        })
+    );
+    await self.clients.claim();
+    log('info', 'Activation complete');
+  } catch (err) {
+    log('error', 'Activation failed:', err);
+  }
+}
+
+// Modularized fetch logic
+async function handleFetchEvent(event) {
   const { request } = event;
   const url = new URL(request.url);
-  if (request.method !== 'GET' || !url.protocol.startsWith('http')) return;
-  if (url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) return;
-  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('cdnjs.cloudflare.com') || url.hostname.includes('cdn.jsdelivr.net')) return;
+  if (request.method !== 'GET' || !url.protocol.startsWith('http')) return fetch(request);
+  if (url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) return fetch(request);
+  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('cdnjs.cloudflare.com') || url.hostname.includes('cdn.jsdelivr.net')) return fetch(request);
 
   // Offline fallback for navigation requests (HTML)
   if (request.mode === 'navigate' || request.destination === 'document') {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          // Cache the response for offline use
-          const responseClone = response.clone();
-          caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, responseClone));
-          return response;
-        })
-        .catch(() => {
-          // Try to serve from cache
-          return caches.match(request).then(cached => {
-            if (cached) return cached;
-            // Fallback to custom offline page if not found
-            return caches.match('./offline.html').then(offlinePage => {
-              if (offlinePage) return offlinePage;
-              // Fallback to main page if offline.html is missing
-              return caches.match('./index.html');
-            });
-          });
-        })
-    );
-    return;
+    try {
+      const response = await enhancedFetch(request);
+      if (response && response.ok) {
+        caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, response.clone()));
+        return response;
+      }
+      throw new Error('Network response not ok');
+    } catch (err) {
+      log('warn', 'Network failed, serving cache or offline page:', err);
+      const cached = await caches.match(request);
+      if (cached) return cached;
+      const offlinePage = await caches.match('./offline.html');
+      if (offlinePage) return offlinePage;
+      return caches.match('./index.html');
+    }
   }
-
   // For other requests, use main handler
-  event.respondWith(handleFetch(request));
-});
+  return handleFetch(request);
+}
 
 // ====================================
 // CACHING STRATEGY IMPLEMENTATIONS
@@ -236,11 +223,14 @@ async function cacheFirst(request, cacheName) {
   const cachedResponse = await cache.match(request, {ignoreSearch: true});
   if (cachedResponse) return cachedResponse;
   try {
-    const response = await fetch(request);
-    cache.put(request, response.clone());
-    limitCacheSize(cacheName);
+    const response = await enhancedFetch(request);
+    if (response && response.ok) {
+      cache.put(request, response.clone());
+      limitCacheSize(cacheName);
+    }
     return response;
   } catch (error) {
+    log('warn', 'cacheFirst failed, serving cache if available:', error);
     return cachedResponse || Response.error();
   }
 }
@@ -254,11 +244,14 @@ async function cacheFirst(request, cacheName) {
 async function networkFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   try {
-    const response = await fetch(request);
-    cache.put(request, response.clone());
-    limitCacheSize(cacheName);
+    const response = await enhancedFetch(request);
+    if (response && response.ok) {
+      cache.put(request, response.clone());
+      limitCacheSize(cacheName);
+    }
     return response;
   } catch (error) {
+    log('warn', 'networkFirst failed, serving cache if available:', error);
     const cachedResponse = await cache.match(request, {ignoreSearch: true});
     return cachedResponse || Response.error();
   }
@@ -275,11 +268,9 @@ async function staleWhileRevalidate(request, cacheName) {
   const cachedResponse = await cache.match(request, {ignoreSearch: true});
   const ttl = CACHE_EXPIRY.API || (30 * 60 * 1000);
   if (isFresh(cachedResponse, ttl)) {
-    // Use microtask for background update
     Promise.resolve().then(() => {
-      fetch(request).then(response => {
-        if (!response || response.status !== 200 || response.type !== 'basic') return;
-        if (!cachedResponse || cachedResponse.headers.get('ETag') !== response.headers.get('ETag')) {
+      enhancedFetch(request).then(response => {
+        if (response && response.ok) {
           cache.put(request, response.clone());
           limitCacheSize(cacheName);
         }
@@ -288,182 +279,20 @@ async function staleWhileRevalidate(request, cacheName) {
     return cachedResponse;
   }
   try {
-    const response = await fetch(request);
-    cache.put(request, response.clone());
-    limitCacheSize(cacheName);
+    const response = await enhancedFetch(request);
+    if (response && response.ok) {
+      cache.put(request, response.clone());
+      limitCacheSize(cacheName);
+    }
     return response;
   } catch (error) {
+    log('warn', 'staleWhileRevalidate failed, serving cache if available:', error);
     return cachedResponse || Response.error();
   }
 }
 
-// ====================================
-// ADVANCED CACHING STRATEGIES (WITH TTL)
-// ====================================
 
-/**
- * Cache First strategy with TTL: Try cache first, check expiry, fallback to network
- * @param {Request} request - The request to handle
- * @param {string} cacheName - Name of the cache to use
- * @param {number} ttl - Time to live in milliseconds
- * @returns {Promise<Response>} - Cached or network response
- */
-async function cacheFirstWithTTL(request, cacheName, ttl) {
-  const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(request);
-  
-  if (cachedResponse) {
-    // Check if cache is still fresh
-    const cachedDate = new Date(cachedResponse.headers.get('sw-cache-date') || cachedResponse.headers.get('date') || 0);
-    const now = new Date();
-    const age = now - cachedDate;
-    
-    if (age < ttl) {
-      return cachedResponse;
-    }
-  }
-  
-  try {
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      // Add cache timestamp
-      const responseWithTimestamp = new Response(networkResponse.body, {
-        status: networkResponse.status,
-        statusText: networkResponse.statusText,
-        headers: {
-          ...Object.fromEntries(networkResponse.headers.entries()),
-          'sw-cache-date': new Date().toISOString()
-        }
-      });
-      
-      cache.put(request, responseWithTimestamp.clone());
-      await limitCacheSize(cacheName);
-      return responseWithTimestamp;
-    }
-  } catch (error) {
-    console.warn('[ServiceWorker] Network failed, returning stale cache:', error);
-  }
-  
-  // Return stale cache if network fails
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-  
-  throw new Error('No cache available and network failed');
-}
-
-/**
- * Network First strategy with TTL: Try network first, fallback to cache
- * @param {Request} request - The request to handle
- * @param {string} cacheName - Name of the cache to use
- * @param {number} ttl - Time to live in milliseconds
- * @returns {Promise<Response>} - Network or cached response
- */
-async function networkFirstWithTTL(request, cacheName, ttl) {
-  const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(request);
-  
-  try {
-    const networkResponse = await fetch(request);
-    
-    if (networkResponse.ok) {
-      // Add cache timestamp
-      const responseWithTimestamp = new Response(networkResponse.body, {
-        status: networkResponse.status,
-        statusText: networkResponse.statusText,
-        headers: {
-          ...Object.fromEntries(networkResponse.headers.entries()),
-          'sw-cache-date': new Date().toISOString()
-        }
-      });
-      
-      cache.put(request, responseWithTimestamp.clone());
-      await limitCacheSize(cacheName);
-      return responseWithTimestamp;
-    }
-    
-    return networkResponse;
-  } catch (error) {
-    // Check if cached response is still valid
-    if (cachedResponse) {
-      const cachedDate = new Date(cachedResponse.headers.get('sw-cache-date') || cachedResponse.headers.get('date') || 0);
-      const age = new Date() - cachedDate;
-      
-      if (age < ttl * 2) { // Allow stale content up to 2x TTL when offline
-        return cachedResponse;
-      }
-    }
-    
-    throw error;
-  }
-}
-
-/**
- * Stale While Revalidate strategy with TTL: Return cache immediately, update in background
- * @param {Request} request - The request to handle
- * @param {string} cacheName - Name of the cache to use
- * @param {number} ttl - Time to live in milliseconds
- * @returns {Promise<Response>} - Cached response with background update
- */
-async function staleWhileRevalidateWithTTL(request, cacheName, ttl) {
-  const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(request);
-  
-  // Check cache freshness
-  let shouldRevalidate = true;
-  if (cachedResponse) {
-    const cachedDate = new Date(cachedResponse.headers.get('sw-cache-date') || cachedResponse.headers.get('date') || 0);
-    const age = new Date() - cachedDate;
-    shouldRevalidate = age > ttl;
-  }
-  
-  // Background revalidation if needed
-  if (shouldRevalidate) {
-    fetch(request).then(networkResponse => {
-      if (networkResponse.ok) {
-        const responseWithTimestamp = new Response(networkResponse.body, {
-          status: networkResponse.status,
-          statusText: networkResponse.statusText,
-          headers: {
-            ...Object.fromEntries(networkResponse.headers.entries()),
-            'sw-cache-date': new Date().toISOString()
-          }
-        });
-        
-        cache.put(request, responseWithTimestamp);
-        limitCacheSize(cacheName);
-      }
-    }).catch(err => {
-      console.warn('[ServiceWorker] Background revalidation failed:', err);
-    });
-  }
-  
-  // Return cached response immediately if available
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-  
-  // If no cached response, wait for network
-  try {
-    const response = await fetch(request);
-    if (response.ok) {
-      const responseWithTimestamp = new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: {
-          ...Object.fromEntries(response.headers.entries()),
-          'sw-cache-date': new Date().toISOString()
-        }
-      });
-      
-      cache.put(request, responseWithTimestamp.clone());
-      return responseWithTimestamp;
-    }
-    return response;
-  } catch (error) {
-    throw error;
-  }
-}
+// Removed unused TTL strategy functions for clarity
 
 // ====================================
 // UTILITY FUNCTIONS
@@ -519,10 +348,23 @@ function isFresh(response, ttl) {
   return age < ttl;
 }
 
-// Minimize logging in production
-function log(...args) {
-  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
-    console.log(...args);
+
+// Unified logging utility
+function log(level, ...args) {
+  if (isDev()) {
+    switch (level) {
+      case 'info':
+        console.info('[ServiceWorker]', ...args);
+        break;
+      case 'warn':
+        console.warn('[ServiceWorker]', ...args);
+        break;
+      case 'error':
+        console.error('[ServiceWorker]', ...args);
+        break;
+      default:
+        console.log('[ServiceWorker]', ...args);
+    }
   }
 }
 
