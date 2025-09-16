@@ -360,7 +360,14 @@ export function initializeDOMUtils() {
   updateLayout();
   
   // Update layout on window resize
-  window.addEventListener('resize', updateLayout);
+  // Throttle resize events for performance
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      updateLayout();
+    }, 200);
+  }, { passive: true });
   
   if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
     console.log('DOM utilities module initialized');

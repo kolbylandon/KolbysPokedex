@@ -29,8 +29,8 @@ function startMatrixEffect() {
       resizeTimeout = null;
     }, 100);
   }
-  window.addEventListener('resize', handleResize);
-  window.addEventListener('orientationchange', handleResize);
+  window.addEventListener('resize', handleResize, { passive: true });
+  window.addEventListener('orientationchange', handleResize, { passive: true });
 
   // Animation loop using requestAnimationFrame
   let running = true;

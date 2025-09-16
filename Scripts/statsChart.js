@@ -308,7 +308,14 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
   
   // Remove any existing resize listeners to prevent duplicates
   window.removeEventListener('resize', resizeHandler);
-  window.addEventListener('resize', resizeHandler);
+  // Throttle resize events for performance
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      resizeHandler();
+    }, 200);
+  }, { passive: true });
   
   // Store reference for cleanup
   statsChart._resizeHandler = resizeHandler;

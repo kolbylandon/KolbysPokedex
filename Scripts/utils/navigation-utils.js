@@ -596,8 +596,20 @@ export function initializeResponsiveBehavior() {
   };
   
   // Add event listeners
-  window.addEventListener('orientationchange', handleOrientationChange);
-  window.addEventListener('resize', handleResize);
+  // Throttle orientationchange and resize events for performance
+  let resizeTimeout;
+  window.addEventListener('orientationchange', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      handleOrientationChange();
+    }, 200);
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      handleResize();
+    }, 200);
+  }, { passive: true });
   
   // Handle visibility change (when switching between apps)
   document.addEventListener('visibilitychange', () => {
