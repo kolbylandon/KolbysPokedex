@@ -91,7 +91,19 @@ export function getAbilityList(abilities) {
   AbilitiesUnorderedList.innerHTML = `<ul id='abilities-unordered-list' class='list-bulleted'></ul>`;
   const fragment = document.createDocumentFragment();
   window.requestAnimationFrame(() => {
+    // Collect regular ability names for comparison
+    const regularAbilityNames = abilities
+      .filter(a => !a.is_hidden)
+      .map(a => a.ability.name.toLowerCase());
+
     abilities.forEach((ability, index) => {
+      // If hidden ability matches a regular ability, skip it
+      if (
+        ability.is_hidden &&
+        regularAbilityNames.includes(ability.ability.name.toLowerCase())
+      ) {
+        return;
+      }
       const ListItem = document.createElement('li');
       ListItem.id = `flavor-text-${index + 1}`;
       ListItem.classList.add('flavor-text');
