@@ -106,7 +106,18 @@ self.addEventListener('fetch', event => {
 async function handleInstall() {
   try {
     const staticCache = await caches.open(STATIC_CACHE);
-    await staticCache.addAll(STATIC_ASSETS);
+    try {
+      await staticCache.addAll(STATIC_ASSETS);
+    } catch (addAllError) {
+      // Try to cache assets one by one and log failures
+      for (const asset of STATIC_ASSETS) {
+        try {
+          await staticCache.add(asset);
+        } catch (assetError) {
+          log('error', `Failed to cache asset: ${asset}`, assetError);
+        }
+      }
+    }
     await Promise.all([
       caches.open(DYNAMIC_CACHE),
       caches.open(API_CACHE)
