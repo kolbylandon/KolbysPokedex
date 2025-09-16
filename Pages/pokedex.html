@@ -61,10 +61,10 @@
   <title>Kolby's Pokédex</title>
   
   <!-- Enhanced favicon configuration for better display -->
-  <link rel="icon" type="image/png" sizes="16x16" href="../Images/pokeball.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../Images/pokeball.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="../Images/pokeball.png">
-  <link rel="shortcut icon" href="../Images/pokeball.png" type="image/png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../Images/pokeball.png" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="32x32" href="../Images/pokeball.png" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="48x48" href="../Images/pokeball.png" fetchpriority="high">
+    <link rel="shortcut icon" href="../Images/pokeball.png" type="image/png" fetchpriority="high">
   
   <!-- Apple Touch Icon for iOS devices -->
   <link rel="apple-touch-icon" sizes="180x180" href="../Images/pokeball.png">
@@ -245,21 +245,19 @@
     <!-- ====================================
          EXTERNAL SCRIPTS AND MODULES
          ==================================== -->
-    
-    <!-- Performance monitoring module -->
-    <script async defer type="module" src="../Scripts/performance.js"></script>
-    
-    <!-- Service Worker manager for PWA functionality -->
-    <script async defer src="../Scripts/sw-manager.js"></script>
-    
-    <!-- Main application entry point -->
-    <script async defer type="module" src="../Scripts/main.js"></script>
-    
-    <!-- Inline script for Service Worker initialization -->
-    <script>
-      // Service Worker registration is now handled by sw-manager.js
-      // This provides better update handling and offline functionality
-      console.log('Service Worker management delegated to sw-manager.js');
-    </script>
+      <!-- Performance monitoring module -->
+      <script type="module" src="../Scripts/performance.js" defer></script>
+      <!-- Service Worker manager for PWA functionality -->
+      <script src="../Scripts/sw-manager.js" defer></script>
+      <!-- Main application entry point -->
+      <script type="module" src="../Scripts/main.js" defer></script>
+      <!-- Matrix background script -->
+      <script type="module" src="../Scripts/matrix-bg.js" defer></script>
+      <!-- Inline script for Service Worker initialization -->
+      <script>
+        // Service Worker registration is now handled by sw-manager.js
+        // This provides better update handling and offline functionality
+        console.log('Service Worker management delegated to sw-manager.js');
+      </script>
   </body>
 </html>

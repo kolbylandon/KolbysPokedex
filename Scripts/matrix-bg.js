@@ -12,7 +12,8 @@ function startMatrixEffect() {
   resizeMatrixCanvas();
   container.style.display = 'block';
   const ctx = canvas.getContext('2d');
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  // Latin letters, numbers, and Japanese Kanji characters
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789亜愛安以衣位宇雲永炎王音下化花会海学楽漢気空月見語国山子時食新人水生青石赤先川千村天電土東日白百文木目友力林話';
   const fontSize = 16;
   let columns = Math.floor(canvas.width / fontSize);
   let drops = Array(columns).fill(1);
