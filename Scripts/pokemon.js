@@ -41,7 +41,8 @@ import { updateNavigationButtons as makeButtonsDisappear, getDeviceType } from '
 import { 
   displayStatsChart, 
 } from './statsChart.js';
-  import { startMatrixEffect, stopMatrixEffect } from './matrix-bg.js';
+import { startMatrixEffect, stopMatrixEffect } from './matrix-bg.js';
+import { showSnowIfBabyOrIce } from './particles.js';
 
 // ====================================
 // DOM ELEMENT REFERENCES
@@ -153,6 +154,13 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   
   // Process Pokemon types and generate color scheme
   const types = getTypes(pokemon.types);
+    // Show snow effect if Pokémon is baby or ice type
+    showSnowIfBabyOrIce({
+      is_baby: speciesResponse.is_baby,
+      types: pokemonResponse.types,
+      isLegendary: speciesResponse.is_legendary,
+      isMythical: speciesResponse.is_mythical
+    });
   const backgroundColor = convertHexToRgba(types[0], 0.35);
   const borderColor = convertHexToRgba(types[1], 0.55);
   

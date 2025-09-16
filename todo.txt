@@ -2,12 +2,10 @@ TO DO
 -----------------------------------------------------------------------------------------
 006) Show move sets in a grid including other information about the attack.
 011) Explore https://pokeapi.co/api/v2/ for new items to add to the info screen.
-017) If the Pokémon is legendary or mythical, have particles.js in the background.
 018) Use the glass instead of the screen or info-screen.
 022) Rewrite javascript files in typescript.
 026) Search footprints on the API, if they exist, show them in the info screen.
 030) Add console logs to the script.
-032) If the Pokémon is a baby or ice, have particles.js be snow in the background.
 037) Hover over the abilities and see what the ability does.
 039) Hover over the types and get the strengths and weaknesses of the type.
 042) Host this site so others can see it.
@@ -93,6 +91,8 @@ IMPLEMENTED
   can search by Pokémon name and use the previous button
 016) Allow generateNextPokedexEntry when user has searched by Pokémon name. //The user
   can search by Pokémon name and use the next button
+017) If the Pokémon is legendary or mythical, have particles.js in the background. //The
+  particles.js is now shown when the Pokémon is legendary or mythical.
 018) Use the glass instead of the screen or info-screen. //The application is now using 
   Glassmorphism for the background of the cards.
 019) Hover over abilities to get the explanation of what it does. // Created a list
@@ -115,6 +115,8 @@ IMPLEMENTED
   been added to the codebase.
 031) Change to female form when clicking on the stats-chart. //Created a button instead of
   clicking the stats-chart.
+032) If the Pokémon is a baby or ice, have particles.js be snow in the background. //The snow
+  effect is now shown when the Pokémon is an ice type.
 033) Look into DevExpress to see if their chart is better than chart.js. //I am very pleased
   with how chart.js is working currently.
 034) Get rid of characters that do not belong (examples: #107 and #369). //Added a method
