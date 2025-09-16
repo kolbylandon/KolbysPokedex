@@ -369,6 +369,9 @@ function getSystemInformation() {
           
           testUtterance.addEventListener('error', (e) => {
             console.log('📱 [Android] Speech synthesis activation failed:', e);
+            if (e.error) {
+              alert('Speech synthesis error: ' + e.error);
+            }
           });
           
           window.speechSynthesis.speak(testUtterance);
@@ -407,6 +410,10 @@ function getSystemInformation() {
                 console.log('📱 [Android] No voices found, attempting to force load');
                 const dummyUtterance = new SpeechSynthesisUtterance(' ');
                 dummyUtterance.volume = 0;
+                dummyUtterance.addEventListener('error', function(event) {
+                  console.error('Speech synthesis error:', event.error);
+                  alert('Speech synthesis error: ' + event.error);
+                });
                 window.speechSynthesis.speak(dummyUtterance);
                 setTimeout(() => {
                   window.speechSynthesis.cancel();
