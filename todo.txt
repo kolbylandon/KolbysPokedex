@@ -42,8 +42,6 @@ TO DO
 121) Create a toggle list of all headers to be shown or hidden in 'info-card'.
 122) Fix localStorage so that it is populated at the beginning of the application.
 128) Format the dateTime variable in local storage.
-129) Fix undefined genera and Pokédex entries (1016) by leaving them blank.
-130) Fix blank abilities in the abilities list (1010).
 131) Create a slideshow that includes the official artwork on the sprite-card.
 137) See about changing this to a typescript implementation.
 138) see about using SCSS modules for the CSS files.
@@ -52,7 +50,6 @@ TO DO
 153) Look into having hidden abilities show in their own list.
 154) Remove the dashes from the paradox Pokémon names.
 155) Incorporate the TGC API.
-157) Fix the input when the Pokémon name has a special character.
 158) Slow the speed down that the characters fall in the Porygon matrix background.
 
 IN PROGRESS
@@ -236,6 +233,10 @@ IMPLEMENTED
   I had hard coded KOMMO-O's name.
 127) Add '(Hidden)' to the hidden abilities in the abilities list. //Added an if check in the helpers.js 
   file to add '(Hidden)' after the name. For the time being, I am leaving it read as well.
+129) Fix undefined genera and Pokédex entries (1016) by leaving them blank. //This was fixed with an 
+  update on the API's side.
+130) Fix blank abilities in the abilities list (1010). //This was fixed with an update on the API's 
+  side.
 132) Fix the bug that allows the lastPokémon and currentPokémon to be the same. //Fixed with simplified 
   storage logic that explicitly prevents same values by clearing LAST_POKEMON when they would be equal.
 133) Change the mouse to a pokéball when hovering over the types divs. //Used pokeball-bullet.png as the 
@@ -264,3 +265,5 @@ IMPLEMENTED
   clicking the info text in the header.
 156) Move the speed stat to the bottom of the chart. //The speed stat is now the last stat in the chart
   and the Sp Attack and Sp Defense stats are now in the correct order as well.
+157) Fix the input when the Pokémon name has a special character. //The input now works when the Pokémon name 
+  has a special character.
