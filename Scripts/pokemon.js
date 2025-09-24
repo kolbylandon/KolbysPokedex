@@ -419,15 +419,15 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     generation: speciesResponse.generation.name.substring(11).toUpperCase(), // Extract generation number
     pokedexEntry: entry,
     
-    // Sprite URLs (prioritized for display)
-    FrontDefaultSprite: pokemonResponse.sprites.front_default,
-    FrontShinySprite: pokemonResponse.sprites.front_shiny,
-    BackDefaultSprite: pokemonResponse.sprites.back_default,
-    BackShinySprite: pokemonResponse.sprites.back_shiny,
-    
-    // Artwork URLs (fallback when sprites are not available)
-    FrontDefaultOfficialArtwork: `${DefaultArtworkUrl}${speciesResponse.id}.png`,
-    FrontShinyOfficialArtwork: `${ShinyArtworkUrl}${speciesResponse.id}.png`,
+  // Sprite URLs (prioritized for display)
+  FrontDefaultSprite: pokemonResponse.sprites.front_default || `${DefaultArtworkUrl}${speciesResponse.id}.png`,
+  FrontShinySprite: pokemonResponse.sprites.front_shiny || `${ShinyArtworkUrl}${speciesResponse.id}.png`,
+  BackDefaultSprite: pokemonResponse.sprites.back_default,
+  BackShinySprite: pokemonResponse.sprites.back_shiny,
+
+  // Artwork URLs (always valid fallback)
+  FrontDefaultOfficialArtwork: `${DefaultArtworkUrl}${speciesResponse.id}.png`,
+  FrontShinyOfficialArtwork: `${ShinyArtworkUrl}${speciesResponse.id}.png`,
     
     // Gender differences (for sprite cycling)
     hasGenderDifferences: speciesResponse.has_gender_differences,

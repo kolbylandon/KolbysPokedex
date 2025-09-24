@@ -53,6 +53,7 @@ TO DO
 154) Remove the dashes from the paradox Pokémon names.
 155) Incorporate the TGC API.
 157) Fix the input when the Pokémon name has a special character.
+158) Slow the speed down that the characters fall in the Porygon matrix background.
 
 IN PROGRESS
 -----------------------------------------------------------------------------------------
