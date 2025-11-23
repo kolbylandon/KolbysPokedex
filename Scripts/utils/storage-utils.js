@@ -58,23 +58,28 @@ export const STORAGE_KEYS = {
 let isInRecallOperation = false;
 
 export function populateLocalStorage(pokemonId, isRecall = false) {
-  if (!pokemonId) return;
+  if(!pokemonId) {
+    return;
+  }
 
   const validId = parseInt(pokemonId, 10);
-  if (isNaN(validId) || validId < 1) return;
+  if(isNaN(validId) || validId < 1) {
+    return;
+  }
 
   // If this is a recall operation, don't modify the storage - it's already been set by swapCurrentAndLastPokemon
-  if (isRecall || isInRecallOperation) {
+  if(isRecall || isInRecallOperation) {
     setStorageItem(STORAGE_KEYS.DATE_TIME, getDateTime());
     getGeoLocation();
     getUserIP();
+  
     return;
   }
 
   const oldCurrent = getStorageItem(STORAGE_KEYS.CURRENT_POKEMON);
   
   // Simple rule: if we have an old current and it's different from new, store it as last
-  if (oldCurrent && oldCurrent !== validId.toString()) {
+  if(oldCurrent && oldCurrent !== validId.toString()) {
     setStorageItem(STORAGE_KEYS.LAST_POKEMON, oldCurrent);
   } else {
     // If no old current or they're the same, clear last to prevent duplicates
@@ -95,13 +100,12 @@ export function swapCurrentAndLastPokemon() {
   const lastPokemon = getStorageItem(STORAGE_KEYS.LAST_POKEMON);
   
   // Check if both values exist and are valid (not null, empty, "null" string, or "0")
-  if (currentPokemon && lastPokemon && 
+  if(currentPokemon && lastPokemon && 
       currentPokemon !== lastPokemon && 
       lastPokemon !== '' && 
       lastPokemon !== '0' &&
       lastPokemon !== 'null' &&
       currentPokemon !== 'null') {
-    
     // Set flag to prevent populateLocalStorage from interfering
     isInRecallOperation = true;
     
@@ -124,22 +128,31 @@ export function swapCurrentAndLastPokemon() {
 }
 
 export function setStorageItem(key, value) {
-  if (!isStorageAvailable()) return false;
+  if(!isStorageAvailable()) {
+    return false;
+  }
+
   try {
     localStorage.setItem(key, value);
+
     return true;
   } catch (error) {
     console.error('Error setting storage item:', error);
+
     return false;
   }
 }
 
 export function getStorageItem(key) {
-  if (!isStorageAvailable()) return null;
+  if(!isStorageAvailable()) {
+    return null;
+  }
+
   try {
     return localStorage.getItem(key);
   } catch (error) {
     console.error('Error getting storage item:', error);
+
     return null;
   }
 }
@@ -149,6 +162,7 @@ function isStorageAvailable() {
     const test = '__storage_test__';
     localStorage.setItem(test, 'test');
     localStorage.removeItem(test);
+
     return true;
   } catch (error) {
     return false;
@@ -161,7 +175,7 @@ function getDateTime() {
 
 function getGeoLocation() {
   // Simplified geolocation
-  if ('geolocation' in navigator) {
+  if('geolocation' in navigator) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const coords = `${position.coords.latitude},${position.coords.longitude}`;
@@ -179,7 +193,7 @@ function getGeoLocation() {
 async function getUserIP() {
   // Check if IP is already stored and still fresh (within 24 hours)
   const existingIP = getStorageItem(STORAGE_KEYS.USER_IP);
-  if (existingIP) {
+  if(existingIP) {
     try {
       const storedData = JSON.parse(existingIP);
       const now = new Date().getTime();
@@ -187,8 +201,9 @@ async function getUserIP() {
       const hoursSinceStored = (now - storedTime) / (1000 * 60 * 60);
       
       // If IP was stored less than 24 hours ago, don't fetch again
-      if (hoursSinceStored < 24) {
+      if(hoursSinceStored < 24) {
         console.log('Using cached IP address:', storedData.ip);
+
         return;
       }
     } catch (error) {
@@ -204,7 +219,7 @@ async function getUserIP() {
     'https://httpbin.org/ip'
   ];
 
-  for (const service of ipServices) {
+  for(const service of ipServices) {
     try {
       console.log(`Attempting to fetch IP from: ${service}`);
       const response = await fetch(service, {
@@ -215,7 +230,7 @@ async function getUserIP() {
         signal: AbortSignal.timeout(5000) // 5 second timeout
       });
 
-      if (!response.ok) {
+      if(!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
 
@@ -223,15 +238,15 @@ async function getUserIP() {
       let ip = null;
 
       // Parse IP from different response formats
-      if (data.ip) {
+      if(data.ip) {
         ip = data.ip;
-      } else if (data.origin) {
+      } else if(data.origin) {
         ip = data.origin;
-      } else if (typeof data === 'string') {
+      } else if(typeof data === 'string') {
         ip = data.trim();
       }
 
-      if (ip && isValidIP(ip)) {
+      if(ip && isValidIP(ip)) {
         const ipData = {
           ip: ip,
           timestamp: new Date().toISOString(),
@@ -247,6 +262,7 @@ async function getUserIP() {
       }
     } catch (error) {
       console.warn(`Failed to fetch IP from ${service}:`, error.message);
+
       continue; // Try next service
     }
   }
@@ -260,8 +276,10 @@ async function getUserIP() {
  * @returns {boolean} True if valid IP address
  */
 function isValidIP(ip) {
-  if (!ip || typeof ip !== 'string') return false;
-  
+  if(!ip || typeof ip !== 'string') {
+    return false;
+  }
+
   // IPv4 pattern
   const ipv4Pattern = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
   
@@ -277,12 +295,15 @@ function isValidIP(ip) {
  */
 export function getStoredIP() {
   const storedIP = getStorageItem(STORAGE_KEYS.USER_IP);
-  if (!storedIP) return null;
+  if(!storedIP) {
+    return null;
+  }
   
   try {
     return JSON.parse(storedIP);
   } catch (error) {
     console.error('Error parsing stored IP data:', error);
+
     return null;
   }
 }
@@ -308,6 +329,6 @@ function isDev() {
 }
 
 // Example usage:
-// if (isDev()) console.log('message');
-// if (isDev()) console.warn('message');
-// if (isDev()) console.error('message');
+// if(isDev()) console.log('message');
+// if(isDev()) console.warn('message');
+// if(isDev()) console.error('message');

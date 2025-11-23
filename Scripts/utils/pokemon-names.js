@@ -92,15 +92,18 @@ export const NAME_VARIATIONS = {
  * @returns {string} Normalized Pokemon name for API
  */
 export function normalizePokemonName(name) {
-  if (!name || typeof name !== 'string') return '';
-  
+  if(!name || typeof name !== 'string') {
+    return '';
+  }
+
   // Basic cleanup
   let normalized = name.toLowerCase().trim();
-  
-  if (normalized === '') return '';
-  
+  if(normalized === '') {
+    return '';
+  }
+
   // Check if it's already in our variations map
-  if (NAME_VARIATIONS[normalized]) {
+  if(NAME_VARIATIONS[normalized]) {
     return NAME_VARIATIONS[normalized];
   }
   
@@ -118,7 +121,7 @@ export function normalizePokemonName(name) {
   normalized = normalized.replace(/^-+|-+$/g, '');
   
   // Check variations map again after normalization
-  if (NAME_VARIATIONS[normalized]) {
+  if(NAME_VARIATIONS[normalized]) {
     return NAME_VARIATIONS[normalized];
   }
   
@@ -141,21 +144,23 @@ export function getRandomPopularPokemon() {
  * @returns {string[]} Array of suggested Pokemon names
  */
 export function suggestPokemonNames(input, maxSuggestions = 5) {
-  if (!input || input.length < 2) return [];
+  if(!input || input.length < 2) {
+    return [];
+  }
   
   const normalizedInput = input.toLowerCase().trim();
   const suggestions = [];
   
   // First, check for exact starts
-  for (const pokemon of POPULAR_POKEMON) {
-    if (pokemon.startsWith(normalizedInput)) {
+  for(const pokemon of POPULAR_POKEMON) {
+    if(pokemon.startsWith(normalizedInput)) {
       suggestions.push(pokemon);
     }
   }
   
   // Then check for contains
-  for (const pokemon of POPULAR_POKEMON) {
-    if (!suggestions.includes(pokemon) && pokemon.includes(normalizedInput)) {
+  for(const pokemon of POPULAR_POKEMON) {
+    if(!suggestions.includes(pokemon) && pokemon.includes(normalizedInput)) {
       suggestions.push(pokemon);
     }
   }
@@ -172,6 +177,6 @@ function isDev() {
 }
 
 // Example usage:
-// if (isDev()) console.log('message');
-// if (isDev()) console.warn('message');
-// if (isDev()) console.error('message');
+// if(isDev()) console.log('message');
+// if(isDev()) console.warn('message');
+// if(isDev()) console.error('message');

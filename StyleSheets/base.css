@@ -9,14 +9,14 @@
   @since 2023
 */
 
-/* ====================================
-   EXTERNAL FONT IMPORTS
-   ==================================== */
+/*====================================
+  EXTERNAL FONT IMPORTS
+  ==================================== */
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 
-/* ====================================
-   RESET & BASE STYLES
-   ==================================== */
+/*====================================
+  RESET & BASE STYLES
+  ==================================== */
 *,
 *::before,
 *::after {
@@ -95,9 +95,9 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-/* ====================================
-   UTILITY CLASSES
-   ==================================== */
+/*====================================
+  UTILITY CLASSES
+  ==================================== */
 /* Performance optimizations */
 .lazy {
   opacity: 0;

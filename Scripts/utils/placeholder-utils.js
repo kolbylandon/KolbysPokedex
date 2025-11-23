@@ -31,13 +31,15 @@ const PLACEHOLDER_EXAMPLES = [
  * @param {number} intervalMs - Rotation interval in milliseconds (default: 3000)
  */
 export function initializePlaceholderRotation(inputElement, intervalMs = 3000) {
-  if (!inputElement) return;
+  if(!inputElement) {
+    return;
+  }
   
   let currentIndex = 0;
   
   const rotatePlaceholder = () => {
     // Only rotate if input is not focused and empty
-    if (document.activeElement !== inputElement && inputElement.value === '') {
+    if(document.activeElement !== inputElement && inputElement.value === '') {
       inputElement.placeholder = PLACEHOLDER_EXAMPLES[currentIndex];
       currentIndex = (currentIndex + 1) % PLACEHOLDER_EXAMPLES.length;
     }
@@ -56,7 +58,7 @@ export function initializePlaceholderRotation(inputElement, intervalMs = 3000) {
   
   // Resume rotation when user leaves empty input
   inputElement.addEventListener('blur', () => {
-    if (inputElement.value === '') {
+    if(inputElement.value === '') {
       setTimeout(rotatePlaceholder, 500); // Small delay before resuming rotation
     }
   });
@@ -86,6 +88,6 @@ function isDev() {
 }
 
 // Example usage:
-// if (isDev()) console.log('message');
-// if (isDev()) console.warn('message');
-// if (isDev()) console.error('message');
+// if(isDev()) console.log('message');
+// if(isDev()) console.warn('message');
+// if(isDev()) console.error('message');

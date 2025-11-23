@@ -109,7 +109,7 @@ async function handleInstall() {
       await staticCache.addAll(STATIC_ASSETS);
     } catch (addAllError) {
       // Try to cache assets one by one and log failures
-      for (const asset of STATIC_ASSETS) {
+      for(const asset of STATIC_ASSETS) {
         try {
           await staticCache.add(asset);
         } catch (assetError) {
@@ -153,50 +153,70 @@ async function handleActivate() {
 async function handleFetchEvent(event) {
   const { request } = event;
   const url = new URL(request.url);
-  if (request.method !== 'GET' || !url.protocol.startsWith('http')) return fetch(request);
-  if (url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) return fetch(request);
-  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('cdnjs.cloudflare.com') || url.hostname.includes('cdn.jsdelivr.net')) return fetch(request);
+  
+  if(request.method !== 'GET' || !url.protocol.startsWith('http')) {
+    return fetch(request);
+  }
+
+  if(url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) {
+    return fetch(request);
+  }
+
+  if(url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('cdnjs.cloudflare.com') || url.hostname.includes('cdn.jsdelivr.net')) {
+    return fetch(request);
+  }
 
   // Serve placeholder for known external sprite hosts when they fail
   const isSpriteHost = url.hostname.includes('raw.githubusercontent.com') || url.hostname.includes('play.pokemonshowdown.com') || url.hostname.includes('pokemoncries.com');
 
   // Offline fallback for navigation requests (HTML)
-  if (request.mode === 'navigate' || request.destination === 'document') {
+  if(request.mode === 'navigate' || request.destination === 'document') {
     try {
       const response = await enhancedFetch(request);
-      if (response && response.ok) {
+      
+      if(response && response.ok) {
         // Clone immediately to avoid body used errors when cache.put runs asynchronously
         const responseForCache = response.clone();
         caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, responseForCache));
         return response;
       }
+
       throw new Error('Network response not ok');
     } catch (err) {
       log('warn', 'Network failed, serving cache or offline page:', err);
       const cached = await caches.match(request);
-      if (cached) return cached;
+      
+      if(cached) {
+        return cached;
+      }
+      
       const offlinePage = await caches.match('./offline.html');
-      if (offlinePage) return offlinePage;
+      
+      if(offlinePage) {
+        return offlinePage;
+      }
+      
       return caches.match('./index.html');
     }
   }
   // For other requests, use main handler
   // If it's an image (sprite) request, try network but fallback to cached placeholder on failure
-  if (request.destination === 'image' || isSpriteHost || url.pathname.match(/\.png$|\.jpg$|\.jpeg$|\.gif$/i)) {
+  if(request.destination === 'image' || isSpriteHost || url.pathname.match(/\.png$|\.jpg$|\.jpeg$|\.gif$/i)) {
     try {
       const response = await enhancedFetch(request);
-      if (response && response.ok) {
+      if(response && response.ok) {
         // cache sprite responses in dynamic cache
         const cache = await caches.open(DYNAMIC_CACHE);
         const responseForCache = response.clone();
         cache.put(request, responseForCache).catch(() => {});
         return response;
       }
+
       throw new Error('Sprite network response not ok');
     } catch (err) {
       log('warn', 'Sprite fetch failed, returning placeholder:', err, request.url);
       const placeholder = await caches.match('./Images/pokeball.png');
-      if (placeholder) return placeholder;
+      if(placeholder) return placeholder;
       return new Response('', { status: 503, statusText: 'Sprite unavailable' });
     }
   }
@@ -217,24 +237,28 @@ async function handleFetch(request) {
   const url = new URL(request.url);
   
   try {
-    if (isStaticAsset(request)) {
+    if(isStaticAsset(request)) {
       return cacheFirst(request, STATIC_CACHE);
     }
-    if (isApiRequest(request)) {
+
+    if(isApiRequest(request)) {
       return staleWhileRevalidate(request, API_CACHE);
     }
+
     // Default: network first for HTML
-    if (request.destination === 'document' || request.url.includes('.html')) {
+    if(request.destination === 'document' || request.url.includes('.html')) {
       return networkFirst(request, DYNAMIC_CACHE);
     }
+
     // Fallback: cache first for other assets
     return cacheFirst(request, DYNAMIC_CACHE);
   } catch (error) {
     // If offline, try to serve from cache
     return caches.match(request).then(cached => {
-      if (cached) return cached;
+      if(cached) return cached;
       // Fallback to main page for navigation requests
-      if (request.mode === 'navigate' || request.destination === 'document') {
+      
+      if(request.mode === 'navigate' || request.destination === 'document') {
         return caches.match('./index.html');
       }
       // Fallback to a generic offline response for other assets
@@ -256,15 +280,21 @@ async function handleFetch(request) {
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request, {ignoreSearch: true});
-  if (cachedResponse) return cachedResponse;
+  
+  if(cachedResponse) {
+    return cachedResponse;
+  }
+  
   try {
     const response = await enhancedFetch(request);
-    if (response && response.ok) {
+    
+    if(response && response.ok) {
       // Clone immediately for caching
       const responseForCache = response.clone();
       cache.put(request, responseForCache);
       limitCacheSize(cacheName);
     }
+    
     return response;
   } catch (error) {
     log('warn', 'cacheFirst failed, serving cache if available:', error);
@@ -282,16 +312,18 @@ async function networkFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   try {
     const response = await enhancedFetch(request);
-    if (response && response.ok) {
+    if(response && response.ok) {
       // Clone immediately for caching
       const responseForCache = response.clone();
       cache.put(request, responseForCache);
       limitCacheSize(cacheName);
     }
+
     return response;
   } catch (error) {
     log('warn', 'networkFirst failed, serving cache if available:', error);
     const cachedResponse = await cache.match(request, {ignoreSearch: true});
+    
     return cachedResponse || Response.error();
   }
 }
@@ -306,10 +338,10 @@ async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request, {ignoreSearch: true});
   const ttl = CACHE_EXPIRY.API || (30 * 60 * 1000);
-  if (isFresh(cachedResponse, ttl)) {
+  if(isFresh(cachedResponse, ttl)) {
     Promise.resolve().then(() => {
       enhancedFetch(request).then(response => {
-          if (response && response.ok) {
+          if(response && response.ok) {
           // Clone immediately for caching
           const responseForCache = response.clone();
           cache.put(request, responseForCache);
@@ -317,14 +349,17 @@ async function staleWhileRevalidate(request, cacheName) {
         }
       });
     });
+
     return cachedResponse;
   }
+
   try {
     const response = await enhancedFetch(request);
-    if (response && response.ok) {
+    if(response && response.ok) {
       cache.put(request, response.clone());
       limitCacheSize(cacheName);
     }
+
     return response;
   } catch (error) {
     log('warn', 'staleWhileRevalidate failed, serving cache if available:', error);
@@ -348,7 +383,7 @@ function isStaticAsset(request) {
   const url = new URL(request.url);
   
   // Check if it's in our static assets list
-  if (STATIC_ASSETS.some(asset => request.url.includes(asset) || url.pathname === asset)) {
+  if(STATIC_ASSETS.some(asset => request.url.includes(asset) || url.pathname === asset)) {
     return true;
   }
   
@@ -372,19 +407,29 @@ function isApiRequest(request) {
  */
 async function limitCacheSize(cacheName) {
   const maxSize = MAX_CACHE_SIZE[cacheName];
-  if (!maxSize) return;
+  if(!maxSize) {
+    return;
+  }
+
   const cache = await caches.open(cacheName);
   const keys = await cache.keys();
-  if (keys.length > maxSize) {
+  
+  if(keys.length > maxSize) {
     // Delete oldest entries in parallel
     await Promise.all(keys.slice(0, keys.length - maxSize).map(key => cache.delete(key)));
   }
 }
 
 function isFresh(response, ttl) {
-  if (!response) return false;
+  if(!response) {
+    return false;
+  }
+  
   const dateHeader = response.headers.get('sw-cache-date') || response.headers.get('date');
-  if (!dateHeader) return false;
+  if(!dateHeader) {
+    return false;
+  }
+  
   const age = Date.now() - new Date(dateHeader).getTime();
   return age < ttl;
 }
@@ -392,7 +437,7 @@ function isFresh(response, ttl) {
 
 // Unified logging utility
 function log(level, ...args) {
-  if (isDev()) {
+  if(isDev()) {
     switch (level) {
       case 'info':
         console.info('[ServiceWorker]', ...args);
@@ -421,10 +466,12 @@ async function measurePerformance(operation, fn) {
     const result = await fn();
     const duration = performance.now() - start;
     console.log(`[ServiceWorker] ${operation} took ${duration.toFixed(2)}ms`);
+    
     return result;
   } catch (error) {
     const duration = performance.now() - start;
     console.error(`[ServiceWorker] ${operation} failed after ${duration.toFixed(2)}ms:`, error);
+    
     throw error;
   }
 }
@@ -437,7 +484,7 @@ async function performCacheHealthCheck() {
     const cacheNames = await caches.keys();
     let totalEntries = 0;
     
-    for (const cacheName of cacheNames) {
+    for(const cacheName of cacheNames) {
       const cache = await caches.open(cacheName);
       const keys = await cache.keys();
       totalEntries += keys.length;
@@ -449,7 +496,7 @@ async function performCacheHealthCheck() {
     console.log(`[ServiceWorker] Cache health check: ${cacheNames.length} caches, ${totalEntries} total entries`);
     
     // Report storage usage if available
-    if ('storage' in navigator && 'estimate' in navigator.storage) {
+    if('storage' in navigator && 'estimate' in navigator.storage) {
       const estimate = await navigator.storage.estimate();
       const usageInMB = (estimate.usage / (1024 * 1024)).toFixed(2);
       const quotaInMB = (estimate.quota / (1024 * 1024)).toFixed(2);
@@ -471,11 +518,11 @@ async function performCacheHealthCheck() {
 self.addEventListener('message', event => {
   const { data } = event;
   
-  if (data && data.type === 'SKIP_WAITING') {
+  if(data && data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
   
-  if (data && data.type === 'CLEAR_CACHE') {
+  if(data && data.type === 'CLEAR_CACHE') {
     event.waitUntil(
       caches.keys().then(cacheNames => {
         return Promise.all(
@@ -483,19 +530,21 @@ self.addEventListener('message', event => {
         );
       }).then(() => {
         console.log('[ServiceWorker] All caches cleared');
-        if (event.ports && event.ports[0]) {
+        
+        if(event.ports && event.ports[0]) {
           event.ports[0].postMessage({ success: true });
         }
       }).catch(err => {
         console.error('[ServiceWorker] Failed to clear caches:', err);
-        if (event.ports && event.ports[0]) {
+        
+        if(event.ports && event.ports[0]) {
           event.ports[0].postMessage({ success: false, error: err.message });
         }
       })
     );
   }
   
-  if (data && data.type === 'GET_CACHE_STATUS') {
+  if(data && data.type === 'GET_CACHE_STATUS') {
     event.waitUntil(
       Promise.all([
         caches.open(STATIC_CACHE).then(cache => cache.keys()),
@@ -509,12 +558,12 @@ self.addEventListener('message', event => {
           total: staticKeys.length + dynamicKeys.length + apiKeys.length
         };
         
-        if (event.ports && event.ports[0]) {
+        if(event.ports && event.ports[0]) {
           event.ports[0].postMessage({ success: true, status });
         }
       }).catch(err => {
         console.error('[ServiceWorker] Failed to get cache status:', err);
-        if (event.ports && event.ports[0]) {
+        if(event.ports && event.ports[0]) {
           event.ports[0].postMessage({ success: false, error: err.message });
         }
       })
@@ -531,11 +580,11 @@ self.addEventListener('message', event => {
  * Handles data synchronization when connectivity is restored
  */
 self.addEventListener('sync', event => {
-  if (event.tag === 'background-sync') {
+  if(event.tag === 'background-sync') {
     event.waitUntil(doBackgroundSync());
   }
   
-  if (event.tag === 'cache-update') {
+  if(event.tag === 'cache-update') {
     event.waitUntil(updateStaleCache());
   }
 });
@@ -549,7 +598,7 @@ async function doBackgroundSync() {
     console.log('[ServiceWorker] Starting background sync...');
     
     // Check if we're online
-    if (!navigator.onLine) {
+    if(!navigator.onLine) {
       console.log('[ServiceWorker] Still offline, skipping background sync');
       return;
     }
@@ -569,19 +618,20 @@ async function doBackgroundSync() {
     const cache = await caches.open(API_CACHE);
     let successCount = 0;
     
-    for (const url of popularPokemon) {
+    for(const url of popularPokemon) {
       try {
         const response = await fetch(url, { 
           method: 'GET',
           headers: { 'Cache-Control': 'max-age=300' }
         });
         
-        if (response.ok) {
+        if(response.ok) {
             // Create a fresh response body by reading the body as a blob then creating a new Response
             const cloned = response.clone();
             const bodyBlob = await cloned.blob();
             const headers = new Headers(response.headers);
             headers.set('sw-cache-date', new Date().toISOString());
+
             const responseWithTimestamp = new Response(bodyBlob, {
               status: response.status,
               statusText: response.statusText,
@@ -615,17 +665,18 @@ async function updateStaleCache() {
     const cache = await caches.open(API_CACHE);
     const keys = await cache.keys();
     
-    for (const request of keys) {
+    for(const request of keys) {
       const cachedResponse = await cache.match(request);
-      if (cachedResponse) {
+
+      if(cachedResponse) {
         const cachedDate = new Date(cachedResponse.headers.get('sw-cache-date') || cachedResponse.headers.get('date') || 0);
         const age = new Date() - cachedDate;
         
         // Update if older than 15 minutes
-        if (age > 15 * 60 * 1000) {
+        if(age > 15 * 60 * 1000) {
           try {
             const networkResponse = await fetch(request);
-            if (networkResponse.ok) {
+            if(networkResponse.ok) {
               // Safely create a fresh response body by cloning and reading as blob
               const clonedNetworkResp = networkResponse.clone();
               const bodyBlob = await clonedNetworkResp.blob();
@@ -667,7 +718,7 @@ self.addEventListener('error', event => {
   console.error('[ServiceWorker] Error:', event.error);
   
   // Report critical errors to main thread if possible
-  if (self.clients) {
+  if(self.clients) {
     self.clients.matchAll().then(clients => {
       clients.forEach(client => {
         client.postMessage({
@@ -688,7 +739,7 @@ self.addEventListener('unhandledrejection', event => {
   event.preventDefault();
   
   // Report to main thread
-  if (self.clients) {
+  if(self.clients) {
     self.clients.matchAll().then(clients => {
       clients.forEach(client => {
         client.postMessage({
@@ -712,7 +763,7 @@ self.addEventListener('online', () => {
   console.log('[ServiceWorker] Network online - starting background sync');
   
   // Trigger background sync when coming back online
-  if (self.registration && self.registration.sync) {
+  if(self.registration && self.registration.sync) {
     self.registration.sync.register('background-sync').catch(err => {
       console.warn('[ServiceWorker] Failed to register background sync:', err);
     });
@@ -737,7 +788,7 @@ async function enhancedFetch(request, options = {}) {
     retryDelay = 1000
   } = options;
   
-  for (let attempt = 0; attempt <= retries; attempt++) {
+  for(let attempt = 0; attempt <= retries; attempt++) {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -749,17 +800,17 @@ async function enhancedFetch(request, options = {}) {
       
       clearTimeout(timeoutId);
       
-      if (response.ok || response.status === 304) {
+      if(response.ok || response.status === 304) {
         return response;
       }
       
-      if (response.status >= 400 && response.status < 500) {
+      if(response.status >= 400 && response.status < 500) {
         // Client errors - don't retry
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
       // Server errors - retry
-      if (attempt < retries) {
+      if(attempt < retries) {
         await new Promise(resolve => setTimeout(resolve, retryDelay * (attempt + 1)));
         continue;
       }
@@ -767,11 +818,11 @@ async function enhancedFetch(request, options = {}) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       
     } catch (error) {
-      if (error.name === 'AbortError') {
+      if(error.name === 'AbortError') {
         console.warn(`[ServiceWorker] Request timeout after ${timeout}ms:`, request.url);
       }
       
-      if (attempt === retries) {
+      if(attempt === retries) {
         throw error;
       }
       
@@ -786,7 +837,8 @@ function isDev() {
 }
 
 console.log('[ServiceWorker] Service Worker script loaded - Enhanced version with TTL caching, performance monitoring, and error handling');
+
 // Example usage:
-// if (isDev()) console.log('message');
-// if (isDev()) console.warn('message');
-// if (isDev()) console.error('message');
+// if(isDev()) console.log('message');
+// if(isDev()) console.warn('message');
+// if(isDev()) console.error('message');

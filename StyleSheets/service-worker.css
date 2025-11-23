@@ -9,9 +9,9 @@
   @since 2023
 */
 
-/* ====================================
-   SERVICE WORKER NOTIFICATIONS
-   ==================================== */
+/*====================================
+  SERVICE WORKER NOTIFICATIONS
+  ==================================== */
 .sw-notification {
   position: fixed !important;
   top: 20px;
@@ -48,9 +48,9 @@
   gap: 8px;
 }
 
-/* ====================================
-   SERVICE WORKER BUTTONS
-   ==================================== */
+/*====================================
+  SERVICE WORKER BUTTONS
+  ==================================== */
 .sw-button {
   padding: 6px 12px;
   border: none;
@@ -78,9 +78,9 @@
   background-color: #616161;
 }
 
-/* ====================================
-   CONNECTION INDICATOR
-   ==================================== */
+/*====================================
+  CONNECTION INDICATOR
+  ==================================== */
 .connection-indicator {
   position: fixed !important;
   bottom: 20px;
@@ -110,9 +110,9 @@
   100% { opacity: 1; }
 }
 
-/* ====================================
-   SERVICE WORKER TOASTS
-   ==================================== */
+/*====================================
+  SERVICE WORKER TOASTS
+  ==================================== */
 .sw-toast {
   position: fixed !important;
   bottom: 20px;
@@ -148,9 +148,9 @@
   border-left: 4px solid #2196F3;
 }
 
-/* ====================================
-   RESPONSIVE SERVICE WORKER UI
-   ==================================== */
+/*====================================
+  RESPONSIVE SERVICE WORKER UI
+  ==================================== */
 @media (max-width: 768px) {
   .sw-notification {
     right: 10px;

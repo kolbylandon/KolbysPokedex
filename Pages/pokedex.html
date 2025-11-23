@@ -35,9 +35,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- ====================================
-       META INFORMATION AND SEO
-       ==================================== -->
+  <!--====================================
+      META INFORMATION AND SEO
+      ====================================-->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <meta name="author" content="Kolby Landon">
@@ -84,9 +84,9 @@
   <meta name="msapplication-TileImage" content="../Images/pokeball.png">
   <meta name="msapplication-TileColor" content="#e53e3e">
   
-  <!-- ====================================
-       EXTERNAL STYLESHEETS
-       ==================================== -->
+  <!--====================================
+      EXTERNAL STYLESHEETS
+      ====================================-->
   <!-- Font Awesome icons for UI elements -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
   
@@ -108,9 +108,9 @@
   <div id="matrix-bg" class="matrix-bg" style="display:none;">
     <canvas id="matrix-canvas" class="matrix-canvas"></canvas>
   </div>
-  <!-- ====================================
-       MAIN HEADER WITH NAVIGATION
-       ==================================== -->
+  <!--====================================
+      MAIN HEADER WITH NAVIGATION
+      ====================================-->
   <header id="header">
     <nav aria-label="Main navigation">
       <form id="header-form" autocomplete="off">
@@ -141,13 +141,6 @@
           <button id="cry-button" class="header-element action-btn hidden-element" type="button" aria-label="Cry">
             <span id="cry-button-top" class="button-top"><i class="fa-solid fa-volume-high"></i></span>
           </button>
-          <!-- 
-            Text-to-Speech Button for Pokédex entries
-            Note for Android users: If this button doesn't work, you may need to:
-            1. Enable Google Text-to-Speech in Settings → Accessibility → Text-to-speech output
-            2. Install/update Google Text-to-Speech from the Play Store
-            3. Enable TalkBack or Select to Speak in Accessibility settings
-          -->
           <button id="read-entry-button" class="header-element action-btn hidden-element" type="button" aria-label="Read Pokédex Entry">
             <span id="read-entry-button-top" class="button-top"><i class="fa-solid fa-book-open"></i></span>
           </button>
@@ -159,9 +152,9 @@
       </nav>
   </header>
     
-  <!-- ====================================
-       MAIN CONTENT AREA
-       ==================================== -->
+  <!--====================================
+      MAIN CONTENT AREA
+      ====================================-->
   <main id="root">
     <!-- Toast notification system for user feedback -->
     <div id="toast" class="toast" role="alert" aria-live="polite">
@@ -238,16 +231,16 @@
       </div>
     </main>
     
-    <!-- ====================================
-         FOOTER
-         ==================================== -->
+    <!--====================================
+        FOOTER
+        ====================================-->
     <footer id="footer">
       <p id="footer-text">Pokémon and Pokémon character names are trademarks of Nintendo.</p>
     </footer>
     
-    <!-- ====================================
-         EXTERNAL SCRIPTS AND MODULES
-         ==================================== -->
+    <!--====================================
+        EXTERNAL SCRIPTS AND MODULES
+        ====================================-->
       <!-- Performance monitoring module -->
     <script type="module" src="../dist/performance.js" defer></script>
     <!-- Service Worker manager for PWA functionality -->

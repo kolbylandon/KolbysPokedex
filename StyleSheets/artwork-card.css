@@ -9,9 +9,9 @@
   @since 2023
 */
 
-/* ====================================
-   ARTWORK CARD LAYOUT
-   ==================================== */
+/*====================================
+  ARTWORK CARD LAYOUT
+  ==================================== */
 #root #artwork-card {
   float: left;
   grid-area: 2/1/3/2;
@@ -36,9 +36,9 @@
   background: transparent;
 }
 
-/* ====================================
-   ARTWORK TABLE STYLING
-   ==================================== */
+/*====================================
+  ARTWORK TABLE STYLING
+  ==================================== */
 #root #artwork-card #artwork-table {
   width: 100%;
   border-collapse: collapse;
@@ -64,9 +64,9 @@
   padding-left: calc(var(--spacing-xs) / 2);
 }
 
-/* ====================================
-   ARTWORK IMAGES
-   ==================================== */
+/*====================================
+  ARTWORK IMAGES
+  ==================================== */
 #root #artwork-card .artwork-table-td .image.artwork {
   margin: 0 auto;
   width: 100%;
@@ -133,9 +133,9 @@
   }
 }
 
-/* ====================================
-   ANDROID OPTIMIZATIONS
-   ==================================== */
+/*====================================
+  ANDROID OPTIMIZATIONS
+  ==================================== */
 @supports (-webkit-appearance: none) {
   #root #artwork-card .artwork-table-td .image.artwork {
     -webkit-transform: translate3d(0, 0, 0);

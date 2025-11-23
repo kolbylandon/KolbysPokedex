@@ -9,9 +9,9 @@
   @since 2023
 */
 
-/* ====================================
-   HEADER POSITIONING
-   ==================================== */
+/*====================================
+  HEADER POSITIONING
+  ==================================== */
 body > #header,
 body header#header,
 header[id="header"],
@@ -54,9 +54,9 @@ header[id="header"],
   width: 100% !important;
 }
 
-/* ====================================
-   HEADER FORM CONTAINER
-   ==================================== */
+/*====================================
+  HEADER FORM CONTAINER
+  ==================================== */
 #header form {
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
@@ -84,9 +84,9 @@ header[id="header"],
   -webkit-transform: none !important;
 }
 
-/* ====================================
-   HEADER LAYOUT SECTIONS
-   ==================================== */
+/*====================================
+  HEADER LAYOUT SECTIONS
+  ==================================== */
 .header-brand {
   display: flex;
   align-items: center;
@@ -104,11 +104,11 @@ header[id="header"],
   margin: 0 var(--spacing-md);
 }
 
-/* Keep the header-center visually centered even when .header-actions
-   changes width or visibility. On larger screens we position it
-   absolutely within the header form so it doesn't shift when action
-   buttons appear/disappear. Mobile stacked layouts (column) remain
-   unaffected because the rule is scoped to min-width: 769px. */
+/*Keep the header-center visually centered even when .header-actions
+  changes width or visibility. On larger screens we position it
+  absolutely within the header form so it doesn't shift when action
+  buttons appear/disappear. Mobile stacked layouts (column) remain
+  unaffected because the rule is scoped to min-width: 769px. */
 @media screen and (min-width: 769px) {
   #header form {
     position: relative; /* ensure absolute children are positioned to this container */
@@ -142,9 +142,9 @@ header[id="header"],
   justify-content: flex-end;
 }
 
-/* ====================================
-   HEADER BRANDING
-   ==================================== */
+/*====================================
+  HEADER BRANDING
+  ==================================== */
 #header form #header-text-button {
   background-color: transparent; 
 }
@@ -189,9 +189,9 @@ header[id="header"],
   }
 }
 
-/* ====================================
-   SEARCH INPUT
-   ==================================== */
+/*====================================
+  SEARCH INPUT
+  ==================================== */
 #header form #pokemon-textbox {
   border: 2px solid var(--pokeball-red);
   background: var(--pokeball-white);
@@ -227,9 +227,9 @@ header[id="header"],
   background: rgba(255, 255, 255, 0.98);
 }
 
-/* ====================================
-   HEADER ELEMENT STYLING
-   ==================================== */
+/*====================================
+  HEADER ELEMENT STYLING
+  ==================================== */
 #header form .header-element {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);

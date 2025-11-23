@@ -146,95 +146,143 @@ let id = null;
   
   /** Primary search button - handles Pokémon lookup by ID or name */
   GoButton.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Go button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Go button clicked');
+    }
+    
     buttonClick('Go', true, true);
   });
   
   /** Random Pokémon button - generates a random Pokémon for discovery */
   RandomPokemonButton.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Random button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Random button clicked');
+    }    
+    
     buttonClick('Random', true, true);
   });
   
   /** Previous button - navigates to the previous Pokémon in the Pokédex */
   PreviousButton.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Previous button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Previous button clicked');
+    }    
+    
     buttonClick('Previous', true, true);
   });
   
   /** Next button - navigates to the next Pokémon in the Pokédex */
   NextButton.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Next button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Next button clicked');
+    }    
+    
     buttonClick('Next', true, true);
   });
   
   /** Recall button - loads the last viewed Pokémon from local storage */
   RecallButton.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Recall button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Recall button clicked');
+    }
+
     buttonClick('Recall', true, true);
   });
   
   /** Cry button - plays the Pokémon's cry audio */
   CryButton.addEventListener('click', (event) => {
-    if (DEBUG) console.log('🔘 [Button Click] Cry button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Cry button clicked');
+    }
+    
     event.preventDefault();
     buttonClick('Cry', true, false);
   });
   
   // Add touch event for better mobile support
   CryButton.addEventListener('touchstart', (event) => {
-    if (DEBUG) console.log('🔘 [Touch Start] Cry button touched');
+    if(DEBUG) {
+      console.log('🔘 [Touch Start] Cry button touched');
+    }
     // Note: preventDefault removed to allow passive listener for better performance
   }, { passive: true });
   
   CryButton.addEventListener('touchend', (event) => {
-    if (DEBUG) console.log('🔘 [Touch End] Cry button touch ended');
+    if(DEBUG) {
+      console.log('🔘 [Touch End] Cry button touch ended');
+    }
+    
     event.preventDefault();
     buttonClick('Cry', true, false);
   });
   
   /** Read Entry button - uses text-to-speech for Pokédex entries */
   ReadEntryButton.addEventListener('click', (event) => {
-    if (DEBUG) console.log('🔘 [Button Click] Read Entry button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Read Entry button clicked');
+    }
+    
     event.preventDefault();
     buttonClick('ReadEntry', false, false);
   });
   
   // Add touch event for better mobile support
   ReadEntryButton.addEventListener('touchstart', (event) => {
-    if (DEBUG) console.log('🔘 [Touch Start] Read Entry button touched');
+    if(DEBUG) {
+      console.log('🔘 [Touch Start] Read Entry button touched');
+    }
     // Note: preventDefault removed to allow passive listener for better performance
   }, { passive: true });
   
   ReadEntryButton.addEventListener('touchend', (event) => {
-    if (DEBUG) console.log('🔘 [Touch End] Read Entry button touch ended');
+    if(DEBUG) {
+      console.log('🔘 [Touch End] Read Entry button touch ended');
+    }
+    
     event.preventDefault();
     buttonClick('ReadEntry', false, false);
   });
   
   /** Clear button - resets the display and hides all cards */
   ClearButton.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Clear button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Clear button clicked');
+    }
+
     buttonClick('Clear', true, false);
   });
   
   /** Type badges - clickable elements that could show type information */
   TypeText.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Type badge 1 clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Type badge 1 clicked');
+    }
+
     buttonClick('TypeText', true, false);
   });
+
   TypeText2.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Type badge 2 clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Type badge 2 clicked');
+    }
+
     buttonClick('TypeText2', true, false);
   });
   
   /** Toast notification controls */
   ToastCloseButton.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Toast close button clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Toast close button clicked');
+    }
+
     buttonClick('ToastClose', true, false);
   });
+
   Toast.addEventListener('click', () => {
-    if (DEBUG) console.log('🔘 [Button Click] Toast notification clicked');
+    if(DEBUG) {
+      console.log('🔘 [Button Click] Toast notification clicked');
+    }
+
     buttonClick('Toast', true, false);
   });
   
@@ -254,6 +302,7 @@ let id = null;
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
+
     resizeTimeout = setTimeout(() => {
       getSystemInformation();
     }, 250); // Throttle to 250ms for better performance
@@ -278,7 +327,7 @@ function handleTextboxInput() {
   const input = Textbox.value.trim();
   
   // If input is numeric, validate it as a Pokédex number
-  if (/^\d+$/.test(input)) {
+  if(/^\d+$/.test(input)) {
     validPokedexNumberCheck(Textbox); // Check if number is within valid range
   } else {
     // For non-numeric input (names), reset to normal color
@@ -300,7 +349,7 @@ function handleTextboxFocus() {
  * Restores current Pokémon ID if input is empty
  */
 function handleTextboxBlur() {
-  if (Textbox.value === '') {
+  if(Textbox.value === '') {
     Textbox.value = id; // Restore current ID if empty
     validPokedexNumberCheck(Textbox); // Update validation state
   }
@@ -312,7 +361,7 @@ function handleTextboxBlur() {
  * @param {KeyboardEvent} event - The keyboard event object
  */
 function handleTextboxKeydown(event) {
-  if (event.key === 'Enter') {
+  if(event.key === 'Enter') {
     event.preventDefault(); // Prevent form submission
     GoButton.click(); // Trigger search
   }
@@ -341,7 +390,7 @@ function getSystemInformation() {
   });
   
   // Unlock audio context and speech synthesis on first load for mobile devices
-  if (deviceType === 'mobile') {
+  if(deviceType === 'mobile') {
     console.log('📱 [Mobile] Preparing audio context and speech synthesis for mobile device');
     // Add one-time unlock on any user interaction
     document.addEventListener('touchstart', unlockAudioContext, { once: true, passive: true });
@@ -349,12 +398,12 @@ function getSystemInformation() {
     
     // Android-specific speech synthesis preparation
     const isAndroid = /Android/i.test(navigator.userAgent);
-    if (isAndroid) {
+    if(isAndroid) {
       console.log('📱 [Android] Detected Android device, applying enhanced speech synthesis initialization');
       
       // Multiple event listeners for Android speech synthesis activation
       const androidSpeechInit = () => {
-        if (window.speechSynthesis) {
+        if(window.speechSynthesis) {
           console.log('📱 [Android] User interaction detected, initializing speech synthesis');
           
           // Enhanced Android speech initialization
@@ -369,7 +418,7 @@ function getSystemInformation() {
           
           testUtterance.addEventListener('error', (e) => {
             console.log('📱 [Android] Speech synthesis activation failed:', e);
-            if (e.error) {
+            if(e.error) {
               alert('Speech synthesis error: ' + e.error);
             }
           });
@@ -392,7 +441,7 @@ function getSystemInformation() {
       
       // Special handling for the speech button on Android
       const readEntryButton = document.getElementById('read-entry-button');
-      if (readEntryButton) {
+      if(readEntryButton) {
         readEntryButton.addEventListener('click', () => {
           console.log('📱 [Android] Speech button clicked, ensuring TTS is ready');
           unlockAudioContext();
@@ -401,12 +450,12 @@ function getSystemInformation() {
           // Additional Android-specific preparation
           setTimeout(() => {
             // Force voice reload for Android
-            if (window.speechSynthesis) {
+            if(window.speechSynthesis) {
               const voices = window.speechSynthesis.getVoices();
               console.log(`📱 [Android] Voices available for speech: ${voices.length}`);
               
               // If no voices, try to force load them
-              if (voices.length === 0) {
+              if(voices.length === 0) {
                 console.log('📱 [Android] No voices found, attempting to force load');
                 const dummyUtterance = new SpeechSynthesisUtterance(' ');
                 dummyUtterance.volume = 0;
@@ -428,14 +477,14 @@ function getSystemInformation() {
     }
     
     // Also prepare speech synthesis voices on mobile
-    if (window.speechSynthesis) {
+    if(window.speechSynthesis) {
       // Load voices asynchronously on mobile
       window.speechSynthesis.addEventListener('voiceschanged', () => {
         const voices = window.speechSynthesis.getVoices();
         console.log(`📱 [Mobile Speech] Loaded ${voices.length} voices for speech synthesis`);
         
         // Android-specific: Log voice details for debugging
-        if (isAndroid && voices.length > 0) {
+        if(isAndroid && voices.length > 0) {
           console.log('📱 [Android Speech] Available voices:');
           voices.forEach((voice, index) => {
             console.log(`  ${index + 1}. ${voice.name} (${voice.lang}) - Local: ${voice.localService}`);
@@ -447,7 +496,11 @@ function getSystemInformation() {
       window.speechSynthesis.getVoices();
     }
   }
-  if (!window.pokemonApp) window.pokemonApp = {};
+
+  if(!window.pokemonApp) {
+    window.pokemonApp = {};
+  }
+  
   window.pokemonApp.deviceType = deviceType;
   
   // Make IP functions available globally for debugging
@@ -485,10 +538,12 @@ function checkLocalStorageItems() {
   if('originalPokédex' in localStorage && localStorage.getItem('originalPokédex') === 'true') {
     localStorage.setItem('originalPokédex', true);
     localStorage.setItem('maximumId', OriginalMaximumId); // Generation 1 limit
+
     return;
   } else {
     localStorage.setItem('originalPokédex', false);
     localStorage.setItem('maximumId', MaximumId); // All generations
+    
     return;
   }
 } //checkLocalStorageItems
@@ -533,8 +588,7 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
         // Note: When searching for same Pokemon, we intentionally don't modify LAST_POKEMON
       }
       id = Textbox.value; // Use entered value
-      break;
-      
+      break;      
     case 'Random':
       // Store current for recall functionality (only if different)
       const currentIdForRandom = NumberHeader.innerText ? NumberHeader.innerText.substring(1) : Textbox.value;
@@ -543,51 +597,51 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       }
       id = getRandomPokemon(); // Generate random ID
       Textbox.value = id;
-      break;
-      
+      break;      
     case 'Previous':
       // Navigate to previous Pokémon in sequence
       const currentIdForPrev = NumberHeader.innerText ? NumberHeader.innerText.substring(1) : Textbox.value;
       if(currentIdForPrev && currentIdForPrev !== '') {
         setStorageItem(STORAGE_KEYS.LAST_POKEMON, currentIdForPrev);
       }
+
       id = (parseInt(NumberHeader.innerText.substring(1)) - 1).toString();
       Textbox.value = id;
-      break;
-      
+      break;      
     case 'Next':
       // Navigate to next Pokémon in sequence
       const currentIdForNext = NumberHeader.innerText ? NumberHeader.innerText.substring(1) : Textbox.value;
       if(currentIdForNext && currentIdForNext !== '') {
         setStorageItem(STORAGE_KEYS.LAST_POKEMON, currentIdForNext);
       }
+
       id = (parseInt(NumberHeader.innerText.substring(1)) + 1).toString();
       Textbox.value = id;
-      break;
-      
+      break;      
     case 'Recall':
       const recalledPokemonId = swapCurrentAndLastPokemon();
       
       if(recalledPokemonId) {
         id = recalledPokemonId;
         Textbox.value = id;
+
         generatePokemon(id, 'visible', true); // Set skipIdValidation to true for recall
       } else {
         showToast('No different Pokémon available to recall.');
+        
         return; // Exit early if no recall is possible
       }
-      break;
-      
+      break;      
     case 'Cry':
       // Play Pokémon's cry audio
       playPokemonCry();
-      break;
-      
+      break;      
     case 'ReadEntry':
       // Toggle text-to-speech for Pokédex entry
-      if (Synth.speaking) {
+      if(Synth.speaking) {
         Synth.cancel();
         showToast('🔇 Stopped reading entry');
+
         // Reset button visual state
         ReadEntryButtonTop.innerHTML = `<i class="fa-solid fa-book-open"></i>`;
       } else {
@@ -599,7 +653,7 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
         const pokemonGenus = GenusSubHeader.textContent;
         const pokemonEntry = PokemonEntryText.textContent;
         
-        if (!pokemonName || !pokemonGenus || !pokemonEntry) {
+        if(!pokemonName || !pokemonGenus || !pokemonEntry) {
           showToast('❌ No Pokémon data available to read');
           ReadEntryButtonTop.innerHTML = `<i class="fa-solid fa-book-open"></i>`;
         } else {
@@ -612,12 +666,12 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
           }, 2000);
         }
       }
-      break;
-      
+      break;      
     case 'Clear':
       // Reset application to initial state
       Textbox.value = '';
-  Body.style.setProperty('--body-bg', 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%, #f8fafc 100%)'); // Reset background
+      Textbox.focus();
+      Body.style.setProperty('--body-bg', 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%, #f8fafc 100%)'); // Reset background
       id = null;
       ToastCloseButton.click(); // Hide any active toasts
       console.log('Clearing elements, HiddenElementsArray length:', HiddenElementsArray.length);
@@ -627,18 +681,15 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
       localStorage.removeItem(STORAGE_KEYS.CURRENT_POKEMON);
       localStorage.removeItem(STORAGE_KEYS.LAST_POKEMON);
       localStorage.removeItem('id'); // Clear legacy id storage
-      break;
-      
+      break;      
     case 'TypeText':
       // Handle first type badge click - could show type information
       requestType(TypeText.innerText);
-      break;
-      
+      break;      
     case 'TypeText2':
       // Handle second type badge click - could show type information
       requestType(TypeText2.innerText);
-      break;
-      
+      break;      
     case 'ToastClose':
     case 'Toast':
       // Return focus to search input when toast is dismissed
@@ -663,7 +714,7 @@ function buttonClick(buttonClicked, cancelSynth, callGeneratePokemon) {
 let audioUnlocked = false;
 
 const unlockAudioOnInteraction = () => {
-  if (!audioUnlocked) {
+  if(!audioUnlocked) {
     console.log('📱 [First Interaction] Unlocking audio context for mobile');
     unlockAudioContext();
     audioUnlocked = true;
@@ -717,6 +768,6 @@ function isDev() {
 }
 
 // Example usage:
-// if (isDev()) console.log('message');
-// if (isDev()) console.warn('message');
-// if (isDev()) console.error('message');
+// if(isDev()) console.log('message');
+// if(isDev()) console.warn('message');
+// if(isDev()) console.error('message');

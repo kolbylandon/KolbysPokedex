@@ -60,7 +60,10 @@ class PerformanceMonitor {
    * @param {string} label - Unique identifier for the timing measurement
    */
   startTiming(label) {
-    if (!this.enabled) return;
+    if(!this.enabled) {
+      return;
+    }
+    
     this.metrics.set(label, performance.now());
   }
 
@@ -68,13 +71,21 @@ class PerformanceMonitor {
    * End timing and log the result
    */
   endTiming(label) {
-    if (!this.enabled) return;
+    if(!this.enabled) {
+      return;
+    }    
+    
     const startTime = this.metrics.get(label);
-    if (startTime) {
+    if(startTime) {
       const endTime = performance.now();
       const duration = endTime - startTime;
-      if (isDev()) console.log(`⚡ ${label}: ${duration.toFixed(2)}ms`);
+      
+      if(isDev()) {
+        console.log(`⚡ ${label}: ${duration.toFixed(2)}ms`);
+      }
+      
       this.metrics.delete(label);
+      
       return duration;
     }
   }
@@ -98,15 +109,18 @@ class PerformanceMonitor {
    * });
    */
   measure(label, fn) {
-    if (!this.enabled) return fn();
-    
+    if(!this.enabled) {
+      return fn();
+    }
+
     this.startTiming(label);
     const result = fn();
     
-    if (result && typeof result.then === 'function') {
+    if(result && typeof result.then === 'function') {
       return result.finally(() => this.endTiming(label));
     } else {
       this.endTiming(label);
+
       return result;
     }
   }
@@ -121,10 +135,10 @@ class PerformanceMonitor {
    * // Will automatically load when scrolled into view
    */
   setupLazyLoading() {
-    if ('IntersectionObserver' in window) {
+    if('IntersectionObserver' in window) {
       const lazyImageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
+          if(entry.isIntersecting) {
             const img = entry.target;
             img.src = img.dataset.src;
             img.classList.remove('lazy');
@@ -152,13 +166,15 @@ class PerformanceMonitor {
    * // "📊 dom-render: 89.12ms"
    */
   setupPerformanceObserver() {
-    if ('PerformanceObserver' in window) {
+    if('PerformanceObserver' in window) {
       try {
         const observer = new PerformanceObserver((list) => {
           const entries = list.getEntries();
           entries.forEach(entry => {
-            if (entry.entryType === 'measure') {
-              if (isDev()) console.log(`📊 ${entry.name}: ${entry.duration.toFixed(2)}ms`);
+            if(entry.entryType === 'measure') {
+              if(isDev()) {
+                console.log(`📊 ${entry.name}: ${entry.duration.toFixed(2)}ms`);
+              }
             }
           });
         });
@@ -184,10 +200,12 @@ class PerformanceMonitor {
    */
   throttle(func, limit) {
     let inThrottle;
+
     return function() {
       const args = arguments;
       const context = this;
-      if (!inThrottle) {
+
+      if(!inThrottle) {
         func.apply(context, args);
         inThrottle = true;
         setTimeout(() => inThrottle = false, limit);
@@ -208,6 +226,7 @@ class PerformanceMonitor {
    */
   debounce(func, delay) {
     let timeoutId;
+
     return function() {
       const args = arguments;
       const context = this;
@@ -227,8 +246,10 @@ class PerformanceMonitor {
    * console.log('Memory usage:', metrics.memory.usedJSHeapSize, 'bytes');
    */
   getMetrics() {
-    if (!('performance' in window)) return {};
-
+    if(!('performance' in window)) {
+      return {};
+    }
+    
     return {
       navigation: performance.getEntriesByType('navigation')[0],
       paint: performance.getEntriesByType('paint'),
@@ -257,18 +278,18 @@ class PerformanceMonitor {
     const metrics = this.getMetrics();
     console.group('🚀 Performance Summary');
     
-    if (metrics.navigation) {
+    if(metrics.navigation) {
       console.log(`DOM Content Loaded: ${metrics.navigation.domContentLoadedEventEnd.toFixed(2)}ms`);
       console.log(`Load Complete: ${metrics.navigation.loadEventEnd.toFixed(2)}ms`);
     }
     
-    if (metrics.paint) {
+    if(metrics.paint) {
       metrics.paint.forEach(paint => {
         console.log(`${paint.name}: ${paint.startTime.toFixed(2)}ms`);
       });
     }
     
-    if (metrics.memory) {
+    if(metrics.memory) {
       console.log(`Memory Usage: ${(metrics.memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`);
     }
     
@@ -322,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * Check if the application is in development mode
  * @returns {boolean} True if in development mode, false if in production
  * @example
- * if (isDev()) {
+ * if(isDev()) {
  *   console.log('Development mode active');
  * }
  */

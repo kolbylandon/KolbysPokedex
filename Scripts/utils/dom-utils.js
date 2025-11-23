@@ -114,17 +114,17 @@ export const CryButton = DOM_CACHE.cryButton;
  */
 export function createArray(elements) {
   const array = Array.from(elements);
-  if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+  if(typeof window !== 'undefined' && window.requestAnimationFrame) {
     window.requestAnimationFrame(() => {
       array.forEach((element, index) => {
-        if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+        if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
           console.log(`Element ${index}: ${element.id || element.tagName} with classes: ${element.className}`);
         }
       });
     });
   } else {
     array.forEach((element, index) => {
-      if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+      if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
         console.log(`Element ${index}: ${element.id || element.tagName} with classes: ${element.className}`);
       }
     });
@@ -145,20 +145,20 @@ export function createArray(elements) {
  * getElementVisibility([CryButton, ReadEntryButton], 'hidden');
  */
 export function getElementVisibility(elements, visibility) {
-  if (!Array.isArray(elements)) {
-    if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+  if(!Array.isArray(elements)) {
+    if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
       console.warn('getElementVisibility: elements should be an array');
     }
     return;
   }
-  if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+  if(typeof window !== 'undefined' && window.requestAnimationFrame) {
     window.requestAnimationFrame(() => {
       elements.forEach((element, index) => {
-        if (element) {
-          if (visibility === 'visible') {
+        if(element) {
+          if(visibility === 'visible') {
             element.classList.remove('hidden-element');
             element.classList.add('visible-element');
-          } else if (visibility === 'hidden') {
+          } else if(visibility === 'hidden') {
             element.classList.remove('visible-element');
             element.classList.add('hidden-element');
           }
@@ -167,11 +167,11 @@ export function getElementVisibility(elements, visibility) {
     });
   } else {
     elements.forEach((element, index) => {
-      if (element) {
-        if (visibility === 'visible') {
+      if(element) {
+        if(visibility === 'visible') {
           element.classList.remove('hidden-element');
           element.classList.add('visible-element');
-        } else if (visibility === 'hidden') {
+        } else if(visibility === 'hidden') {
           element.classList.remove('visible-element');
           element.classList.add('hidden-element');
         }
@@ -195,7 +195,7 @@ export function getElementVisibility(elements, visibility) {
 export function makeButtonsDisappear(id, hasGenderDifferences) {
   const MaximumId = 1025; // Import this from constants if needed
   
-  if (id === 0 || id > MaximumId) {
+  if(id === 0 || id > MaximumId) {
     // Hide all action buttons for invalid Pokemon
     getElementVisibility([
       PreviousButton, NextButton, RecallButton, 
@@ -225,32 +225,41 @@ export function makeButtonsDisappear(id, hasGenderDifferences) {
  * showToast('Error: Pokemon not found');
  */
 export function showToast(text) {
-  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+  if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
     console.log(`🍞 [Toast] Displaying message: "${text}"`);
   }
-  if (!text || typeof text !== 'string') {
-    if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+  
+  if(!text || typeof text !== 'string') {
+    if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
       console.warn('⚠️ [Toast] Invalid text provided:', text);
     }
+
     return;
   }
+  
   ToastText.textContent = text;
-  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+  
+  if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
     console.log(`📝 [Toast] Text content set`);
   }
+
   Toast.classList.remove('hidden');
   Toast.classList.add('show');
-  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+
+  if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
     console.log(`✅ [Toast] Toast displayed`);
   }
+
   setTimeout(() => {
-    if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+    if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
       console.log(`⏰ [Toast] Auto-hiding toast after 3 seconds`);
     }
+    
     Toast.classList.remove('show');
+    
     setTimeout(() => {
       Toast.classList.add('hidden');
-      if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+      if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
         console.log(`🔇 [Toast] Toast hidden completely`);
       }
     }, 300);
@@ -267,7 +276,7 @@ export function showToast(text) {
  * @returns {string} Device type: 'mobile', 'tablet', or 'desktop'
  * @example
  * const device = getDeviceType();
- * if (device === 'mobile') {
+ * if(device === 'mobile') {
  *   // Apply mobile-specific styling
  * }
  */
@@ -276,10 +285,10 @@ export function getDeviceType() {
   const userAgent = navigator.userAgent.toLowerCase();
   
   // Check for mobile devices
-  if (width <= 768 || /android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent)) {
-    if (width <= 480) {
+  if(width <= 768 || /android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent)) {
+    if(width <= 480) {
       return 'mobile';
-    } else if (width <= 768) {
+    } else if(width <= 768) {
       return 'tablet';
     }
   }
@@ -297,8 +306,11 @@ export function getDeviceType() {
  */
 export function headerLayout(deviceType) {
   const header = document.getElementById('header');
-  if (!header) return;
   
+  if(!header) {
+    return;
+  }
+
   // Remove existing device classes
   header.classList.remove('mobile-layout', 'tablet-layout', 'desktop-layout');
   
@@ -326,7 +338,7 @@ export function headerLayout(deviceType) {
  * Checks against the valid range of Pokemon IDs
  * @returns {boolean} True if the input is a valid Pokédex number
  * @example
- * if (validPokedexNumberCheck()) {
+ * if(validPokedexNumberCheck()) {
  *   // Process valid Pokemon ID
  * } else {
  *   showToast('Invalid Pokédex number');
@@ -369,12 +381,12 @@ export function initializeDOMUtils() {
     }, 200);
   }, { passive: true });
   
-  if (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+  if(typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
     console.log('DOM utilities module initialized');
   }
 }
 
 // Auto-initialize on module load
-if (typeof document !== 'undefined') {
+if(typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', initializeDOMUtils);
 }

@@ -1,31 +1,31 @@
 /*
   KOLBY'S POKÉDEX - CSS VARIABLES
   ==============================
-  
+
   Core design system variables for consistent theming across all components.
-  
+
   @author Kolby Landon
   @version 2.0
   @since 2023
 */
 
-/* ====================================
-   CSS CUSTOM PROPERTIES SYSTEM
-   ==================================== */
+/*====================================
+  CSS CUSTOM PROPERTIES SYSTEM
+  ==================================== */
 :root {
-  /* ====================================
-     POKÉBALL COLOR PALETTE
-     ==================================== */
+  /*====================================
+  POKÉBALL COLOR PALETTE
+  ==================================== */
   --pokeball-red: #e53e3e;
   --pokeball-red-light: #fc8181;
   --pokeball-white: #ffffff;
   --pokeball-gray: #718096;
   --pokeball-dark: #2d3748;
   --pokeball-accent: #f7fafc;
-  
-  /* ====================================
-     PRIMARY COLOR SYSTEM
-     ==================================== */
+
+  /*====================================
+  PRIMARY COLOR SYSTEM
+  ==================================== */
   --primary-color: var(--pokeball-red);
   --primary-75: rgba(229, 62, 62, 0.75);
   --primary-95: rgba(229, 62, 62, 0.95);
@@ -38,10 +38,10 @@
   --shadow-color: rgba(45, 55, 72, 0.2);
   --glass-bg: rgba(255, 255, 255, 0.8);
   --glass-border: rgba(255, 255, 255, 0.3);
-  
-  /* ====================================
-     SPACING SCALE SYSTEM
-     ==================================== */
+
+  /*====================================
+  SPACING SCALE SYSTEM
+  ==================================== */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 0.75rem;
@@ -49,10 +49,10 @@
   --spacing-xl: 1.5rem;
   --spacing-2xl: 2rem;
   --spacing-3xl: 3rem;
-  
-  /* ====================================
-     TYPOGRAPHY SCALE SYSTEM
-     ==================================== */
+
+  /*====================================
+  TYPOGRAPHY SCALE SYSTEM
+  ==================================== */
   --font-xs: 0.875rem;
   --font-sm: 1rem;
   --font-md: 1.125rem;
@@ -62,18 +62,18 @@
   --font-3xl: 2.625rem;
   --font-4xl: 3.25rem;
   --font-5xl: 4rem;
-  
-  /* ====================================
-     BORDER RADIUS SYSTEM
-     ==================================== */
+
+  /*====================================
+  BORDER RADIUS SYSTEM
+  ==================================== */
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
-  
-  /* ====================================
-     SHADOW SYSTEM
-     ==================================== */
+
+  /*====================================
+  SHADOW SYSTEM
+  ==================================== */
   --shadow-sm: 0 1px 3px rgba(45, 55, 72, 0.1);
   --shadow-md: 0 4px 6px rgba(45, 55, 72, 0.1);
   --shadow-lg: 0 10px 15px rgba(45, 55, 72, 0.1);

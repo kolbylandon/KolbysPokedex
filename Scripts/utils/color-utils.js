@@ -73,46 +73,65 @@ function isDev() {
 }
 
 export function getTypeColor(type) {
-  if (!type || typeof type !== 'string') {
-    if (isDev()) console.warn('getTypeColor: Invalid type parameter provided');
+  if(!type || typeof type !== 'string') {
+    if(isDev()) {
+      console.warn('getTypeColor: Invalid type parameter provided');
+    }
+
     return DEFAULT_TYPE_COLOR;
   }
   const normalizedType = type.toLowerCase().trim();
   const color = POKEMON_TYPE_COLORS[normalizedType];
-  if (!color) {
-    if (isDev()) console.warn(`getTypeColor: Unknown Pokemon type '${type}', using default color`);
+  if(!color) {
+    if(isDev()) {
+      console.warn(`getTypeColor: Unknown Pokemon type '${type}', using default color`);
+    }
+
     return DEFAULT_TYPE_COLOR;
   }
+
   return color;
 }
 
 export function getAllTypeColors() {
   // Return a copy to prevent external modification
-  return { ...POKEMON_TYPE_COLORS };
+  return { 
+    ...POKEMON_TYPE_COLORS 
+  };
 }
 
 export function isValidPokemonType(type) {
-  if (!type || typeof type !== 'string') {
+  if(!type || typeof type !== 'string') {
     return false;
   }
+
   return type.toLowerCase().trim() in POKEMON_TYPE_COLORS;
 }
 
 export function convertHexToRgba(hexColor, alpha) {
-  if (!hexColor || typeof hexColor !== 'string') {
-    if (isDev()) console.warn('convertHexToRgba: Invalid hex color provided');
+  if(!hexColor || typeof hexColor !== 'string') {
+    if(isDev()) {
+      console.warn('convertHexToRgba: Invalid hex color provided');
+    }
+
     return TRANSPARENT_COLOR;
   }
-  if (typeof alpha !== 'number' || alpha < 0 || alpha > 1) {
-    if (isDev()) console.warn('convertHexToRgba: Invalid alpha value, must be between 0 and 1');
+  if(typeof alpha !== 'number' || alpha < 0 || alpha > 1) {
+    if(isDev()) {
+      console.warn('convertHexToRgba: Invalid alpha value, must be between 0 and 1');
+    }
+    
     alpha = 1;
   }
   let cleanHex = hexColor.replace('#', '');
-  if (cleanHex.length === 3) {
+  if(cleanHex.length === 3) {
     cleanHex = cleanHex.split('').map(char => char + char).join('');
   }
-  if (cleanHex.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(cleanHex)) {
-    if (isDev()) console.warn('convertHexToRgba: Invalid hex color format');
+  if(cleanHex.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(cleanHex)) {
+    if(isDev()) {
+      console.warn('convertHexToRgba: Invalid hex color format');
+    }
+    
     return TRANSPARENT_COLOR;
   }
   try {
@@ -120,30 +139,45 @@ export function convertHexToRgba(hexColor, alpha) {
     const r = (hexValue >> 16) & 255;
     const g = (hexValue >> 8) & 255;
     const b = hexValue & 255;
+    
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   } catch (error) {
-    if (isDev()) console.error('convertHexToRgba: Error converting hex to RGBA:', error);
+    if(isDev()) {
+      console.error('convertHexToRgba: Error converting hex to RGBA:', error);
+    }
+    
     return TRANSPARENT_COLOR;
   }
 }
 
 export function convertRgbaToHex(rgbaColor) {
-  if (!rgbaColor || typeof rgbaColor !== 'string') {
-    if (isDev()) console.warn('convertRgbaToHex: Invalid RGBA color provided');
+  if(!rgbaColor || typeof rgbaColor !== 'string') {
+    if(isDev()) {
+      console.warn('convertRgbaToHex: Invalid RGBA color provided');
+    }
+    
     return '#000000';
   }
   const rgbaMatch = rgbaColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
-  if (!rgbaMatch) {
-    if (isDev()) console.warn('convertRgbaToHex: Invalid RGBA format');
+  if(!rgbaMatch) {
+    if(isDev()) {
+      console.warn('convertRgbaToHex: Invalid RGBA format');
+    }
+    
     return '#000000';
   }
+
   const r = parseInt(rgbaMatch[1], 10);
   const g = parseInt(rgbaMatch[2], 10);
   const b = parseInt(rgbaMatch[3], 10);
-  if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-    if (isDev()) console.warn('convertRgbaToHex: Invalid RGB values');
+  if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+    if(isDev()) {
+      console.warn('convertRgbaToHex: Invalid RGB values');
+    }
+    
     return '#000000';
   }
+  
   const hex = ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
   return `#${hex.toUpperCase()}`;
 }
@@ -162,13 +196,13 @@ export function convertRgbaToHex(rgbaColor) {
  * const textColor = luminance > 0.5 ? '#000000' : '#FFFFFF'; // Black or white text
  */
 export function getColorLuminance(hexColor) {
-  if (!hexColor || typeof hexColor !== 'string') {
+  if(!hexColor || typeof hexColor !== 'string') {
     return 0;
   }
   
   // Remove hash and convert to RGB
   const cleanHex = hexColor.replace('#', '');
-  if (cleanHex.length !== 6) {
+  if(cleanHex.length !== 6) {
     return 0;
   }
   
@@ -207,12 +241,12 @@ export function isLightColor(hexColor, threshold = 0.5) {
  * const complementary = getComplementaryColor('#F07D33'); // Returns contrasting color
  */
 export function getComplementaryColor(hexColor) {
-  if (!hexColor || typeof hexColor !== 'string') {
+  if(!hexColor || typeof hexColor !== 'string') {
     return '#FFFFFF';
   }
   
   const cleanHex = hexColor.replace('#', '');
-  if (cleanHex.length !== 6) {
+  if(cleanHex.length !== 6) {
     return '#FFFFFF';
   }
   

@@ -55,13 +55,14 @@ let isOffline = !navigator.onLine;
  * @returns {Promise<boolean>} True if initialization successful, false otherwise
  * @example
  * const success = await initializeServiceWorker();
- * if (success) {
+ * if(success) {
  *   console.log('PWA features are active');
  * }
  */
 async function initializeServiceWorker() {
-  if (!('serviceWorker' in navigator)) {
+  if(!('serviceWorker' in navigator)) {
     console.warn('Service Worker not supported');
+
     return false;
   }
 
@@ -70,9 +71,11 @@ async function initializeServiceWorker() {
     setupUpdateListener();
     setupOfflineListener();
     console.log('Service Worker Manager initialized');
+
     return true;
   } catch (error) {
     console.error('Service Worker initialization failed:', error);
+
     return false;
   }
 }
@@ -94,13 +97,13 @@ async function registerServiceWorker() {
     console.log('ServiceWorker registered successfully with scope:', swRegistration.scope);
 
     // Handle different registration states
-    if (swRegistration.installing) {
+    if(swRegistration.installing) {
       console.log('ServiceWorker installing...');
       trackInstallProgress(swRegistration.installing);
-    } else if (swRegistration.waiting) {
+    } else if(swRegistration.waiting) {
       console.log('ServiceWorker waiting...');
       showUpdateAvailable();
-    } else if (swRegistration.active) {
+    } else if(swRegistration.active) {
       console.log('ServiceWorker active');
       showInstallSuccess();
     }
@@ -117,8 +120,8 @@ async function registerServiceWorker() {
  */
 function trackInstallProgress(worker) {
   worker.addEventListener('statechange', function() {
-    if (worker.state === 'installed') {
-      if (navigator.serviceWorker.controller) {
+    if(worker.state === 'installed') {
+      if(navigator.serviceWorker.controller) {
         // New update available
         showUpdateAvailable();
       } else {
@@ -133,15 +136,17 @@ function trackInstallProgress(worker) {
  * Setup update listener for service worker updates
  */
 function setupUpdateListener() {
-  if (!swRegistration) return;
+  if(!swRegistration) {
+    return;
+  }
 
   swRegistration.addEventListener('updatefound', function() {
     const newWorker = swRegistration.installing;
     console.log('New ServiceWorker found');
     
     newWorker.addEventListener('statechange', function() {
-      if (newWorker.state === 'installed') {
-        if (navigator.serviceWorker.controller) {
+      if(newWorker.state === 'installed') {
+        if(navigator.serviceWorker.controller) {
           showUpdateAvailable();
         }
       }
@@ -173,7 +178,7 @@ function showUpdateAvailable() {
   
   // Create update notification if it doesn't exist
   let notification = document.getElementById('sw-update-notification');
-  if (!notification) {
+  if(!notification) {
     notification = createUpdateNotification();
     document.body.appendChild(notification);
   }
@@ -209,6 +214,7 @@ function createUpdateNotification() {
     applyUpdate();
     notification.classList.remove('show');
   });
+
   notification.querySelector('#sw-dismiss-update').addEventListener('click', function() {
     dismissUpdate();
     notification.classList.remove('show');
@@ -221,8 +227,9 @@ function createUpdateNotification() {
  * Apply the pending service worker update
  */
 function applyUpdate() {
-  if (!swRegistration || !swRegistration.waiting) {
+  if(!swRegistration || !swRegistration.waiting) {
     console.warn('No service worker update available');
+
     return;
   }
 
@@ -245,9 +252,10 @@ function applyUpdate() {
  */
 function dismissUpdate() {
   const notification = document.getElementById('sw-update-notification');
-  if (notification) {
+  if(notification) {
     notification.classList.remove('show');
   }
+
   isUpdateAvailable = false;
 }
 
@@ -279,7 +287,8 @@ function showOfflineStatus() {
  */
 function updateConnectionIndicator(isOnline) {
   let indicator = document.getElementById('connection-indicator');
-  if (!indicator) {
+
+  if(!indicator) {
     indicator = document.createElement('div');
     indicator.id = 'connection-indicator';
     indicator.className = 'connection-indicator';
@@ -295,8 +304,8 @@ function updateConnectionIndicator(isOnline) {
  * Trigger background sync
  */
 function triggerBackgroundSync() {
-  if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
-    if (swRegistration && swRegistration.sync) {
+  if('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+    if(swRegistration && swRegistration.sync) {
       swRegistration.sync.register('background-sync').then(function() {
         console.log('Background sync registered');
       }).catch(function(error) {
@@ -311,14 +320,15 @@ function triggerBackgroundSync() {
  */
 function getCacheStatus() {
   return new Promise(function(resolve, reject) {
-    if (!navigator.serviceWorker.controller) {
+    if(!navigator.serviceWorker.controller) {
       reject(new Error('No active service worker'));
+
       return;
     }
 
     const messageChannel = new MessageChannel();
     messageChannel.port1.onmessage = function(event) {
-      if (event.data.success) {
+      if(event.data.success) {
         resolve(event.data.status);
       } else {
         reject(new Error(event.data.error || 'Failed to get cache status'));
@@ -337,14 +347,15 @@ function getCacheStatus() {
  */
 function clearCaches() {
   return new Promise(function(resolve, reject) {
-    if (!navigator.serviceWorker.controller) {
+    if(!navigator.serviceWorker.controller) {
       reject(new Error('No active service worker'));
+
       return;
     }
 
     const messageChannel = new MessageChannel();
     messageChannel.port1.onmessage = function(event) {
-      if (event.data.success) {
+      if(event.data.success) {
         resolve();
       } else {
         reject(new Error(event.data.error || 'Failed to clear caches'));
@@ -362,13 +373,15 @@ function clearCaches() {
  * Preload important resources
  */
 function preloadResources(urls) {
-  if (!urls || !Array.isArray(urls)) return Promise.resolve();
-
+  if(!urls || !Array.isArray(urls)) {
+    return Promise.resolve();
+  }
+  
   return caches.open('pokedex-dynamic-v3').then(function(cache) {
     return Promise.allSettled(
       urls.map(function(url) {
         return fetch(url).then(function(response) {
-          if (response.ok) {
+          if(response.ok) {
             return cache.put(url, response);
           }
         }).catch(function(err) {
@@ -390,7 +403,7 @@ function showToast(message, type) {
   type = type || 'info';
   
   let toast = document.getElementById('sw-toast');
-  if (!toast) {
+  if(!toast) {
     toast = document.createElement('div');
     toast.id = 'sw-toast';
     toast.className = 'sw-toast';
@@ -445,6 +458,6 @@ window.ServiceWorkerManager = {
 };
 
 // Example usage:
-// if (isDev()) console.log('message');
-// if (isDev()) console.warn('message');
-// if (isDev()) console.error('message');
+// if(isDev()) console.log('message');
+// if(isDev()) console.warn('message');
+// if(isDev()) console.error('message');

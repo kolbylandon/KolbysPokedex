@@ -11,9 +11,9 @@
   @since 2023
 */
 
-/* ====================================
-   IMPORT ALL MODULAR STYLESHEETS
-   ==================================== */
+/*====================================
+  IMPORT ALL MODULAR STYLESHEETS
+  ==================================== */
 
 /* Core system variables and design tokens */
 @import url("variables.css");

@@ -47,8 +47,14 @@ const TextColor = 'rgba(98, 98, 98, 0.95)';
  */
 function getDeviceTypeForChart() {
   const width = window.innerWidth;
-  if (width <= 480) return 'mobile';
-  if (width <= 1024) return 'tablet';
+  if(width <= 480) {
+    return 'mobile';
+  }
+  
+  if(width <= 1024) {
+    return 'tablet';
+  }
+
   return 'desktop';
 }
 
@@ -155,10 +161,9 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
   // Switch Sp.Atk and Speed so Speed comes before Sp.Atk
   const statLabels = ['HP', 'Attack', 'Defense', 'Speed', 'Sp.Atk', 'Sp.Def'];
   let reorderedStats = stats;
-  if (statLabels.length === stats.length) {
-    // Original order: ['HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed']
-    // Desired order:  ['HP', 'Attack', 'Defense', 'Speed', 'Sp.Atk', 'Sp.Def']
+  if(statLabels.length === stats.length) {
     const originalOrder = ['HP', 'Attack', 'Defense', 'Sp.Atk', 'Sp.Def', 'Speed'];
+
     reorderedStats = [
       stats[originalOrder.indexOf('HP')],
       stats[originalOrder.indexOf('Attack')],
@@ -168,10 +173,11 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
       stats[originalOrder.indexOf('Sp.Atk')],
     ];
   }
+
   const chartData = {
     labels: ['HP', 'Attack', 'Defense', 'Speed', 'Sp.Def', 'Sp.Atk'],
     datasets: [{
-      data: reorderedStats,                 // Base stat values array
+      data: reorderedStats,        // Base stat values array
       backgroundColor,             // Fill color based on Pokemon type
       borderColor,                 // Border color based on Pokemon type
     }],
@@ -179,8 +185,8 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
 
   // Configure chart appearance and behavior options with responsive settings
   const chartOptions = {
-    responsive: true,              // Enable responsiveness
-    maintainAspectRatio: false,    // Allow dynamic sizing
+    responsive: true,                               // Enable responsiveness
+    maintainAspectRatio: false,                     // Allow dynamic sizing
     devicePixelRatio: window.devicePixelRatio || 2, // Better quality on high-DPI screens
     animation: {
       duration: deviceType === 'mobile' ? 300 : 500 // Faster animations on mobile
@@ -190,9 +196,9 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
       mode: 'nearest'              // Improved mobile touch response
     },
     elements: {
-      line: {
+      line:    {
         borderWidth: config.lineWidth, // Responsive line width
-        tension: 0.4               // Smooth curves
+        tension: 0.4                  // Smooth curves
       },
       point: {
         radius: config.pointRadius, // Responsive point size
@@ -292,9 +298,10 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
   
   // Add resize listener for responsive updates
   const resizeHandler = () => {
-    if (statsChart) {
+    if(statsChart) {
       const newDeviceType = getDeviceTypeForChart();
-      if (newDeviceType !== deviceType) {
+      
+      if(newDeviceType !== deviceType) {
         // Redraw chart with new responsive settings if device type changed
         setTimeout(() => {
           displayStatsChart(backgroundColor, borderColor, stats, max, name);
@@ -312,6 +319,7 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
+    
     resizeTimeout = setTimeout(() => {
       resizeHandler();
     }, 200);
@@ -330,11 +338,12 @@ async function displayStatsChart(backgroundColor, borderColor, stats, max, name)
  * Call this before creating a new chart to prevent memory leaks
  */
 function cleanupStatsChart() {
-  if (statsChart) {
+  if(statsChart) {
     // Remove resize listener if it exists
-    if (statsChart._resizeHandler) {
+    if(statsChart._resizeHandler) {
       window.removeEventListener('resize', statsChart._resizeHandler);
     }
+    
     // Destroy the chart instance
     statsChart.destroy();
     statsChart = null;
@@ -354,9 +363,9 @@ function isDev() {
 }
 
 // Example usage:
-// if (isDev()) console.log('message');
-// if (isDev()) console.warn('message');
-// if (isDev()) console.error('message');
+// if(isDev()) console.log('message');
+// if(isDev()) console.warn('message');
+// if(isDev()) console.error('message');
 
 // ====================================
 // MODULE EXPORTS

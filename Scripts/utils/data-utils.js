@@ -83,8 +83,11 @@ export function getAbilityList(abilities) {
     return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
   }
 
-  if (!abilities || !Array.isArray(abilities)) {
-    if (isDev()) console.warn('getAbilityList: Invalid abilities array provided');
+  if(!abilities || !Array.isArray(abilities)) {
+    if(isDev()) {
+      console.warn('getAbilityList: Invalid abilities array provided');
+    }
+    
     return;
   }
   AbilitiesHeader.innerText = abilities.length === 1 ? 'Ability:' : 'Abilities:';
@@ -94,27 +97,29 @@ export function getAbilityList(abilities) {
     // Collect regular ability names for comparison
     const regularAbilityNames = abilities
       .filter(a => !a.is_hidden)
-      .map(a => a.ability.name.toLowerCase());
+      .map(a => a.ability.name.toLowerCase()
+    );
 
     abilities.forEach((ability, index) => {
       // If hidden ability matches a regular ability, skip it
-      if (
-        ability.is_hidden &&
-        regularAbilityNames.includes(ability.ability.name.toLowerCase())
-      ) {
+      if(ability.is_hidden && regularAbilityNames.includes(ability.ability.name.toLowerCase())) {
         return;
       }
+
       const ListItem = document.createElement('li');
       ListItem.id = `flavor-text-${index + 1}`;
       ListItem.classList.add('flavor-text');
       let name = capitalizeAfterHyphen(capitalizeFirstLetter(ability.ability.name));
-      if (ability.is_hidden) {
+      
+      if(ability.is_hidden) {
         name += ' (Hidden)';
       }
+
       requestAbilityEffect(ability.ability.url, ListItem, name);
       ListItem.style.color = ability.is_hidden === false ? TextColor : HiddenAbilityTextColor;
       fragment.appendChild(ListItem);
     });
+
     AbilitiesUnorderedList.appendChild(fragment);
   });
 }
@@ -138,20 +143,26 @@ export function getHeldItemList(heldItems) {
     return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
   }
 
-  if (!heldItems || !Array.isArray(heldItems)) {
-    if (isDev()) console.warn('getHeldItemList: Invalid held items array provided');
+  if(!heldItems || !Array.isArray(heldItems)) {
+    if(isDev()) {
+      console.warn('getHeldItemList: Invalid held items array provided');
+    }
+    
     return;
   }
-  if (heldItems.length === 0) {
+  if(heldItems.length === 0) {
     HeldItemsHeader.style.display = 'none';
     HeldItemsUnorderedList.style.display = 'none';
+
     return;
   }
+
   HeldItemsHeader.innerText = heldItems.length === 1 ? 'Held Item:' : 'Held Items:';
   HeldItemsUnorderedList.innerHTML = `<ul id='held-items-unordered-list' class='list-bulleted'></ul>`;
   HeldItemsHeader.style.display = 'block';
   HeldItemsUnorderedList.style.display = 'block';
   const fragment = document.createDocumentFragment();
+
   window.requestAnimationFrame(() => {
     heldItems.forEach((heldItem, index) => {
       const ListItem = document.createElement('li');
@@ -161,6 +172,7 @@ export function getHeldItemList(heldItems) {
       ListItem.style.color = TextColor;
       fragment.appendChild(ListItem);
     });
+
     HeldItemsUnorderedList.appendChild(fragment);
   });
 }
@@ -185,19 +197,26 @@ export function getFormList(forms) {
     return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
   }
 
-  if (!forms || !Array.isArray(forms)) {
-    if (isDev()) console.warn('getFormList: Invalid forms array provided');
+  if(!forms || !Array.isArray(forms)) {
+    if(isDev()) {
+      console.warn('getFormList: Invalid forms array provided');
+    }
+    
     return;
   }
-  if (forms.length === 1) {
+
+  if(forms.length === 1) {
     FormsHeader.style.display = 'none';
     FormsUnorderedList.style.display = 'none';
+    
     return;
   }
+
   FormsHeader.style.display = 'block';
   FormsUnorderedList.style.display = 'block';
   FormsUnorderedList.innerHTML = `<ul id='forms-unordered-list' class='list-bulleted'></ul>`;
   const fragment = document.createDocumentFragment();
+
   window.requestAnimationFrame(() => {
     forms.forEach((form, index) => {
       const ListItem = document.createElement('li');
@@ -205,14 +224,17 @@ export function getFormList(forms) {
       ListItem.classList.add('form-text');
       requestForm(form.pokemon.url, ListItem);
       ListItem.style.color = TextColor;
+
       ListItem.addEventListener('click', () => {
         const pokemonId = form.pokemon.url.split('/').slice(-2, -1)[0];
         import('./navigation-utils.js?v=20250801i').then(({ generatePokemon }) => {
           generatePokemon(pokemonId, 'visible', true);
         });
       });
+
       fragment.appendChild(ListItem);
     });
+
     FormsUnorderedList.appendChild(fragment);
   });
 }
@@ -238,8 +260,8 @@ export function getStatTotal(stats) {
     return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
   }
 
-  if (!stats || !Array.isArray(stats)) {
-    if (isDev()) console.warn('getStatTotal: Invalid stats array provided');
+  if(!stats || !Array.isArray(stats)) {
+    if(isDev()) console.warn('getStatTotal: Invalid stats array provided');
     return 0;
   }
 
@@ -247,7 +269,7 @@ export function getStatTotal(stats) {
   
   // Sum all base stat values
   stats.forEach(stat => {
-    if (stat && typeof stat.base_stat === 'number') {
+    if(stat && typeof stat.base_stat === 'number') {
       statTotal += stat.base_stat;
     }
   });
@@ -269,8 +291,11 @@ export function getLargestStat(statsArray) {
     return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
   }
 
-  if (!statsArray || !Array.isArray(statsArray)) {
-    if (isDev()) console.warn('getLargestStat: Invalid stats array provided');
+  if(!statsArray || !Array.isArray(statsArray)) {
+    if(isDev()) {
+      console.warn('getLargestStat: Invalid stats array provided');
+    }
+    
     return 0;
   }
 
@@ -297,8 +322,11 @@ export function getPokedexEntry(flavorTextEntries) {
     return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
   }
 
-  if (!flavorTextEntries || !Array.isArray(flavorTextEntries)) {
-    if (isDev()) console.warn('getPokedexEntry: Invalid flavor text entries provided');
+  if(!flavorTextEntries || !Array.isArray(flavorTextEntries)) {
+    if(isDev()) {
+      console.warn('getPokedexEntry: Invalid flavor text entries provided');
+    }
+    
     return 'No Pokédex entry available.';
   }
 
@@ -308,13 +336,13 @@ export function getPokedexEntry(flavorTextEntries) {
   let entry = '';
   
   // Extract English language entries
-  for (let index in flavorTextEntries) {
-    if (flavorTextEntries[index].language.name === 'en') {
+  for(let index in flavorTextEntries) {
+    if(flavorTextEntries[index].language.name === 'en') {
       entriesArray.push(flavorTextEntries[index].flavor_text);
     }
   }
   
-  if (entriesArray.length === 0) {
+  if(entriesArray.length === 0) {
     return 'No English Pokédex entry available.';
   }
   
@@ -322,7 +350,7 @@ export function getPokedexEntry(flavorTextEntries) {
   entry = entriesArray[~~(Math.random() * entriesArray.length)].replaceAll(RegEx, ' ');
   
   // Fix common formatting issues with Pokemon name
-  if (entry.includes('POKéMON')) {
+  if(entry.includes('POKéMON')) {
     entry = entry.replaceAll('POKéMON', 'Pokémon');
   }
   
@@ -345,14 +373,17 @@ export function getGenus(genera) {
     return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
   }
 
-  if (!genera || !Array.isArray(genera)) {
-    if (isDev()) console.warn('getGenus: Invalid genera array provided');
+  if(!genera || !Array.isArray(genera)) {
+    if(isDev()) {
+      console.warn('getGenus: Invalid genera array provided');
+    }    
+    
     return 'Unknown Pokémon';
   }
 
   // Find and return English genus entry
-  for (let index in genera) {
-    if (genera[index].language.name === 'en') {
+  for(let index in genera) {
+    if(genera[index].language.name === 'en') {
       return genera[index].genus;
     }
   }
@@ -374,12 +405,15 @@ export function getGenus(genera) {
  * console.log(height); // "5'7\""
  */
 export function getHeight(height) {
-  if (typeof height !== 'number' || height < 0) {
+  if(typeof height !== 'number' || height < 0) {
     function isDev() {
       return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
     }
 
-    if (isDev()) console.warn('getHeight: Invalid height value provided');
+    if(isDev()) {
+      console.warn('getHeight: Invalid height value provided');
+    }
+    
     return '0"';
   }
 
@@ -400,12 +434,15 @@ export function getHeight(height) {
  * console.log(weight); // "15.2 lbs"
  */
 export function getWeight(weight) {
-  if (typeof weight !== 'number' || weight < 0) {
+  if(typeof weight !== 'number' || weight < 0) {
     function isDev() {
       return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
     }
 
-    if (isDev()) console.warn('getWeight: Invalid weight value provided');
+    if(isDev()) {
+      console.warn('getWeight: Invalid weight value provided');
+    }
+    
     return '0.0';
   }
 
@@ -434,8 +471,11 @@ export function getTypes(types) {
     return typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
   }
 
-  if (!types || !Array.isArray(types) || types.length === 0) {
-    if (isDev()) console.warn('getTypes: Invalid types array provided');
+  if(!types || !Array.isArray(types) || types.length === 0) {
+    if(isDev()) {
+      console.warn('getTypes: Invalid types array provided');
+    }
+    
     return ['#000000', '#000000'];
   }
 
@@ -452,9 +492,10 @@ export function getTypes(types) {
   let secondBackgroundColor = null;
   
   // Handle single type Pokemon
-  if (types.length === 1) {
+  if(types.length === 1) {
     TypeHeader.innerText = 'Type:';
     TypeText2.hidden = true;
+
     secondColor = firstColor;           // Use same color for gradient
     secondBackgroundColor = firstBackgroundColor;
   } else {
@@ -491,11 +532,13 @@ export function getTypes(types) {
  * const maxId = getPokedexType('false'); // Returns 1025
  */
 export function getPokedexType(showOnlyOriginalPokemon) {
-  if (showOnlyOriginalPokemon === 'true') {
+  if(showOnlyOriginalPokemon === 'true') {
     MaximumId = OriginalMaximumId; // Limit to original 151
+    
     return MaximumId;
   } else {
     MaximumId = 1025; // Include all generations
+
     return MaximumId;
   }
 }
@@ -522,7 +565,7 @@ export function getRandomPokemon() {
  * const name = capitalizeFirstLetter('pikachu'); // Returns 'Pikachu'
  */
 export function capitalizeFirstLetter(string) {
-  if (!string || typeof string !== 'string') {
+  if(!string || typeof string !== 'string') {
     return string;
   }
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -536,7 +579,7 @@ export function capitalizeFirstLetter(string) {
  * const name = capitalizeAfterHyphen('ho-oh'); // Returns 'Ho-Oh'
  */
 export function capitalizeAfterHyphen(hyphenatedString) {
-  if (!hyphenatedString || typeof hyphenatedString !== 'string') {
+  if(!hyphenatedString || typeof hyphenatedString !== 'string') {
     return hyphenatedString;
   }
   
@@ -555,7 +598,7 @@ export function capitalizeAfterHyphen(hyphenatedString) {
  * const name = punctuationNameCheck('mr-mime'); // Returns 'Mr. Mime'
  */
 export function punctuationNameCheck(name) {
-  if (!name || typeof name !== 'string') {
+  if(!name || typeof name !== 'string') {
     return name;
   }
 

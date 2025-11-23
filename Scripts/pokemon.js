@@ -38,9 +38,7 @@ import {
 import { convertHexToRgba } from './utils/color-utils.js?v=20250801i';
 import { populateLocalStorage } from './utils/storage-utils.js?v=20250802h';
 import { updateNavigationButtons as makeButtonsDisappear, getDeviceType } from './utils/navigation-utils.js?v=20250801i';
-import { 
-  displayStatsChart, 
-} from './statsChart.js';
+import { displayStatsChart, } from './statsChart.js';
 import { startMatrixEffect, stopMatrixEffect } from './matrix-bg.js';
 import { showSnowIfBabyOrIce } from './particles.js';
 
@@ -132,15 +130,17 @@ let currentSpriteState = 'artwork';
 function populatePage(pokemonResponse, speciesResponse, visibility) {
   // Reset sprite display state for new Pokemon
   currentSpriteState = 'artwork';
-  if (isDev()) console.log('🔄 [Sprite State] Reset to artwork for new Pokemon');
+  if(isDev()) {
+    console.log('🔄 [Sprite State] Reset to artwork for new Pokemon');
+  }
 
-    // Matrix background for Porygon family
-    const porygonNames = ['porygon', 'porygon2', 'porygon-z'];
-    if (porygonNames.includes(pokemonResponse.name.toLowerCase())) {
-      startMatrixEffect();
-    } else {
-      stopMatrixEffect();
-    }
+  // Matrix background for Porygon family
+  const porygonNames = ['porygon', 'porygon2', 'porygon-z'];
+  if(porygonNames.includes(pokemonResponse.name.toLowerCase())) {
+    startMatrixEffect();
+  } else {
+    stopMatrixEffect();
+  }
   
   // Process raw API data into usable formats
   const statTotal = getStatTotal(pokemonResponse.stats);
@@ -161,6 +161,7 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
       isLegendary: speciesResponse.is_legendary,
       isMythical: speciesResponse.is_mythical
     });
+    
   const backgroundColor = convertHexToRgba(types[0], 0.35);
   const borderColor = convertHexToRgba(types[1], 0.55);
   
@@ -188,7 +189,7 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
   }
   
   // Configure cry button based on audio availability
-  if (pokemon.cry) {
+  if(pokemon.cry) {
     // Audio available - show enabled cry button
     CryButtonTop.innerHTML = `<i class="fa-solid fa-volume-high"></i>`;
     CryButton.title = `Play ${capitalizeFirstLetter(pokemon.name)}'s cry`;
@@ -217,33 +218,43 @@ function displayAttributes() {
   const deviceType = getDeviceType();
   // Efficiently update only if values changed
   const idText = `#${pokemon.id} `;
-  if (NumberHeader.innerText !== idText) 
+  if(NumberHeader.innerText !== idText) {
     NumberHeader.innerText = idText;
+  }
 
   const fixedName = punctuationNameCheck(pokemon.name);
   const nameText = fixedName.toUpperCase();
 
-  if (NameHeader.innerText !== nameText) 
+  if(NameHeader.innerText !== nameText) { 
     NameHeader.innerText = nameText;
-  if (GenusSubHeader.innerText !== pokemon.genus) 
+  }
+  if(GenusSubHeader.innerText !== pokemon.genus) {
     GenusSubHeader.innerText = pokemon.genus;
-  if (GenerationText.innerText !== pokemon.generation) 
+  }
+  if(GenerationText.innerText !== pokemon.generation) {
     GenerationText.innerText = pokemon.generation;
-  if (PokedexEntryText.innerText !== pokemon.pokedexEntry) 
+  }
+  if(PokedexEntryText.innerText !== pokemon.pokedexEntry) {
     PokedexEntryText.innerText = pokemon.pokedexEntry;
-  if (HeightText.innerText !== pokemon.height) 
+  }
+  if(HeightText.innerText !== pokemon.height) {
     HeightText.innerText = pokemon.height;
+  }
 
   const weightVal = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
   
-  if (WeightText.innerText !== weightVal) 
+  if(WeightText.innerText !== weightVal) {
     WeightText.innerText = weightVal;
-  if (deviceType === 'mobile') 
+  }
+  if(deviceType === 'mobile') {
     WeightText.innerHTML += '<br>';
-  if (StatsText.innerText !== `${pokemon.baseStatTotal}`) 
+  }
+  if(StatsText.innerText !== `${pokemon.baseStatTotal}`) {
     StatsText.innerText = `${pokemon.baseStatTotal}`;
-  if (deviceType === 'mobile' || deviceType === 'tablet') 
+  }
+  if(deviceType === 'mobile' || deviceType === 'tablet') {
     StatsText.innerHTML += '<br>';
+  }
 
   // Sprite logic
   const hasDefaultSprite = !!pokemon.FrontDefaultSprite;
@@ -265,13 +276,14 @@ function displayAttributes() {
     DefaultArtworkElement.addEventListener('click', handler);
   }
 
-  if (hasDefaultSprite && hasShinySprite) {
+  if(hasDefaultSprite && hasShinySprite) {
     currentSpriteState = 'default';
     configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultSprite, 'Default Sprite');
     DefaultArtworkElement.style.display = '';
     setToggle(() => {
       DefaultArtworkElement._showingShiny = !DefaultArtworkElement._showingShiny;
-      if (DefaultArtworkElement._showingShiny) {
+      
+      if(DefaultArtworkElement._showingShiny) {
         configureArtworkElement(DefaultArtworkElement, pokemon.FrontShinySprite, 'Shiny Default Sprite');
         DefaultArtworkElement.title = 'Click to show default sprite';
       } else {
@@ -279,19 +291,22 @@ function displayAttributes() {
         DefaultArtworkElement.title = 'Click to show shiny sprite';
       }
     }, 'pointer', 'Click to show shiny sprite');
-  } else if (hasDefaultSprite) {
+  } else if(hasDefaultSprite) {
     currentSpriteState = 'default';
     configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultSprite, 'Default Sprite');
+    
     DefaultArtworkElement.style.display = '';
     DefaultArtworkElement.style.cursor = 'default';
     DefaultArtworkElement.title = 'Default Sprite';
-  } else if (hasArtwork && hasShinyArtwork) {
+  } else if(hasArtwork && hasShinyArtwork) {
     currentSpriteState = 'artwork';
     configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultOfficialArtwork, 'Default Official Artwork');
     DefaultArtworkElement.style.display = '';
+    
     setToggle(() => {
       DefaultArtworkElement._showingShiny = !DefaultArtworkElement._showingShiny;
-      if (DefaultArtworkElement._showingShiny) {
+      
+      if(DefaultArtworkElement._showingShiny) {
         configureArtworkElement(DefaultArtworkElement, pokemon.FrontShinyOfficialArtwork, 'Shiny Official Artwork');
         DefaultArtworkElement.title = 'Click to show default artwork';
       } else {
@@ -299,15 +314,16 @@ function displayAttributes() {
         DefaultArtworkElement.title = 'Click to show shiny artwork';
       }
     }, 'pointer', 'Click to show shiny artwork');
-  } else if (hasArtwork) {
+  } else if(hasArtwork) {
     currentSpriteState = 'artwork';
     configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultOfficialArtwork, 'Default Official Artwork');
+
     DefaultArtworkElement.style.display = '';
     DefaultArtworkElement.style.cursor = 'default';
     DefaultArtworkElement.title = 'Default Official Artwork';
   }
   // Always hide the shiny artwork image element
-  if (ShinyArtworkElement) {
+  if(ShinyArtworkElement) {
     ShinyArtworkElement.style.display = 'none';
     ShinyArtworkElement.src = '';
   }
@@ -335,7 +351,7 @@ function displayAttributes() {
 function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, height, weight, genus) {
   // Handle Pokemon cry audio with fallback options
   let cryUrl = null;
-  if (pokemonResponse.cries) {
+  if(pokemonResponse.cries) {
     // Prefer latest cry format, fallback to legacy if needed
     cryUrl = pokemonResponse.cries.latest || pokemonResponse.cries.legacy || null;
   }
@@ -373,15 +389,15 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
     generation: speciesResponse.generation.name.substring(11).toUpperCase(), // Extract generation number
     pokedexEntry: entry,
     
-  // Sprite URLs (prioritized for display)
-  FrontDefaultSprite: pokemonResponse.sprites.front_default || `${DefaultArtworkUrl}${speciesResponse.id}.png`,
-  FrontShinySprite: pokemonResponse.sprites.front_shiny || `${ShinyArtworkUrl}${speciesResponse.id}.png`,
-  BackDefaultSprite: pokemonResponse.sprites.back_default,
-  BackShinySprite: pokemonResponse.sprites.back_shiny,
+    // Sprite URLs (prioritized for display)
+    FrontDefaultSprite: pokemonResponse.sprites.front_default || `${DefaultArtworkUrl}${speciesResponse.id}.png`,
+    FrontShinySprite: pokemonResponse.sprites.front_shiny || `${ShinyArtworkUrl}${speciesResponse.id}.png`,
+    BackDefaultSprite: pokemonResponse.sprites.back_default,
+    BackShinySprite: pokemonResponse.sprites.back_shiny,
 
-  // Artwork URLs (always valid fallback)
-  FrontDefaultOfficialArtwork: `${DefaultArtworkUrl}${speciesResponse.id}.png`,
-  FrontShinyOfficialArtwork: `${ShinyArtworkUrl}${speciesResponse.id}.png`,
+    // Artwork URLs (always valid fallback)
+    FrontDefaultOfficialArtwork: `${DefaultArtworkUrl}${speciesResponse.id}.png`,
+    FrontShinyOfficialArtwork: `${ShinyArtworkUrl}${speciesResponse.id}.png`,
     
     // Gender differences (for sprite cycling)
     hasGenderDifferences: speciesResponse.has_gender_differences,
@@ -404,20 +420,6 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
   // Set gender-specific sprites if Pokemon has gender differences
   setGenderDifferenceSprites(pokemon, pokemonResponse);
   
-  // Legacy sprites array (preserved for potential future use)
-  // spritesArray = [
-  //   pokemon.FrontDefaultSprite,
-  //   pokemon.BackDefaultSprite,
-  //   pokemon.FrontShinySprite,
-  //   pokemon.BackShinySprite,
-  //   pokemon.FrontDefaultOfficialArtwork,
-  //   pokemon.FrontShinyOfficialArtwork,
-  //   pokemon.frontFemaleSprite,
-  //   pokemon.backFemaleSprite,
-  //   pokemon.frontFemaleShinySprite,
-  //   pokemon.backFemaleShinySprite
-  // ];
-  
   // Store Pokemon data in local storage for recall functionality
   populateLocalStorage(pokemon.id);
   
@@ -439,7 +441,7 @@ function getPokemonObject(pokemonResponse, speciesResponse, statTotal, entry, he
  */
 function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
   // Only set female sprites if Pokemon has gender differences
-  if (pokemonObj.hasGenderDifferences) {
+  if(pokemonObj.hasGenderDifferences) {
     // Get male and female sprite URLs
     pokemonObj.frontMaleSprite = pokemonResponse.sprites.front_default; // Male is typically the default
     pokemonObj.backMaleSprite = pokemonResponse.sprites.back_default;
@@ -463,7 +465,7 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
       (pokemonObj.frontFemaleSprite || pokemonObj.frontFemaleShinySprite) :
       (pokemonObj.frontMaleSprite || pokemonObj.frontMaleShinySprite);
     
-    if (isDev()) console.log(`👫 [Gender Sprites] ${pokemonObj.name} has gender differences:`, {
+    if(isDev()) console.log(`👫 [Gender Sprites] ${pokemonObj.name} has gender differences:`, {
       defaultGender: pokemonObj.defaultGender,
       alternateGender: pokemonObj.alternateGender,
       frontMale: pokemonObj.frontMaleSprite ? 'available' : 'null',
@@ -477,7 +479,9 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
       cycleWillIncludeAlternate: hasUsableAlternateSprites
     });
   } else {
-    if (isDev()) console.log(`👤 [Gender Sprites] ${pokemonObj.name} has no gender differences`);
+    if(isDev()) {
+      console.log(`👤 [Gender Sprites] ${pokemonObj.name} has no gender differences`);
+    }
   }
 } //setGenderDifferenceSprites
 
@@ -502,7 +506,7 @@ function addSpriteClickListeners() {
  * For Pokemon without gender differences or alternate sprites: artwork → default → artwork (repeat)
  */
 function cycleSpriteDisplay() {
-  if (!pokemon) {
+  if(!pokemon) {
     console.warn('⚠️ [Sprite Cycle] Cannot cycle - No Pokemon loaded');
     return;
   }
@@ -515,7 +519,7 @@ function cycleSpriteDisplay() {
   
   // Determine next state based on current state and available sprites
   let nextState;
-  if (hasAlternateSprites) {
+  if(hasAlternateSprites) {
     // Cycle: artwork → default → alternate → artwork
     switch (currentSpriteState) {
       case 'artwork':
@@ -542,9 +546,13 @@ function cycleSpriteDisplay() {
       default:
         nextState = 'artwork';
     }
-  }  currentSpriteState = nextState;
-  if (isDev()) console.log(`🔄 [Sprite Cycle] Switching to ${currentSpriteState} display for ${pokemon.name}`);
+  }
+  currentSpriteState = nextState;
   
+  if(isDev()) {
+    console.log(`🔄 [Sprite Cycle] Switching to ${currentSpriteState} display for ${pokemon.name}`);
+  }
+
   // Update sprites based on new state
   updateSpriteDisplay();
   
@@ -562,7 +570,10 @@ function cycleSpriteDisplay() {
       displayText = '🖼️ Official artwork';
       break;
   }
-  showToast(`${displayText} displayed`);
+  
+  if(typeof showToast !== 'undefined') {
+    showToast(`${displayText} displayed`);
+  }
 }
 
 /**
@@ -577,30 +588,27 @@ function updateSpriteDisplay() {
       shinyImage = pokemon.FrontShinySprite;
       defaultAlt = `Default Sprite (${pokemon.defaultGender || 'default'})`;
       shinyAlt = `Shiny Default Sprite (${pokemon.defaultGender || 'default'})`;
-      break;
-      
+      break;      
     case 'alternate':
       // Use alternate gender sprites based on what the alternate gender is
-      if (pokemon.alternateGender === 'female') {
+      if(pokemon.alternateGender === 'female') {
         defaultImage = pokemon.frontFemaleSprite;
         shinyImage = pokemon.frontFemaleShinySprite;
         defaultAlt = 'Female Default Sprite';
         shinyAlt = 'Female Shiny Sprite';
-      } else if (pokemon.alternateGender === 'male') {
+      } else if(pokemon.alternateGender === 'male') {
         defaultImage = pokemon.frontMaleSprite;
         shinyImage = pokemon.frontMaleShinySprite;
         defaultAlt = 'Male Default Sprite';
         shinyAlt = 'Male Shiny Sprite';
       }
-      break;
-      
+      break;      
     case 'artwork':
       defaultImage = null; // Force artwork loading
       shinyImage = null;   // Force artwork loading
       defaultAlt = 'Default Official Artwork';
       shinyAlt = 'Shiny Official Artwork';
-      break;
-      
+      break;      
     default:
       defaultImage = pokemon.FrontDefaultSprite;
       shinyImage = pokemon.FrontShinySprite;
@@ -609,15 +617,19 @@ function updateSpriteDisplay() {
   }
   
   // Update default image
-  if (currentSpriteState === 'artwork' || !defaultImage) {
-    if (isDev()) console.log(`🖼️ [Sprite Update] Loading default artwork`);
+  if(currentSpriteState === 'artwork' || !defaultImage) {
+    if(isDev()) {
+      console.log(`🖼️ [Sprite Update] Loading default artwork`);
+    }
     configureArtworkElement(
       DefaultArtworkElement,
       pokemon.FrontDefaultOfficialArtwork,
       defaultAlt
     );
   } else {
-    if (isDev()) console.log(`🎮 [Sprite Update] Loading ${currentSpriteState} default sprite`);
+    if(isDev()) {
+      console.log(`🎮 [Sprite Update] Loading ${currentSpriteState} default sprite`);
+    }
     configurePriorityArtworkElement(
       DefaultArtworkElement,
       defaultImage,
@@ -627,15 +639,19 @@ function updateSpriteDisplay() {
   }
   
   // Update shiny image
-  if (currentSpriteState === 'artwork' || !shinyImage) {
-    if (isDev()) console.log(`✨ [Sprite Update] Loading shiny artwork`);
+  if(currentSpriteState === 'artwork' || !shinyImage) {
+    if(isDev()) {
+      console.log(`✨ [Sprite Update] Loading shiny artwork`);
+    }
     configureArtworkElement(
       ShinyArtworkElement,
       pokemon.FrontShinyOfficialArtwork,
       shinyAlt
     );
   } else {
-    if (isDev()) console.log(`✨ [Sprite Update] Loading ${currentSpriteState} shiny sprite`);
+    if(isDev()) {
+      console.log(`✨ [Sprite Update] Loading ${currentSpriteState} shiny sprite`);
+    }
     configurePriorityArtworkElement(
       ShinyArtworkElement,
       shinyImage,
@@ -675,10 +691,14 @@ function configurePriorityArtworkElement(element, spriteUrl, artworkUrl, altText
   
   // Function to attempt loading official artwork as fallback
   const loadOfficialArtwork = () => {
-    if (isDev()) console.log(`🖼️ Loading official artwork fallback: ${altText}`);
-    
+    if(isDev()) {
+      console.log(`🖼️ Loading official artwork fallback: ${altText}`);
+    }
+
     element.onload = function() {
-      if (isDev()) console.log(`✅ Official artwork loaded: ${altText}`);
+      if(isDev()) {
+        console.log(`✅ Official artwork loaded: ${altText}`);
+      }
     };
     
     element.onerror = function() {
@@ -691,11 +711,15 @@ function configurePriorityArtworkElement(element, spriteUrl, artworkUrl, altText
   };
   
   // Try sprite first, fallback to artwork on failure
-  if (spriteUrl && spriteUrl !== null) {
-    if (isDev()) console.log(`🎮 Attempting sprite load: ${altText}`);
-    
+  if(spriteUrl && spriteUrl !== null) {
+    if(isDev()) {
+      console.log(`🎮 Attempting sprite load: ${altText}`);
+    }
+
     element.onload = function() {
-      if (isDev()) console.log(`✅ Sprite loaded successfully: ${altText}`);
+      if(isDev()) {
+        console.log(`✅ Sprite loaded successfully: ${altText}`);
+      }
     };
     
     element.onerror = function() {
@@ -704,13 +728,13 @@ function configurePriorityArtworkElement(element, spriteUrl, artworkUrl, altText
     };
     
     // Android-specific optimizations
-    if (isAndroid) {
+    if(isAndroid) {
       element.crossOrigin = 'anonymous';
       element.loading = 'lazy';
     }
     
     // Mobile optimizations
-    if (isMobile) {
+    if(isMobile) {
       element.decoding = 'async';
       element.style.willChange = 'transform';
     }
@@ -745,8 +769,10 @@ function configureArtworkElement(element, imageUrl, altText) {
   const isAndroid = /Android/i.test(navigator.userAgent);
   const isMobile = window.deviceType === 'mobile';
   
-  if (isAndroid) {
-    if (isDev()) console.log('🤖 [Android] Configuring artwork with Android-specific loading strategy');
+  if(isAndroid) {
+    if(isDev()) {
+      console.log('🤖 [Android] Configuring artwork with Android-specific loading strategy');
+    }
     
     // Android-specific: Set longer timeout and add crossorigin
     element.crossOrigin = 'anonymous';
@@ -761,7 +787,10 @@ function configureArtworkElement(element, imageUrl, altText) {
       const urlToLoad = retryCount > 0 ? `${imageUrl}?retry=${retryCount}&t=${Date.now()}` : imageUrl;
       
       element.onload = function() {
-        if (isDev()) console.log(`✅ [Android] Artwork loaded successfully: ${element.alt}`);
+        if(isDev()) {
+          console.log(`✅ [Android] Artwork loaded successfully: ${element.alt}`);
+        }
+
         // Android-specific: Force a repaint to ensure visibility
         element.style.display = 'none';
         element.offsetHeight; // Trigger reflow
@@ -772,8 +801,9 @@ function configureArtworkElement(element, imageUrl, altText) {
         retryCount++;
         console.warn(`❌ [Android] Artwork load failed (attempt ${retryCount}): ${element.alt}`);
         
-        if (retryCount <= maxRetries) {
+        if(retryCount <= maxRetries) {
           console.log(`🔄 [Android] Retrying artwork load in ${retryCount * 1000}ms...`);
+          
           setTimeout(() => {
             attemptLoad();
           }, retryCount * 1000); // Progressive delay: 1s, 2s, 3s
@@ -784,7 +814,7 @@ function configureArtworkElement(element, imageUrl, altText) {
           element.style.filter = 'grayscale(100%)';
           
           // Show user feedback
-          if (typeof showToast !== 'undefined') {
+          if(typeof showToast !== 'undefined') {
             showToast('Some artwork may not load properly on this device');
           }
         }
@@ -800,16 +830,19 @@ function configureArtworkElement(element, imageUrl, altText) {
   } else {
     // Non-Android devices: Standard loading
     element.onload = function() {
-      if (isDev()) console.log(`✅ Artwork loaded: ${element.alt}`);
+      if(isDev()) {
+        console.log(`✅ Artwork loaded: ${element.alt}`);
+      }
     };
     
     element.onerror = function() {
-  console.warn(`❌ Artwork load failed: ${element.alt}`);
-  element.style.opacity = '1';
-  element.style.filter = '';
-  // Set Pokeball placeholder image
-  element.src = '/Images/pokeball.png';
-  element.alt = 'Pokeball Placeholder';
+      console.warn(`❌ Artwork load failed: ${element.alt}`);
+      element.style.opacity = '1';
+      element.style.filter = '';
+      
+      // Set Pokeball placeholder image
+      element.src = '/Images/pokeball.png';
+      element.alt = 'Pokeball Placeholder';
     };
     
     // Set the source
@@ -817,7 +850,7 @@ function configureArtworkElement(element, imageUrl, altText) {
   }
   
   // Additional mobile optimizations
-  if (isMobile) {
+  if(isMobile) {
     // Mobile-specific: Preload hint for better performance
     element.decoding = 'async';
     element.style.willChange = 'transform';

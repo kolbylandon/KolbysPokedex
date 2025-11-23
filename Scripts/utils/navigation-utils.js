@@ -66,10 +66,16 @@ export { MINIMUM_ID, MAXIMUM_ID };
  * console.log(`User is on: ${deviceType}`); // "mobile", "tablet", or "desktop"
  */
 export function getDeviceType() {
-  if (isDev()) console.log('🔍 [Device Detection] Starting device type detection...');
-  const agent = navigator.userAgent;
-  if (isDev()) console.log('🔍 [Device Detection] User agent:', agent);
+  if(isDev()) {
+    console.log('🔍 [Device Detection] Starting device type detection...');
+  }
   
+  const agent = navigator.userAgent;
+  
+  if(isDev()) {
+    console.log('🔍 [Device Detection] User agent:', agent);
+  }
+
   // Enhanced regular expressions for better device detection
   const tabletRegex = /(tablet|ipad|playbook|silk)|(android(?!.*mobi))|kindle|nook|gt-|sm-t|nexus (?=7|9|10)|xoom|sch-i800|playstation|nintendo|wiiu/i;
   const mobileRegex = /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)|Windows Phone/i;
@@ -79,20 +85,26 @@ export function getDeviceType() {
   const screenHeight = window.screen ? window.screen.height : window.innerHeight;
   const devicePixelRatio = window.devicePixelRatio || 1;
   
-  if (isDev()) console.log('🔍 [Device Detection] Screen dimensions:', { 
+  if(isDev()) console.log('🔍 [Device Detection] Screen dimensions:', { 
     width: screenWidth, 
     height: screenHeight, 
     devicePixelRatio 
   });
   
   // Enhanced detection logic
-  if (tabletRegex.test(agent)) {
-    if (isDev()) console.log('📱 [Device Detection] Detected as TABLET via user agent');
+  if(tabletRegex.test(agent)) {
+    if(isDev()) {
+      console.log('📱 [Device Detection] Detected as TABLET via user agent');
+    }
+    
     return 'tablet';
   }
   
-  if (mobileRegex.test(agent)) {
-    if (isDev()) console.log('📱 [Device Detection] Detected as MOBILE via user agent');
+  if(mobileRegex.test(agent)) {
+    if(isDev()) {
+      console.log('📱 [Device Detection] Detected as MOBILE via user agent');
+    }
+    
     return 'mobile';
   }
   
@@ -103,25 +115,36 @@ export function getDeviceType() {
   // Consider high-DPI mobile devices
   const effectiveWidth = screenWidth / devicePixelRatio;
   const effectiveHeight = screenHeight / devicePixelRatio;
+
+  if(isDev()) {
+    console.log('🔍 [Device Detection] Fallback detection values:', {
+      maxDimension,
+      minDimension,
+      effectiveWidth,
+      effectiveHeight
+    });
+  }
   
-  if (isDev()) console.log('🔍 [Device Detection] Fallback detection values:', {
-    maxDimension,
-    minDimension,
-    effectiveWidth,
-    effectiveHeight
-  });
-  
-  if (effectiveWidth <= 480 || (maxDimension <= 896 && minDimension <= 414)) {
-    if (isDev()) console.log('📱 [Device Detection] Detected as MOBILE via screen size');
+  if(effectiveWidth <= 480 || (maxDimension <= 896 && minDimension <= 414)) {
+    if(isDev()) {
+      console.log('📱 [Device Detection] Detected as MOBILE via screen size');
+    }
+    
     return 'mobile';
   }
   
-  if (effectiveWidth <= 1024 || (maxDimension <= 1366 && minDimension <= 768)) {
-    if (isDev()) console.log('📱 [Device Detection] Detected as TABLET via screen size');
+  if(effectiveWidth <= 1024 || (maxDimension <= 1366 && minDimension <= 768)) {
+    if(isDev()) {
+      console.log('📱 [Device Detection] Detected as TABLET via screen size');
+    }
+    
     return 'tablet';
   }
   
-  if (isDev()) console.log('🖥️ [Device Detection] Detected as DESKTOP (default)');
+  if(isDev()) {
+    console.log('🖥️ [Device Detection] Detected as DESKTOP (default)');
+  }
+  
   return 'desktop';
 }
 
@@ -129,14 +152,12 @@ export function getDeviceType() {
  * Checks if the device supports touch input
  * @returns {boolean} True if touch is supported
  * @example
- * if (isTouchDevice()) {
+ * if(isTouchDevice()) {
  *   // Optimize for touch interactions
  * }
  */
 export function isTouchDevice() {
-  return 'ontouchstart' in window || 
-         navigator.maxTouchPoints > 0 || 
-         navigator.msMaxTouchPoints > 0;
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 }
 
 /**
@@ -152,13 +173,14 @@ export function getDeviceOrientation() {
   let orientationType = 'unknown';
   let angle = 0;
   
-  if (screenOrientation) {
+  if(screenOrientation) {
     orientationType = screenOrientation.type || screenOrientation;
     angle = screenOrientation.angle || 0;
   } else {
     // Fallback detection
     const width = window.innerWidth;
     const height = window.innerHeight;
+
     orientationType = width > height ? 'landscape' : 'portrait';
   }
   
@@ -224,10 +246,13 @@ const BUTTON_TEMPLATES = {
  * applyResponsiveLayout(deviceType);
  */
 export function applyResponsiveLayout(deviceType) {
-  if (isDev()) console.log(`🎨 [Responsive Layout] Applying layout for device type: ${deviceType}`);
+  if(isDev()) {
+    console.log(`🎨 [Responsive Layout] Applying layout for device type: ${deviceType}`);
+  }
+  
   const templates = BUTTON_TEMPLATES[deviceType] || BUTTON_TEMPLATES.desktop;
   
-  if (!BUTTON_TEMPLATES[deviceType]) {
+  if(!BUTTON_TEMPLATES[deviceType]) {
     console.warn(`⚠️ [Responsive Layout] Unknown device type '${deviceType}', using desktop template`);
   }
   
@@ -243,21 +268,26 @@ export function applyResponsiveLayout(deviceType) {
     recall: document.getElementById('recall-button-top')
   };
   
-  if (isDev()) console.log('🔍 [Responsive Layout] Found button elements:', 
-    Object.entries(buttonTops).map(([key, element]) => `${key}: ${element ? 'found' : 'missing'}`).join(', '));
-  
+  if(isDev()) {
+    console.log('🔍 [Responsive Layout] Found button elements:', Object.entries(buttonTops).map(([key, element]) => `${key}: ${element ? 'found' : 'missing'}`).join(', '));
+  }
+
   // Apply templates to available button tops
   let appliedCount = 0;
+
   Object.keys(templates).forEach(buttonKey => {
     const buttonTop = buttonTops[buttonKey];
-    if (buttonTop && templates[buttonKey]) {
+    if(buttonTop && templates[buttonKey]) {
       // Extract just the inner content from the template (remove the span wrapper)
       const templateContent = templates[buttonKey].replace(/^<span[^>]*>|<\/span>$/g, '');
       const oldContent = buttonTop.innerHTML;
       buttonTop.innerHTML = templateContent;
-      if (isDev()) console.log(`🔄 [Responsive Layout] Updated ${buttonKey} button: "${oldContent}" → "${templateContent}"`);
+      if(isDev()) {
+        console.log(`🔄 [Responsive Layout] Updated ${buttonKey} button: "${oldContent}" → "${templateContent}"`);
+      }
+      
       appliedCount++;
-    } else if (!buttonTop) {
+    } else if(!buttonTop) {
       console.warn(`⚠️ [Responsive Layout] Button element '${buttonKey}' not found in DOM`);
     }
   });
@@ -270,21 +300,29 @@ export function applyResponsiveLayout(deviceType) {
   body.classList.remove('device-mobile', 'device-tablet', 'device-desktop');
   body.classList.add(`device-${deviceType}`);
   
-  if (isDev()) console.log(`🎨 [Responsive Layout] Updated body classes: removed [${oldClasses.join(', ')}], added [device-${deviceType}]`);
-  
+  if(isDev()) {
+    console.log(`🎨 [Responsive Layout] Updated body classes: removed [${oldClasses.join(', ')}], added [device-${deviceType}]`);
+  }
+
   // Apply touch-specific optimizations
-  if (isTouchDevice()) {
+  if(isTouchDevice()) {
     body.classList.add('touch-device');
-    if (isDev()) console.log('👆 [Responsive Layout] Touch device detected, adding touch optimizations');
-    
+    if(isDev()) {
+      console.log('👆 [Responsive Layout] Touch device detected, adding touch optimizations');
+    }
+
     // Increase button targets for better touch interaction
     const allButtons = document.querySelectorAll('button, .button');
     allButtons.forEach(button => {
       button.classList.add('touch-optimized');
     });
-    if (isDev()) console.log(`👆 [Responsive Layout] Applied touch optimization to ${allButtons.length} buttons`);
+    if(isDev()) {
+      console.log(`👆 [Responsive Layout] Applied touch optimization to ${allButtons.length} buttons`);
+    }
   } else {
-    if (isDev()) console.log('🖱️ [Responsive Layout] Non-touch device, skipping touch optimizations');
+    if(isDev()) {
+      console.log('🖱️ [Responsive Layout] Non-touch device, skipping touch optimizations');
+    }
   }
   
   console.log(`✅ [Responsive Layout] Successfully applied responsive layout for: ${deviceType}`);
@@ -314,25 +352,30 @@ export function generatePokemon(id, visibility = 'visible', skipIdValidation = f
   
   try {
     // Handle string input (Pokemon names)
-    if (typeof id === 'string' && isNaN(parseInt(id, 10))) {
+    if(typeof id === 'string' && isNaN(parseInt(id, 10))) {
       console.log(`🔤 [Generate Pokemon] String input detected: "${id}", treating as Pokemon name`);
       
       // Clean up and normalize the Pokemon name
       const pokemonName = normalizePokemonName(id);
       
-      if (pokemonName === '') {
+      if(pokemonName === '') {
         console.warn(`⚠️ [Generate Pokemon] Empty or invalid string provided: "${id}"`);
         showToast('Please enter a valid Pokémon name or ID');
-        if (textbox) textbox.style.color = ERROR_COLOR;
+        
+        if(textbox) {
+          textbox.style.color = ERROR_COLOR;
+        }
+        
         return;
       }
       
       console.log(`✅ [Generate Pokemon] Requesting Pokemon by name: "${pokemonName}" (normalized from "${id}")`);
       requestPokemon(pokemonName, visibility);
-      if (textbox) {
+      if(textbox) {
         textbox.style.color = TEXT_COLOR;
         console.log(`🎨 [Generate Pokemon] Set textbox color to success state for name search`);
       }
+
       return;
     }
     
@@ -341,49 +384,60 @@ export function generatePokemon(id, visibility = 'visible', skipIdValidation = f
     console.log(`🔢 [Generate Pokemon] Numeric ID: ${pokemonId} (type: ${typeof pokemonId})`);
     
     // Validate ID is a number
-    if (isNaN(pokemonId)) {
+    if(isNaN(pokemonId)) {
       console.error(`❌ [Generate Pokemon] Invalid input provided: ${id} → ${pokemonId} (NaN)`);
       showToast('Please enter a valid Pokémon name or ID');
-      if (textbox) textbox.style.color = ERROR_COLOR;
+      if(textbox) {
+        textbox.style.color = ERROR_COLOR;
+      }
+      
       return;
     }
     
     // Handle validation based on skipIdValidation flag
-    if (!skipIdValidation) {
+    if(!skipIdValidation) {
       console.log(`✅ [Generate Pokemon] Performing ID validation (range: ${MINIMUM_ID}-${MAXIMUM_ID})`);
+      
       // Normal validation - check boundaries
-      if (pokemonId >= MINIMUM_ID && pokemonId <= MAXIMUM_ID) {
+      if(pokemonId >= MINIMUM_ID && pokemonId <= MAXIMUM_ID) {
         console.log(`✅ [Generate Pokemon] ID ${pokemonId} is within valid range, requesting Pokemon data`);
         requestPokemon(pokemonId, visibility);
-        if (textbox) {
+        
+        if(textbox) {
           textbox.style.color = TEXT_COLOR;
           console.log(`🎨 [Generate Pokemon] Reset textbox color to success state`);
         }
+
         return;
       } else {
         // ID out of bounds
         console.warn(`⚠️ [Generate Pokemon] ID ${pokemonId} is out of bounds (${MINIMUM_ID}-${MAXIMUM_ID})`);
         showToast(`Please enter a number between ${MINIMUM_ID} and ${MAXIMUM_ID} or a Pokémon name`);
-        if (textbox) {
+        
+        if(textbox) {
           textbox.style.color = ERROR_COLOR;
           console.log(`🎨 [Generate Pokemon] Set textbox color to error state`);
         }
+
         return;
       }
     } else {
       console.log(`⏭️ [Generate Pokemon] Skipping validation, requesting Pokemon data directly`);
       // Skip validation - used for forms, evolutions, etc.
       requestPokemon(pokemonId, visibility);
-      if (textbox) {
+
+      if(textbox) {
         textbox.style.color = TEXT_COLOR;
         console.log(`🎨 [Generate Pokemon] Set textbox color to success state`);
       }
+
       return;
     }
   } catch (error) {
     console.error('❌ [Generate Pokemon] Error in generatePokemon:', error);
     showToast('Error loading Pokemon data');
-    if (textbox) {
+
+    if(textbox) {
       textbox.style.color = ERROR_COLOR;
       console.log(`🎨 [Generate Pokemon] Set textbox color to error state due to exception`);
     }
@@ -414,7 +468,7 @@ export function getRandomPokemon() {
 export function setPokedexType(showOnlyOriginal) {
   const useOriginal = showOnlyOriginal === true || showOnlyOriginal === 'true';
   
-  if (useOriginal) {
+  if(useOriginal) {
     MAXIMUM_ID = ORIGINAL_MAXIMUM_ID;
     console.log('Pokédex limited to original 151 Pokemon');
   } else {
@@ -424,7 +478,7 @@ export function setPokedexType(showOnlyOriginal) {
   
   // Update UI if maximum ID display exists
   const maxIdDisplay = document.getElementById('max-id-display');
-  if (maxIdDisplay) {
+  if(maxIdDisplay) {
     maxIdDisplay.textContent = MAXIMUM_ID;
   }
   
@@ -448,34 +502,43 @@ export function updateNavigationButtons(currentId, hasGenderDifferences = false)
   const nextButton = document.getElementById('next-button');
   const recallButton = document.getElementById('recall-button');
   
-  if (isDev()) console.log(`🔍 [Navigation Buttons] Button elements found:`, {
-    previous: previousButton ? 'found' : 'missing',
-    next: nextButton ? 'found' : 'missing',
-    recall: recallButton ? 'found' : 'missing'
-  });
+  if(isDev()) { 
+    console.log(`🔍 [Navigation Buttons] Button elements found:`, {
+      previous: previousButton ? 'found' : 'missing',
+      next: nextButton ? 'found' : 'missing',
+      recall: recallButton ? 'found' : 'missing'
+    });
+  }
   
   // Validate current ID
-  if (typeof currentId !== 'number' || isNaN(currentId)) {
+  if(typeof currentId !== 'number' || isNaN(currentId)) {
     console.warn(`⚠️ [Navigation Buttons] Invalid current ID provided: ${currentId} (type: ${typeof currentId})`);
+    
     return;
   }
   
   // Show/hide Previous button based on minimum ID boundary
-  if (previousButton) {
+  if(previousButton) {
     const showPrevious = currentId > MINIMUM_ID;
     previousButton.style.display = showPrevious ? 'inline-block' : 'none';
-    if (isDev()) console.log(`⬅️ [Navigation Buttons] Previous button: ${showPrevious ? 'shown' : 'hidden'} (ID ${currentId} ${showPrevious ? '>' : '<='} ${MINIMUM_ID})`);
+
+    if(isDev()) {
+      console.log(`⬅️ [Navigation Buttons] Previous button: ${showPrevious ? 'shown' : 'hidden'} (ID ${currentId} ${showPrevious ? '>' : '<='} ${MINIMUM_ID})`);
+    }
   }
   
   // Show/hide Next button based on maximum ID boundary  
-  if (nextButton) {
+  if(nextButton) {
     const showNext = currentId < MAXIMUM_ID;
     nextButton.style.display = showNext ? 'inline-block' : 'none';
-    if (isDev()) console.log(`➡️ [Navigation Buttons] Next button: ${showNext ? 'shown' : 'hidden'} (ID ${currentId} ${showNext ? '<' : '>='} ${MAXIMUM_ID})`);
+    
+    if(isDev()) {
+      console.log(`➡️ [Navigation Buttons] Next button: ${showNext ? 'shown' : 'hidden'} (ID ${currentId} ${showNext ? '<' : '>='} ${MAXIMUM_ID})`);
+    }
   }
   
   // Show/hide Recall button based on stored Pokemon data
-  if (recallButton) {
+  if(recallButton) {
     const lastPokemon = getStorageItem(STORAGE_KEYS.LAST_POKEMON);
     const currentPokemon = getStorageItem(STORAGE_KEYS.CURRENT_POKEMON);
     
@@ -487,12 +550,18 @@ export function updateNavigationButtons(currentId, hasGenderDifferences = false)
                       lastPokemon !== 'null' &&
                       currentPokemon !== 'null';
     
-    if (showRecall) {
+    if(showRecall) {
       recallButton.style.display = 'inline-block';
-      if (isDev()) console.log(`🔄 [Navigation Buttons] Recall button: shown (last: ${lastPokemon}, current: ${currentPokemon})`);
+      
+      if(isDev()) {
+        console.log(`🔄 [Navigation Buttons] Recall button: shown (last: ${lastPokemon}, current: ${currentPokemon})`);
+      }
     } else {
       recallButton.style.display = 'none';
-      if (isDev()) console.log(`🔄 [Navigation Buttons] Recall button: hidden (last: ${lastPokemon}, current: ${currentPokemon})`);
+      
+      if(isDev()) {
+        console.log(`🔄 [Navigation Buttons] Recall button: hidden (last: ${lastPokemon}, current: ${currentPokemon})`);
+      }
     }
   }
   
@@ -516,16 +585,18 @@ export function validateNumericInput(input) {
   const inputElement = typeof input === 'string' ? null : input;
   const inputValue = typeof input === 'string' ? input : input.value;
   
-  if (!inputValue) return;
-  
+  if(!inputValue) {
+    return;
+  }
+
   // RegEx to match any non-digit character
   const nonDigitRegex = /\D/g;
   
   // Check if input contains non-digits
-  if (nonDigitRegex.test(inputValue)) {
+  if(nonDigitRegex.test(inputValue)) {
     const cleanValue = inputValue.replace(nonDigitRegex, '');
     
-    if (inputElement) {
+    if(inputElement) {
       inputElement.value = cleanValue;
       // Trigger input event to update any listeners
       inputElement.dispatchEvent(new Event('input', { bubbles: true }));
@@ -544,13 +615,14 @@ export function validateNumericInput(input) {
  * @returns {boolean} True if the input is valid, false otherwise
  * @example
  * const isValid = validatePokedexNumber(textbox);
- * if (isValid) {
+ * if(isValid) {
  *   generatePokemon(textbox.value, 'visible', false);
  * }
  */
 export function validatePokedexNumber(textboxElement) {
-  if (!textboxElement) {
+  if(!textboxElement) {
     console.warn('validatePokedexNumber: No textbox element provided');
+    
     return false;
   }
   
@@ -585,7 +657,10 @@ export function initializeResponsiveBehavior() {
     setTimeout(() => {
       const deviceType = getDeviceType();
       applyResponsiveLayout(deviceType);
-      if (isDev()) console.log('Orientation changed, updated layout for:', deviceType);
+
+      if(isDev()) {
+        console.log('Orientation changed, updated layout for:', deviceType);
+      }
     }, 100); // Small delay to let orientation change complete
   };
   
@@ -604,6 +679,7 @@ export function initializeResponsiveBehavior() {
       handleOrientationChange();
     }, 200);
   }, { passive: true });
+
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
@@ -613,14 +689,16 @@ export function initializeResponsiveBehavior() {
   
   // Handle visibility change (when switching between apps)
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
+    if(!document.hidden) {
       // App became visible again, recheck device type
       const deviceType = getDeviceType();
       applyResponsiveLayout(deviceType);
     }
   });
   
-  if (isDev()) console.log('Responsive behavior initialized for:', initialDeviceType);
+  if(isDev()) {
+    console.log('Responsive behavior initialized for:', initialDeviceType);
+  }
 }
 
 // ====================================
@@ -641,7 +719,7 @@ export { setPokedexType as getPokedexType };
  * Enables dev-only logging and features
  * @returns {boolean} True if in development mode
  * @example
- * if (isDev()) {
+ * if(isDev()) {
  *   console.log('Development mode active');
  * }
  */

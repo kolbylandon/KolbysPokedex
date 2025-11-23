@@ -60,8 +60,10 @@ let audioContextUnlocked = false;
  * This function should be called on first user interaction
  */
 export function unlockAudioContext() {
-  if (audioContextUnlocked) return;
-  
+  if(audioContextUnlocked) {
+    return;
+  }
+
   try {
     // Create a silent audio element and attempt to play it
     const silentAudio = new Audio();
@@ -72,24 +74,26 @@ export function unlockAudioContext() {
     silentAudio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmcfCCuFyvLGfC4GM2C57+WUQQ0LTaXU8dlzIwc2jdXz1XgqBTLAy+7dexELLXLG8+ONPQ0PVqXU8dtxIQU6gsOj1VB1jA==';
     
     const playPromise = silentAudio.play();
-    if (playPromise !== undefined) {
+    if(playPromise !== undefined) {
       playPromise.then(() => {
         audioContextUnlocked = true;
-        if (isDev()) console.log('📱 [Mobile Audio] Audio context unlocked successfully');
+        if(isDev()) console.log('📱 [Mobile Audio] Audio context unlocked successfully');
       }).catch(() => {
-        if (isDev()) console.log('📱 [Mobile Audio] Could not unlock audio context');
+        if(isDev()) console.log('📱 [Mobile Audio] Could not unlock audio context');
       });
     }
     
     // Enhanced Android-specific speech synthesis initialization
-    if (window.speechSynthesis) {
+    if(window.speechSynthesis) {
       const isAndroid = /Android/i.test(navigator.userAgent);
       
       try {
-        if (isAndroid) {
+        if(isAndroid) {
           // Enhanced Android-specific initialization
-          if (isDev()) console.log('📱 [Android Speech] Enhanced Android speech synthesis initialization');
-          
+          if(isDev()) {
+            console.log('📱 [Android Speech] Enhanced Android speech synthesis initialization');
+          }
+
           // Multiple initialization attempts with different strategies
           const initStrategies = [
             // Strategy 1: Empty utterance
@@ -131,9 +135,11 @@ export function unlockAudioContext() {
           // Force voices to load multiple times for Android
           const loadVoices = () => {
             const voices = Synth.getVoices();
-            if (voices.length === 0) {
-              if (isDev()) console.log('📱 [Android Speech] No voices loaded, forcing reload attempt');
-              
+            if(voices.length === 0) {
+              if(isDev()) {
+                console.log('📱 [Android Speech] No voices loaded, forcing reload attempt');
+              }
+
               // Try different methods to trigger voice loading
               setTimeout(() => {
                 const triggerUtterance = new SpeechSynthesisUtterance('voice test');
@@ -145,11 +151,15 @@ export function unlockAudioContext() {
                 // Check again after trigger
                 setTimeout(() => {
                   const newVoices = Synth.getVoices();
-                  if (isDev()) console.log(`📱 [Android Speech] Voice reload result: ${newVoices.length} voices`);
+                  if(isDev()) {
+                    console.log(`📱 [Android Speech] Voice reload result: ${newVoices.length} voices`);
+                  }
                 }, 500);
               }, 300);
             } else {
-              if (isDev()) console.log(`📱 [Android Speech] Found ${voices.length} voices on initialization`);
+              if(isDev()) {
+                console.log(`📱 [Android Speech] Found ${voices.length} voices on initialization`);
+              }
             }
           };
           
@@ -165,14 +175,20 @@ export function unlockAudioContext() {
           testUtterance.volume = 0;
           Synth.speak(testUtterance);
           Synth.cancel();
-          if (isDev()) console.log('📱 [Mobile Speech] Speech synthesis initialized');
+          if(isDev()) {
+            console.log('📱 [Mobile Speech] Speech synthesis initialized');
+          }
         }
       } catch (speechError) {
-        if (isDev()) console.log('📱 [Mobile Speech] Could not initialize speech synthesis:', speechError);
+        if(isDev()) {
+          console.log('📱 [Mobile Speech] Could not initialize speech synthesis:', speechError);
+        }
       }
     }
   } catch (error) {
-    if (isDev()) console.log('📱 [Mobile Audio] Error attempting to unlock audio context:', error);
+    if(isDev()) {
+      console.log('📱 [Mobile Audio] Error attempting to unlock audio context:', error);
+    }
   }
 }
 
@@ -192,9 +208,11 @@ export function playCurrentPokemonCry() {
     let pokemonData = null;
     
     // First try to get global pokemon object if available
-    if (typeof window !== 'undefined' && window.pokemon) {
+    if(typeof window !== 'undefined' && window.pokemon) {
       pokemonData = window.pokemon;
-      if (isDev()) console.log('Using global pokemon object:', pokemonData);
+      if(isDev()) {
+        console.log('Using global pokemon object:', pokemonData);
+      }
     } else {
       // Fallback: Extract Pokemon data from DOM elements
       const nameElement = document.getElementById('name-header');
@@ -203,26 +221,33 @@ export function playCurrentPokemonCry() {
       let pokemonName = '';
       let pokemonId = '';
       
-      if (nameElement && nameElement.textContent) {
+      if(nameElement && nameElement.textContent) {
         pokemonName = nameElement.textContent.trim().toLowerCase();
         // Clean up name - remove any extra characters
         pokemonName = pokemonName.replace(/[^\w\s-]/g, '').trim();
-        if (isDev()) console.log('Extracted Pokemon name:', pokemonName);
-      }
-      
-      if (numberElement && numberElement.textContent) {
-        const numberMatch = numberElement.textContent.match(/\d+/);
-        if (numberMatch) {
-          pokemonId = parseInt(numberMatch[0]);
-          if (isDev()) console.log('Extracted Pokemon ID:', pokemonId);
+        if(isDev()) { 
+          console.log('Extracted Pokemon name:', pokemonName); 
         }
       }
       
-      if (isDev()) console.log('Extracted Pokemon data from DOM:', { name: pokemonName, id: pokemonId });
+      if(numberElement && numberElement.textContent) {
+        const numberMatch = numberElement.textContent.match(/\d+/);
+        if(numberMatch) {
+          pokemonId = parseInt(numberMatch[0]);
+          if(isDev()) {
+            console.log('Extracted Pokemon ID:', pokemonId);
+          }
+        }
+      }
       
-      if (!pokemonName || !pokemonId) {
+      if(isDev()) {
+        console.log('Extracted Pokemon data from DOM:', { name: pokemonName, id: pokemonId });
+      }
+
+      if(!pokemonName || !pokemonId) {
         console.error('Could not extract Pokemon data from DOM - Name:', nameElement?.textContent, 'Number:', numberElement?.textContent);
         showToast('Cannot play cry: Pokemon data not found');
+        
         return;
       }
       
@@ -254,9 +279,10 @@ export function playCurrentPokemonCry() {
  * playPokemonCryWithData(pokemon);
  */
 export function playPokemonCryWithData(pokemon) {
-  if (!pokemon || (!pokemon.name && !pokemon.id)) {
+  if(!pokemon || (!pokemon.name && !pokemon.id)) {
     console.error('Invalid Pokemon data for cry playback');
     showToast('Cannot play cry: Invalid Pokemon data');
+
     return;
   }
 
@@ -266,7 +292,7 @@ export function playPokemonCryWithData(pokemon) {
   const cryButton = document.getElementById('cry-button');
   const cryButtonTop = document.getElementById('cry-button-top');
   
-  if (!cryButton || !cryButtonTop) {
+  if(!cryButton || !cryButtonTop) {
     console.error('Cry button elements not found');
     return;
   }
@@ -288,10 +314,14 @@ export function playPokemonCryWithData(pokemon) {
 
   try {
     // If no cry URL is provided or it's null, go directly to alternative sources
-    if (!pokemon.cry) {
-      if (isDev()) console.log('No primary cry URL available, using alternative sources');
+    if(!pokemon.cry) {
+      if(isDev()) {
+        console.log('No primary cry URL available, using alternative sources');
+      }
+      
       resetButtonState();
       tryAlternativeCry(pokemon);
+
       return;
     }
 
@@ -306,11 +336,16 @@ export function playPokemonCryWithData(pokemon) {
     });
     
     audio.addEventListener('loadstart', () => {
-      if (isDev()) console.log('Loading Pokémon cry...');
+      if(isDev()) {
+        console.log('Loading Pokémon cry...');
+      }
     });
     
     audio.addEventListener('canplay', () => {
-      if (isDev()) console.log('Pokémon cry ready to play');
+      if(isDev()) {
+        console.log('Pokémon cry ready to play');
+      }
+      
       resetButtonState();
     });
     
@@ -329,7 +364,7 @@ export function playPokemonCryWithData(pokemon) {
     // Attempt to play with promise handling (required for modern browsers)
     const playPromise = audio.play();
     
-    if (playPromise !== undefined) {
+    if(playPromise !== undefined) {
       playPromise
         .then(() => {
           console.log(`Playing ${pokemon.name}'s cry`);
@@ -342,17 +377,17 @@ export function playPokemonCryWithData(pokemon) {
           resetButtonState();
           
           // Handle specific error types with appropriate user feedback
-          if (error.name === 'NotAllowedError') {
+          if(error.name === 'NotAllowedError') {
             // Check if this is likely a mobile browser
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            if (isMobile) {
+            if(isMobile) {
               showToast('Tap the cry button again to enable audio on mobile');
               // Try to unlock audio context again
               unlockAudioContext();
             } else {
               showToast('Please interact with the page first, then try again');
             }
-          } else if (error.name === 'NotSupportedError') {
+          } else if(error.name === 'NotSupportedError') {
             showToast('Audio format not supported by your browser');
           } else {
             showToast('Failed to play Pokémon cry');
@@ -370,7 +405,7 @@ export function playPokemonCryWithData(pokemon) {
     showToast('Error loading Pokémon cry');
     
     // Attempt alternative sources if available
-    if (pokemon.name || pokemon.id) {
+    if(pokemon.name || pokemon.id) {
       tryAlternativeCry(pokemon);
     }
   }
@@ -387,16 +422,18 @@ export function playPokemonCryWithData(pokemon) {
 export function tryAlternativeCry(pokemon) {
   console.log(`🔄 [Alternative Cry] Starting fallback audio for:`, pokemon);
   
-  if (!pokemon || !pokemon.id) {
+  if(!pokemon || !pokemon.id) {
     console.error('❌ [Alternative Cry] Invalid Pokemon data for alternative cry:', pokemon);
+    
     return;
   }
   
   const cryButton = document.getElementById('cry-button');
   const cryButtonTop = document.getElementById('cry-button-top');
   
-  if (!cryButton || !cryButtonTop) {
+  if(!cryButton || !cryButtonTop) {
     console.error('❌ [Alternative Cry] Cry button elements not found in DOM');
+
     return;
   }
   
@@ -404,34 +441,42 @@ export function tryAlternativeCry(pokemon) {
   const alternativeUrls = [];
   ALTERNATIVE_CRY_SOURCES.forEach(baseUrl => {
     SUPPORTED_AUDIO_FORMATS.forEach(format => {
-      if (baseUrl.includes('pokemonshowdown')) {
+      if(baseUrl.includes('pokemonshowdown')) {
         // Pokemon Showdown uses name-based URLs
         const url = `${baseUrl}${pokemon.name.toLowerCase()}${format}`;
         alternativeUrls.push(url);
-        if (isDev()) console.log(`🎵 [Alternative Cry] Generated showdown URL: ${url}`);
+        if(isDev()) {
+          console.log(`🎵 [Alternative Cry] Generated showdown URL: ${url}`);
+        }
       } else {
         // Other sources use ID-based URLs
         const url = `${baseUrl}${pokemon.id}${format}`;
         alternativeUrls.push(url);
-        if (isDev()) console.log(`🎵 [Alternative Cry] Generated ID-based URL: ${url}`);
+        if(isDev()) {
+          console.log(`🎵 [Alternative Cry] Generated ID-based URL: ${url}`);
+        }
       }
     });
   });
-  
-  if (isDev()) console.log(`🎵 [Alternative Cry] Generated ${alternativeUrls.length} alternative URLs`);
+
+  if(isDev()) {
+    console.log(`🎵 [Alternative Cry] Generated ${alternativeUrls.length} alternative URLs`);
+  }
+
   showToast('Trying alternative audio sources...');
   
   let currentIndex = 0;
   
   // Recursive function to try each alternative source
   function tryNext() {
-    if (currentIndex >= alternativeUrls.length) {
+    if(currentIndex >= alternativeUrls.length) {
       // All sources failed - disable cry feature
       console.error(`❌ [Alternative Cry] All ${alternativeUrls.length} sources failed`);
       showToast('No working cry audio found for this Pokémon');
       cryButtonTop.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`;
       cryButton.disabled = true;
       cryButton.classList.add('cry-unavailable');
+
       return;
     }
     
@@ -499,16 +544,18 @@ export function tryAlternativeCry(pokemon) {
  * startReadingEntry('Bulbasaur', 'Seed Pokémon', 'A strange seed was planted...');
  */
 export function startReadingEntry(name, genus, entry) {
-  if (!name || !genus || !entry) {
+  if(!name || !genus || !entry) {
     console.warn('Missing required text for speech synthesis');
     showToast('Cannot read entry: missing information');
+
     return;
   }
 
   // Check if speech synthesis is supported
-  if (!isSpeechSupported()) {
+  if(!isSpeechSupported()) {
     console.error('Speech synthesis not supported in this browser');
     showToast('Text-to-speech not supported in this browser');
+
     return;
   }
 
@@ -520,18 +567,23 @@ export function startReadingEntry(name, genus, entry) {
   
   // Provide immediate feedback for Android users
   const isAndroid = /Android/i.test(navigator.userAgent);
-  if (isAndroid) {
+  if(isAndroid) {
     showToast('🤖 Preparing Android text-to-speech...');
     
     // Android-specific: Check if TTS services are available
-    if (window.speechSynthesis) {
+    if(window.speechSynthesis) {
       const voices = window.speechSynthesis.getVoices();
-      if (voices.length === 0) {
-        if (isDev()) console.log('📱 [Android Speech] No voices immediately available, this may indicate TTS services are disabled');
+
+      if(voices.length === 0) {
+        if(isDev()) {
+          console.log('📱 [Android Speech] No voices immediately available, this may indicate TTS services are disabled');
+        }
+
         showToast('⚠️ If speech doesn\'t work, enable Google Text-to-Speech in Settings → Accessibility → Text-to-speech output');
         setTimeout(() => {
           const delayedVoices = window.speechSynthesis.getVoices();
-          if (delayedVoices.length === 0) {
+
+          if(delayedVoices.length === 0) {
             showToast('💡 Android TTS Setup: Settings → Apps → Google Text-to-Speech → Enable');
           }
         }, 1000);
@@ -542,11 +594,13 @@ export function startReadingEntry(name, genus, entry) {
   try {
     
     // Android-specific: More aggressive initialization
-    if (isAndroid) {
-      if (isDev()) console.log('📱 [Android Speech] Starting Android-specific speech initialization');
-      
+    if(isAndroid) {
+      if(isDev()) {
+        console.log('📱 [Android Speech] Starting Android-specific speech initialization');
+      }
+
       // Force multiple initialization attempts for Android
-      for (let i = 0; i < 3; i++) {
+      for(let i = 0; i < 3; i++) {
         setTimeout(() => {
           const initUtterance = new SpeechSynthesisUtterance('');
           initUtterance.volume = 0;
@@ -563,13 +617,13 @@ export function startReadingEntry(name, genus, entry) {
       return new Promise((resolve) => {
         let voices = Synth.getVoices();
         
-        if (voices.length > 0) {
+        if(voices.length > 0) {
           resolve(voices);
         } else {
           // Android often needs time to load voices
           const voicesChangedHandler = () => {
             voices = Synth.getVoices();
-            if (voices.length > 0) {
+            if(voices.length > 0) {
               Synth.removeEventListener('voiceschanged', voicesChangedHandler);
               resolve(voices);
             }
@@ -581,8 +635,8 @@ export function startReadingEntry(name, genus, entry) {
           setTimeout(() => {
             Synth.removeEventListener('voiceschanged', voicesChangedHandler);
             voices = Synth.getVoices();
-            if (voices.length === 0) {
-              if (isDev()) console.log('📱 [Android Speech] No voices found, forcing another attempt');
+            if(voices.length === 0) {
+              if(isDev()) console.log('📱 [Android Speech] No voices found, forcing another attempt');
               // Force another getVoices call for stubborn Android devices
               setTimeout(() => {
                 voices = Synth.getVoices();
@@ -598,9 +652,11 @@ export function startReadingEntry(name, genus, entry) {
 
     // Wait for voices to be available before proceeding
     waitForVoices().then((voices) => {
-      if (isDev()) console.log(`📱 [Speech] Available voices: ${voices.length}`);
-      
-      if (isAndroid) {
+      if(isDev()) {
+        console.log(`📱 [Speech] Available voices: ${voices.length}`);
+      }
+
+      if(isAndroid) {
         // Android-specific implementation with enhanced error handling
         const fullText = `${name}. The ${genus}. ${entry}`;
         const utterance = new SpeechSynthesisUtterance(fullText);
@@ -611,7 +667,7 @@ export function startReadingEntry(name, genus, entry) {
         utterance.volume = 1.0;  // Full volume for Android
         
         // Set best available English voice for Android
-        if (voices.length > 0) {
+        if(voices.length > 0) {
           // Prioritize local voices over network voices for Android
           const englishVoice = voices.find(voice => 
             voice.lang.startsWith('en') && 
@@ -623,38 +679,55 @@ export function startReadingEntry(name, genus, entry) {
             voice.lang.startsWith('en')
           );
           
-          if (englishVoice) {
+          if(englishVoice) {
             utterance.voice = englishVoice;
-            if (isDev()) console.log('📱 [Android Speech] Using voice:', englishVoice.name, 'Local:', englishVoice.localService);
+
+            if(isDev()) {
+              console.log('📱 [Android Speech] Using voice:', englishVoice.name, 'Local:', englishVoice.localService);
+            }
           } else {
-            if (isDev()) console.log('📱 [Android Speech] No English voice found, using default');
+            if(isDev()) {
+              console.log('📱 [Android Speech] No English voice found, using default');
+            }
           }
         } else {
-          if (isDev()) console.log('📱 [Android Speech] No voices available, proceeding with default');
+          if(isDev()) {
+            console.log('📱 [Android Speech] No voices available, proceeding with default');
+          }
         }
         
         // Enhanced Android event listeners
         utterance.addEventListener('start', () => {
-          if (isDev()) console.log('📱 [Android Speech] Successfully started reading Pokemon entry');
+          if(isDev()) {
+            console.log('📱 [Android Speech] Successfully started reading Pokemon entry');
+          }
           showToast('📢 Reading Pokédex entry...');
         });
         
         utterance.addEventListener('end', () => {
-          if (isDev()) console.log('📱 [Android Speech] Successfully finished reading Pokemon entry');
+          if(isDev()) {
+            console.log('📱 [Android Speech] Successfully finished reading Pokemon entry');
+          }
+          
           showToast('✅ Finished reading entry');
         });
         
         utterance.addEventListener('error', (error) => {
           console.error('📱 [Android Speech] Speech synthesis error:', error);
-          if (isDev()) console.log('📱 [Android Speech] Error details:', {
-            error: error.error,
-            message: error.message,
-            type: error.type
-          });
+          if(isDev()) {
+            console.log('📱 [Android Speech] Error details:', {
+              error: error.error,
+              message: error.message,
+              type: error.type
+            });
+          }
           
           // Android-specific error handling and retry logic
-          if (error.error === 'network' || error.error === 'synthesis-failed') {
-            if (isDev()) console.log('📱 [Android Speech] Network/synthesis error, attempting retry with different settings');
+          if(error.error === 'network' || error.error === 'synthesis-failed') {
+            if(isDev()) {
+              console.log('📱 [Android Speech] Network/synthesis error, attempting retry with different settings');
+            }
+            
             showToast('⚠️ Speech failed, trying again...');
             
             // Retry with simplified text and different settings
@@ -668,12 +741,18 @@ export function startReadingEntry(name, genus, entry) {
               retryUtterance.voice = null;
               
               retryUtterance.addEventListener('start', () => {
-                if (isDev()) console.log('📱 [Android Speech] Retry successful');
+                if(isDev()) {
+                  console.log('📱 [Android Speech] Retry successful');
+                }
+                
                 showToast('📢 Reading Pokédex entry...');
               });
               
               retryUtterance.addEventListener('error', () => {
-                if (isDev()) console.log('📱 [Android Speech] Retry also failed');
+                if(isDev()) {
+                  console.log('📱 [Android Speech] Retry also failed');
+                }
+
                 showToast('❌ Text-to-speech unavailable. Try enabling "TalkBack" or "Select to Speak" in Android Accessibility settings, then try again.');
               });
               
@@ -686,20 +765,28 @@ export function startReadingEntry(name, genus, entry) {
         
         // Android-specific: Multiple initialization attempts before speaking
         setTimeout(() => {
-          if (isDev()) console.log('📱 [Android Speech] Attempting to start speech synthesis');
-          
+          if(isDev()) {
+            console.log('📱 [Android Speech] Attempting to start speech synthesis');
+          }
+
           // Clear any pending speech before starting
           Synth.cancel();
           
           // Additional delay for Android TTS engine initialization
           setTimeout(() => {
-            if (isDev()) console.log('📱 [Android Speech] Starting utterance');
+            if(isDev()) {
+              console.log('📱 [Android Speech] Starting utterance');
+            }
+
             Synth.speak(utterance);
             
             // Android fallback: Check if speech actually started
             setTimeout(() => {
-              if (!Synth.speaking && !Synth.pending) {
-                if (isDev()) console.log('📱 [Android Speech] Speech did not start, attempting manual trigger');
+              if(!Synth.speaking && !Synth.pending) {
+                if(isDev()) {
+                  console.log('📱 [Android Speech] Speech did not start, attempting manual trigger');
+                }
+
                 showToast('🔄 Initializing speech... Please wait.');
                 
                 // Force another attempt
@@ -712,14 +799,17 @@ export function startReadingEntry(name, genus, entry) {
                     
                     // Final check - if still not working, provide help
                     setTimeout(() => {
-                      if (!Synth.speaking && !Synth.pending) {
-                        if (isDev()) console.log('📱 [Android Speech] All attempts failed');
+                      if(!Synth.speaking && !Synth.pending) {
+                        if(isDev()) {
+                          console.log('📱 [Android Speech] All attempts failed');
+                        }
+
                         showToast('� Text-to-speech unavailable. Try: Settings → Accessibility → Text-to-speech → Install or update Google TTS');
                         
                         // Provide a one-time diagnostic
                         setTimeout(() => {
                           const diagnosticVoices = window.speechSynthesis.getVoices();
-                          if (diagnosticVoices.length === 0) {
+                          if(diagnosticVoices.length === 0) {
                             showToast('🚨 No TTS voices found. Install Google Text-to-Speech from Play Store');
                           } else {
                             showToast('⚙️ TTS voices found but not working. Check TTS settings or restart browser');
@@ -748,10 +838,11 @@ export function startReadingEntry(name, genus, entry) {
           utterance.volume = 0.8;  // 80% volume
           
           // Set a voice if available (important for some mobile browsers)
-          if (voices.length > 0) {
+          if(voices.length > 0) {
             // Prefer English voices
             const englishVoice = voices.find(voice => voice.lang.startsWith('en'));
-            if (englishVoice) {
+
+            if(englishVoice) {
               utterance.voice = englishVoice;
             }
           }
@@ -759,13 +850,18 @@ export function startReadingEntry(name, genus, entry) {
         
         // Add event listeners for user feedback
         nameUtterance.addEventListener('start', () => {
-          if (isDev()) console.log('📱 [Speech] Starting to read Pokemon entry');
+          if(isDev()) {
+            console.log('📱 [Speech] Starting to read Pokemon entry');
+          }
+
           showToast('Reading Pokemon entry...');
         });
         
         entryUtterance.addEventListener('end', () => {
-          if (isDev()) console.log('📱 [Speech] Finished reading Pokemon entry');
-          showToast('Finished reading entry');
+          if(isDev()) {
+            console.log('📱 [Speech] Finished reading Pokemon entry');
+          }
+        showToast('Finished reading entry');
         });
         
         entryUtterance.addEventListener('error', (error) => {
@@ -774,7 +870,7 @@ export function startReadingEntry(name, genus, entry) {
         });
         
         // Queue speech synthesis utterances in sequence
-        if (isDev()) console.log('📱 [Speech] Starting speech synthesis');
+        if(isDev()) console.log('📱 [Speech] Starting speech synthesis');
         Synth.speak(nameUtterance);
         Synth.speak(genusUtterance);
         
@@ -798,9 +894,12 @@ export function startReadingEntry(name, genus, entry) {
  * stopReadingEntry(); // Immediately stops any current speech
  */
 export function stopReadingEntry() {
-  if (Synth.speaking) {
+  if(Synth.speaking) {
     Synth.cancel();
-    if (isDev()) console.log('Speech synthesis cancelled');
+    if(isDev()) {
+      console.log('Speech synthesis cancelled');
+    }
+
     showToast('Stopped reading entry');
   }
 }
@@ -814,19 +913,22 @@ export function stopReadingEntry() {
  * console.log(`Speech is now: ${state}`);
  */
 export function toggleSpeechPlayback() {
-  if (Synth.speaking && !Synth.paused) {
+  if(Synth.speaking && !Synth.paused) {
     // Currently speaking - pause it
     Synth.pause();
     showToast('Paused reading');
+
     return 'paused';
-  } else if (Synth.paused) {
+  } else if(Synth.paused) {
     // Currently paused - resume it
     Synth.resume();
     showToast('Resumed reading');
+
     return 'playing';
   } else {
     // Not speaking - already stopped
     showToast('No active reading to toggle');
+
     return 'stopped';
   }
 }
@@ -840,7 +942,7 @@ export function toggleSpeechPlayback() {
  * Tests for HTML5 audio support and common formats
  * @returns {boolean} True if audio is supported, false otherwise
  * @example
- * if (isAudioSupported()) {
+ * if(isAudioSupported()) {
  *   playPokemonCry(pokemon);
  * } else {
  *   showToast('Audio not supported in this browser');
@@ -848,6 +950,7 @@ export function toggleSpeechPlayback() {
  */
 export function isAudioSupported() {
   const audio = document.createElement('audio');
+
   return !!(audio.canPlayType && (
     audio.canPlayType('audio/mpeg;').replace(/no/, '') ||
     audio.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, '') ||
@@ -859,46 +962,65 @@ export function isAudioSupported() {
  * Checks if the browser supports the Web Speech API
  * @returns {boolean} True if speech synthesis is supported
  * @example
- * if (isSpeechSupported()) {
+ * if(isSpeechSupported()) {
  *   startReadingEntry(name, genus, entry);
  * } else {
  *   showToast('Text-to-speech not supported');
  * }
  */
 export function isSpeechSupported() {
-  if (!('speechSynthesis' in window)) {
-    if (isDev()) console.log('📱 [Speech Check] speechSynthesis not available in window');
+  if(!('speechSynthesis' in window)) {
+    if(isDev()) {
+      console.log('📱 [Speech Check] speechSynthesis not available in window');
+    }
+
     return false;
   }
   
   // Additional check for mobile browsers that might have partial support
   try {
     const testUtterance = new SpeechSynthesisUtterance('test');
-    if (!testUtterance) {
-      if (isDev()) console.log('📱 [Speech Check] Cannot create SpeechSynthesisUtterance');
+    if(!testUtterance) {
+      if(isDev()) {
+        console.log('📱 [Speech Check] Cannot create SpeechSynthesisUtterance');
+      }
+      
       return false;
     }
     
     // Android-specific check - ensure voices are available
     const voices = window.speechSynthesis.getVoices();
-    if (isDev()) console.log('📱 [Speech Check] Available voices:', voices.length);
-    
+    if(isDev()) {
+      console.log('📱 [Speech Check] Available voices:', voices.length);
+    }
+
     // If no voices are available immediately, try to wait for them (Android issue)
-    if (voices.length === 0) {
-      if (isDev()) console.log('📱 [Speech Check] No voices available immediately, will retry when needed');
-      
+    if(voices.length === 0) {
+      if(isDev()) {
+        console.log('📱 [Speech Check] No voices available immediately, will retry when needed');
+      }
+
       // Android-specific: Provide helpful guidance
       const isAndroid = /Android/i.test(navigator.userAgent);
-      if (isAndroid) {
-        if (isDev()) console.log('📱 [Android Speech Check] Android device detected - TTS may need manual activation');
+      if(isAndroid) {
+        if(isDev()) {
+          console.log('📱 [Android Speech Check] Android device detected - TTS may need manual activation');
+        }
+        
         return true; // Still return true, but with a warning that it might need setup
       }
     }
     
-    if (isDev()) console.log('📱 [Speech Check] Speech synthesis is supported');
+    if(isDev()) {
+      console.log('📱 [Speech Check] Speech synthesis is supported');
+    }
+    
     return true;
   } catch (error) {
-    if (isDev()) console.log('📱 [Speech Check] Error testing speech synthesis:', error);
+    if(isDev()) {
+      console.log('📱 [Speech Check] Error testing speech synthesis:', error);
+    }
+
     return false;
   }
 }
@@ -915,8 +1037,9 @@ export function isSpeechSupported() {
  */
 export function preloadPokemonCry(cryUrl) {
   return new Promise((resolve, reject) => {
-    if (!cryUrl) {
+    if(!cryUrl) {
       reject(new Error('No cry URL provided'));
+      
       return;
     }
     
@@ -960,7 +1083,7 @@ export const SPEECH_SYNTH = Synth;
  * Checks if the application is running in development mode
  * @returns {boolean} True if in development mode, false if in production
  * @example
- * if (isDev()) {
+ * if(isDev()) {
  *   console.log('Development mode');
  * }
  */

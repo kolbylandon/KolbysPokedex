@@ -68,13 +68,15 @@ async function fetchJson(url) {
   try {
     // Check cache first to avoid unnecessary API calls
     const cached = REQUEST_CACHE.get(url);
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    if(cached && Date.now() - cached.timestamp < CACHE_DURATION) {
       return cached.data;
     }
 
     // Perform HTTP request with timeout handling
     const response = await fetch(url);
-    if (!response.ok) throw response;
+    
+    if(!response.ok) 
+      throw response;
     
     // Parse JSON response
     const data = await response.json();
@@ -101,7 +103,7 @@ function handleError(exception) {
   let userMessage = '';
   
   // Handle HTTP error responses
-  if (exception.status) {
+  if(exception.status) {
     switch (exception.status) {
       case 404:
         userMessage = 'Pokémon not found. Please check the name or ID and try again.';
@@ -124,7 +126,7 @@ function handleError(exception) {
   showToast(userMessage);
   
   // Log detailed error information for debugging
-  if (isDev()) {
+  if(isDev()) {
     console.error('API Request Error:', {
       status: exception.status || 'Unknown',
       message: exception.message || exception.statusText || 'Unknown error',
@@ -297,9 +299,9 @@ function isDev() {
 }
 
 // Example usage:
-// if (isDev()) console.log('message');
-// if (isDev()) console.warn('message');
-// if (isDev()) console.error('message');
+// if(isDev()) console.log('message');
+// if(isDev()) console.warn('message');
+// if(isDev()) console.error('message');
 
 export {
   requestPokemon, requestAbilityEffect, requestHeldItem, requestForm, requestType

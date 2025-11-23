@@ -9,9 +9,9 @@
   @since 2023
 */
 
-/* ====================================
-   PRIMARY BUTTON
-   ==================================== */
+/*====================================
+  PRIMARY BUTTON
+  ==================================== */
 .primary-btn {
   background: linear-gradient(135deg, var(--pokeball-red) 0%, #ff6b6b 100%);
   border: none;
@@ -30,9 +30,6 @@
 }
 
 /* Make all buttons except search and random wider */
-
-
-
 .primary-btn:not([class*="search"]):not([class*="random"]),
 .secondary-btn:not([class*="search"]):not([class*="random"]),
 .action-btn:not([class*="search"]):not([class*="random"]) {
@@ -48,9 +45,9 @@
     0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* ====================================
-   SECONDARY BUTTON
-   ==================================== */
+/*====================================
+  SECONDARY BUTTON
+  ==================================== */
 .secondary-btn {
   background: var(--pokeball-white);
   border: 2px solid var(--pokeball-red);
@@ -77,9 +74,9 @@
     0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* ====================================
-   ACTION BUTTON
-   ==================================== */
+/*====================================
+  ACTION BUTTON
+  ==================================== */
 .action-btn {
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(229, 62, 62, 0.2);
@@ -123,9 +120,9 @@
     0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* ====================================
-   BUTTON STATES
-   ==================================== */
+/*====================================
+  BUTTON STATES
+  ==================================== */
 .action-btn:disabled {
   background: rgba(200, 200, 200, 0.5);
   color: rgba(150, 150, 150, 0.8);
@@ -169,9 +166,9 @@
   100% { transform: rotate(360deg); }
 }
 
-/* ====================================
-   TOUCH DEVICE OPTIMIZATIONS
-   ==================================== */
+/*====================================
+  TOUCH DEVICE OPTIMIZATIONS
+  ==================================== */
 @media (hover: none) and (pointer: coarse) {
   .action-btn:hover {
     background: rgba(255, 255, 255, 0.9);
@@ -189,9 +186,9 @@
   }
 }
 
-/* ====================================
-   BUTTON CONTENT & ICONS
-   ==================================== */
+/*====================================
+  BUTTON CONTENT & ICONS
+  ==================================== */
 .action-btn i {
   font-size: 0.875rem;
   line-height: 1;
