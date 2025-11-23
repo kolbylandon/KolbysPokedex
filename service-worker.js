@@ -157,12 +157,17 @@ async function handleFetchEvent(event) {
   if (url.searchParams.has('sw-bypass') || url.pathname.includes('sw-bypass')) return fetch(request);
   if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('cdnjs.cloudflare.com') || url.hostname.includes('cdn.jsdelivr.net')) return fetch(request);
 
+  // Serve placeholder for known external sprite hosts when they fail
+  const isSpriteHost = url.hostname.includes('raw.githubusercontent.com') || url.hostname.includes('play.pokemonshowdown.com') || url.hostname.includes('pokemoncries.com');
+
   // Offline fallback for navigation requests (HTML)
   if (request.mode === 'navigate' || request.destination === 'document') {
     try {
       const response = await enhancedFetch(request);
       if (response && response.ok) {
-        caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, response.clone()));
+        // Clone immediately to avoid body used errors when cache.put runs asynchronously
+        const responseForCache = response.clone();
+        caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, responseForCache));
         return response;
       }
       throw new Error('Network response not ok');
@@ -176,6 +181,26 @@ async function handleFetchEvent(event) {
     }
   }
   // For other requests, use main handler
+  // If it's an image (sprite) request, try network but fallback to cached placeholder on failure
+  if (request.destination === 'image' || isSpriteHost || url.pathname.match(/\.png$|\.jpg$|\.jpeg$|\.gif$/i)) {
+    try {
+      const response = await enhancedFetch(request);
+      if (response && response.ok) {
+        // cache sprite responses in dynamic cache
+        const cache = await caches.open(DYNAMIC_CACHE);
+        const responseForCache = response.clone();
+        cache.put(request, responseForCache).catch(() => {});
+        return response;
+      }
+      throw new Error('Sprite network response not ok');
+    } catch (err) {
+      log('warn', 'Sprite fetch failed, returning placeholder:', err, request.url);
+      const placeholder = await caches.match('./Images/pokeball.png');
+      if (placeholder) return placeholder;
+      return new Response('', { status: 503, statusText: 'Sprite unavailable' });
+    }
+  }
+
   return handleFetch(request);
 }
 
@@ -235,7 +260,9 @@ async function cacheFirst(request, cacheName) {
   try {
     const response = await enhancedFetch(request);
     if (response && response.ok) {
-      cache.put(request, response.clone());
+      // Clone immediately for caching
+      const responseForCache = response.clone();
+      cache.put(request, responseForCache);
       limitCacheSize(cacheName);
     }
     return response;
@@ -256,7 +283,9 @@ async function networkFirst(request, cacheName) {
   try {
     const response = await enhancedFetch(request);
     if (response && response.ok) {
-      cache.put(request, response.clone());
+      // Clone immediately for caching
+      const responseForCache = response.clone();
+      cache.put(request, responseForCache);
       limitCacheSize(cacheName);
     }
     return response;
@@ -280,8 +309,10 @@ async function staleWhileRevalidate(request, cacheName) {
   if (isFresh(cachedResponse, ttl)) {
     Promise.resolve().then(() => {
       enhancedFetch(request).then(response => {
-        if (response && response.ok) {
-          cache.put(request, response.clone());
+          if (response && response.ok) {
+          // Clone immediately for caching
+          const responseForCache = response.clone();
+          cache.put(request, responseForCache);
           limitCacheSize(cacheName);
         }
       });
@@ -546,16 +577,18 @@ async function doBackgroundSync() {
         });
         
         if (response.ok) {
-          const responseWithTimestamp = new Response(response.body, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: {
-              ...Object.fromEntries(response.headers.entries()),
-              'sw-cache-date': new Date().toISOString()
-            }
-          });
+            // Create a fresh response body by reading the body as a blob then creating a new Response
+            const cloned = response.clone();
+            const bodyBlob = await cloned.blob();
+            const headers = new Headers(response.headers);
+            headers.set('sw-cache-date', new Date().toISOString());
+            const responseWithTimestamp = new Response(bodyBlob, {
+              status: response.status,
+              statusText: response.statusText,
+              headers
+            });
           
-          await cache.put(url, responseWithTimestamp);
+            await cache.put(url, responseWithTimestamp);
           successCount++;
           console.log('[ServiceWorker] Background sync cached:', url);
         }
@@ -593,15 +626,17 @@ async function updateStaleCache() {
           try {
             const networkResponse = await fetch(request);
             if (networkResponse.ok) {
-              const responseWithTimestamp = new Response(networkResponse.body, {
+              // Safely create a fresh response body by cloning and reading as blob
+              const clonedNetworkResp = networkResponse.clone();
+              const bodyBlob = await clonedNetworkResp.blob();
+              const headers = new Headers(networkResponse.headers);
+              headers.set('sw-cache-date', new Date().toISOString());
+              const responseWithTimestamp = new Response(bodyBlob, {
                 status: networkResponse.status,
                 statusText: networkResponse.statusText,
-                headers: {
-                  ...Object.fromEntries(networkResponse.headers.entries()),
-                  'sw-cache-date': new Date().toISOString()
-                }
+                headers
               });
-              
+
               await cache.put(request, responseWithTimestamp);
               console.log('[ServiceWorker] Updated stale cache for:', request.url);
             }
