@@ -104,6 +104,35 @@ header[id="header"],
   margin: 0 var(--spacing-md);
 }
 
+/* Keep the header-center visually centered even when .header-actions
+   changes width or visibility. On larger screens we position it
+   absolutely within the header form so it doesn't shift when action
+   buttons appear/disappear. Mobile stacked layouts (column) remain
+   unaffected because the rule is scoped to min-width: 769px. */
+@media screen and (min-width: 769px) {
+  #header form {
+    position: relative; /* ensure absolute children are positioned to this container */
+  }
+
+  .header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    width: auto; /* allow children to size naturally up to max-width */
+    max-width: 600px; /* slightly larger on desktops */
+    justify-content: center;
+    z-index: 2;
+  }
+
+  /* Ensure brand and actions keep their space in the flow */
+  .header-brand,
+  .header-actions {
+    position: relative;
+    z-index: 3;
+  }
+}
+
 .header-actions {
   display: flex;
   gap: var(--spacing-xs);
