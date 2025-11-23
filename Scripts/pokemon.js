@@ -214,149 +214,103 @@ function populatePage(pokemonResponse, speciesResponse, visibility) {
  * Handles responsive text formatting based on device type
  */
 function displayAttributes() {
-  const deviceType = getDeviceType(); // Get device type for responsive adjustments
-  
-  // Display Pokemon identification
-  NumberHeader.innerText = `#${pokemon.id} `;
-  pokemon.name = punctuationNameCheck(pokemon.name);         // Fix special characters
-  NameHeader.innerText = pokemon.name.toUpperCase();         // Display name in caps
-  GenusSubHeader.innerText = pokemon.genus;                  // Species classification
-  
-  // Display Pokemon details
-  GenerationText.innerText = pokemon.generation;             // Generation info
-  PokedexEntryText.innerText = pokemon.pokedexEntry;        // Flavor text description
-  HeightText.innerText = pokemon.height;                     // Height in feet/inches
-  
-  // Weight display with responsive line breaks
-  WeightText.innerText = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
-  if(deviceType === 'mobile') {
-    WeightText.innerHTML += '<br>';  // Add line break on mobile for better layout
-  }
-  
-  // Stats total display with responsive line breaks
-  StatsText.innerText = `${pokemon.baseStatTotal}`;
-  if(deviceType === 'mobile' || deviceType === 'tablet') {
-    StatsText.innerHTML += '<br>';   // Add line break on mobile/tablet
-  }
-  
-  // Configure Pokemon images to start with official artwork (matching initial state)
-  configureArtworkElement(
-    DefaultArtworkElement,
-    pokemon.FrontDefaultOfficialArtwork,
-    'Default Official Artwork'
-  );
-  
-  // Configure shiny Pokemon image to start with official artwork (matching initial state)
-  configureArtworkElement(
-    ShinyArtworkElement,
-    pokemon.FrontShinyOfficialArtwork,
-    'Shiny Official Artwork'
-  );
-  
-  // Sprite display logic: show default sprite, toggle to shiny on click, fallback to artwork ONLY if both sprites are missing
-  let hasDefaultSprite = !!pokemon.FrontDefaultSprite;
-  let hasShinySprite = !!pokemon.FrontShinySprite;
-  let hasArtwork = !!pokemon.FrontDefaultOfficialArtwork;
-  let hasShinyArtwork = !!pokemon.FrontShinyOfficialArtwork;
+  const deviceType = getDeviceType();
+  // Efficiently update only if values changed
+  const idText = `#${pokemon.id} `;
+  if (NumberHeader.innerText !== idText) 
+    NumberHeader.innerText = idText;
 
-  // Remove any previous click handler and event listener
+  const fixedName = punctuationNameCheck(pokemon.name);
+  const nameText = fixedName.toUpperCase();
+
+  if (NameHeader.innerText !== nameText) 
+    NameHeader.innerText = nameText;
+  if (GenusSubHeader.innerText !== pokemon.genus) 
+    GenusSubHeader.innerText = pokemon.genus;
+  if (GenerationText.innerText !== pokemon.generation) 
+    GenerationText.innerText = pokemon.generation;
+  if (PokedexEntryText.innerText !== pokemon.pokedexEntry) 
+    PokedexEntryText.innerText = pokemon.pokedexEntry;
+  if (HeightText.innerText !== pokemon.height) 
+    HeightText.innerText = pokemon.height;
+
+  const weightVal = `${pokemon.weight.substring(0, pokemon.weight.length - 2)} lbs`;
+  
+  if (WeightText.innerText !== weightVal) 
+    WeightText.innerText = weightVal;
+  if (deviceType === 'mobile') 
+    WeightText.innerHTML += '<br>';
+  if (StatsText.innerText !== `${pokemon.baseStatTotal}`) 
+    StatsText.innerText = `${pokemon.baseStatTotal}`;
+  if (deviceType === 'mobile' || deviceType === 'tablet') 
+    StatsText.innerHTML += '<br>';
+
+  // Sprite logic
+  const hasDefaultSprite = !!pokemon.FrontDefaultSprite;
+  const hasShinySprite = !!pokemon.FrontShinySprite;
+  const hasArtwork = !!pokemon.FrontDefaultOfficialArtwork;
+  const hasShinyArtwork = !!pokemon.FrontShinyOfficialArtwork;
+
+  // Remove previous click handler
   DefaultArtworkElement.onclick = null;
   DefaultArtworkElement.removeEventListener('click', DefaultArtworkElement._toggleHandler);
-
-  // Store toggle state and handler as properties on the element
   DefaultArtworkElement._showingShiny = false;
   DefaultArtworkElement._toggleHandler = null;
 
+  // Helper for setting up toggle
+  function setToggle(handler, cursor, title) {
+    DefaultArtworkElement.style.cursor = cursor;
+    DefaultArtworkElement.title = title;
+    DefaultArtworkElement._toggleHandler = handler;
+    DefaultArtworkElement.addEventListener('click', handler);
+  }
+
   if (hasDefaultSprite && hasShinySprite) {
     currentSpriteState = 'default';
-    configureArtworkElement(
-      DefaultArtworkElement,
-      pokemon.FrontDefaultSprite,
-      'Default Sprite'
-    );
+    configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultSprite, 'Default Sprite');
     DefaultArtworkElement.style.display = '';
-    DefaultArtworkElement.style.cursor = 'pointer';
-    DefaultArtworkElement.title = 'Click to show shiny sprite';
-    DefaultArtworkElement._toggleHandler = function () {
+    setToggle(() => {
       DefaultArtworkElement._showingShiny = !DefaultArtworkElement._showingShiny;
       if (DefaultArtworkElement._showingShiny) {
-        configureArtworkElement(
-          DefaultArtworkElement,
-          pokemon.FrontShinySprite,
-          'Shiny Default Sprite'
-        );
+        configureArtworkElement(DefaultArtworkElement, pokemon.FrontShinySprite, 'Shiny Default Sprite');
         DefaultArtworkElement.title = 'Click to show default sprite';
       } else {
-        configureArtworkElement(
-          DefaultArtworkElement,
-          pokemon.FrontDefaultSprite,
-          'Default Sprite'
-        );
+        configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultSprite, 'Default Sprite');
         DefaultArtworkElement.title = 'Click to show shiny sprite';
       }
-    };
-    DefaultArtworkElement.addEventListener('click', DefaultArtworkElement._toggleHandler);
+    }, 'pointer', 'Click to show shiny sprite');
   } else if (hasDefaultSprite) {
     currentSpriteState = 'default';
-    configureArtworkElement(
-      DefaultArtworkElement,
-      pokemon.FrontDefaultSprite,
-      'Default Sprite'
-    );
+    configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultSprite, 'Default Sprite');
     DefaultArtworkElement.style.display = '';
     DefaultArtworkElement.style.cursor = 'default';
     DefaultArtworkElement.title = 'Default Sprite';
-    DefaultArtworkElement._showingShiny = false;
-    DefaultArtworkElement._toggleHandler = null;
   } else if (hasArtwork && hasShinyArtwork) {
     currentSpriteState = 'artwork';
-    configureArtworkElement(
-      DefaultArtworkElement,
-      pokemon.FrontDefaultOfficialArtwork,
-      'Default Official Artwork'
-    );
+    configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultOfficialArtwork, 'Default Official Artwork');
     DefaultArtworkElement.style.display = '';
-    DefaultArtworkElement.style.cursor = 'pointer';
-    DefaultArtworkElement.title = 'Click to show shiny artwork';
-    DefaultArtworkElement._showingShiny = false;
-    DefaultArtworkElement._toggleHandler = function () {
+    setToggle(() => {
       DefaultArtworkElement._showingShiny = !DefaultArtworkElement._showingShiny;
       if (DefaultArtworkElement._showingShiny) {
-        configureArtworkElement(
-          DefaultArtworkElement,
-          pokemon.FrontShinyOfficialArtwork,
-          'Shiny Official Artwork'
-        );
+        configureArtworkElement(DefaultArtworkElement, pokemon.FrontShinyOfficialArtwork, 'Shiny Official Artwork');
         DefaultArtworkElement.title = 'Click to show default artwork';
       } else {
-        configureArtworkElement(
-          DefaultArtworkElement,
-          pokemon.FrontDefaultOfficialArtwork,
-          'Default Official Artwork'
-        );
+        configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultOfficialArtwork, 'Default Official Artwork');
         DefaultArtworkElement.title = 'Click to show shiny artwork';
       }
-    };
-    DefaultArtworkElement.addEventListener('click', DefaultArtworkElement._toggleHandler);
+    }, 'pointer', 'Click to show shiny artwork');
   } else if (hasArtwork) {
     currentSpriteState = 'artwork';
-    configureArtworkElement(
-      DefaultArtworkElement,
-      pokemon.FrontDefaultOfficialArtwork,
-      'Default Official Artwork'
-    );
+    configureArtworkElement(DefaultArtworkElement, pokemon.FrontDefaultOfficialArtwork, 'Default Official Artwork');
     DefaultArtworkElement.style.display = '';
     DefaultArtworkElement.style.cursor = 'default';
     DefaultArtworkElement.title = 'Default Official Artwork';
-    DefaultArtworkElement._showingShiny = false;
-    DefaultArtworkElement._toggleHandler = null;
   }
   // Always hide the shiny artwork image element
   if (ShinyArtworkElement) {
     ShinyArtworkElement.style.display = 'none';
     ShinyArtworkElement.src = '';
   }
-  
   // Remove sprite click listeners and interaction (only show default sprite)
   DefaultArtworkElement.removeEventListener('click', cycleSpriteDisplay);
   DefaultArtworkElement.style.cursor = 'default';
@@ -500,7 +454,7 @@ function setGenderDifferenceSprites(pokemonObj, pokemonResponse) {
     // Determine if default sprite is male or female by comparing URLs
     // If female sprites exist and are different from default, then default is male
     const defaultIsMale = pokemonObj.frontFemaleSprite && 
-                         pokemonObj.frontFemaleSprite !== pokemonObj.FrontDefaultSprite;
+                          pokemonObj.frontFemaleSprite !== pokemonObj.FrontDefaultSprite;
     
     pokemonObj.defaultGender = defaultIsMale ? 'male' : 'female';
     pokemonObj.alternateGender = defaultIsMale ? 'female' : 'male';
